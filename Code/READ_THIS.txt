@@ -1,0 +1,2 @@
+This code is taken from the exercice (pathfinding 4)
+This means that this code isn't 100% ours.
