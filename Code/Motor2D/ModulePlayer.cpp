@@ -12,8 +12,9 @@ ModulePlayer::~ModulePlayer() {}
 bool ModulePlayer::Start() {
 	playerData.x = 0;
 	playerData.y = 0;
+	playerData.w = 40;
+	playerData.h = 70;
 	playerData.playerState = PLAYER_STATE::STAND;
-	playerData.playerRect = { 0,0, 40, 70 };
 	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
 	playerData.tempoJump = 0;
 	playerData.timeOnAir = 200;
@@ -126,10 +127,10 @@ void ModulePlayer::DrawPlayer() {
 }
 
 void ModulePlayer::MovimentPlayer() {
-	bool col[4] = { App->map->IsCollidingWithTerrain(playerData.x + playerData.playerRect.w / 2 , playerData.y + playerData.playerRect.h, DOWN),
-		App->map->IsCollidingWithTerrain(playerData.x + playerData.playerRect.w / 2 , playerData.y, UP),
-		App->map->IsCollidingWithTerrain(playerData.x, playerData.y + playerData.playerRect.h / 2, LEFT),
-		App->map->IsCollidingWithTerrain(playerData.x + playerData.playerRect.w , playerData.y + playerData.playerRect.h / 2, RIGHT) };
+	bool col[4] = { App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2 , playerData.y + playerData.h, DOWN),
+		App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2 , playerData.y, UP),
+		App->map->IsCollidingWithTerrain(playerData.x, playerData.y + playerData.h / 2, LEFT),
+		App->map->IsCollidingWithTerrain(playerData.x + playerData.w , playerData.y + playerData.h / 2, RIGHT) };
 	// 0-Down, 1-Up, 2-Left, 3-Right
 
 	switch (playerData.playerState) {
@@ -160,6 +161,28 @@ void ModulePlayer::MovimentPlayer() {
 			playerData.x -= 0.5f;
 
 		AccioTp();
+		break;
+
+	case HABILITY_Q:
+		App->render->Blit(playerData.playerSprites, playerData.x + (playerData.w / 2) + 100 - 50/*tamany del fum / 2*/, playerData.y - (playerData.h / 2), &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
+		App->render->Blit(playerData.playerSprites, playerData.x + (playerData.w / 2) - 100 - 50, playerData.y - (playerData.h / 2), &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
+		App->render->Blit(playerData.playerSprites, playerData.x - (playerData.w / 2), playerData.y - 100 - 50, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
+		
+		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_DOWN) {
+			playerData.x += 100.0f + (playerData.w / 2);
+			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.playerState = PLAYER_STATE::STAND;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_DOWN) {
+			playerData.x -= 100.0f + (playerData.w / 2);
+			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.playerState = PLAYER_STATE::STAND;
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN) {
+			playerData.y -= 100.0f;
+			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.playerState = PLAYER_STATE::STAND;
+		}
 		break;
 
 	case DEAD:
@@ -193,7 +216,7 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 
 bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	bool ret = false;
-	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir * 3 && col[0] == true) {
+	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir * 2 && col[0] == true) {
 		playerData.playerState = JUMPING;
 		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
 		ret = true;
@@ -204,74 +227,10 @@ bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	return ret;
 }
 
-bool ModulePlayer::AccioTp() {
-	bool ret = false;
-
+void ModulePlayer::AccioTp() {
 	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
 		if (playerData.tempoPerTP < SDL_GetTicks()) {
-			playerData.tempoPerTP = SDL_GetTicks() + 1000; // temps de cooldown
-
-			int dir = 0;
-			while (dir == 0) {
-				if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_DOWN)
-					dir = 1;
-				else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_DOWN)
-					dir = 2;
-				else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN)
-					dir = 3;
-
-				App->render->Blit(playerData.playerSprites, playerData.x + 100, playerData.y, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
-				App->render->Blit(playerData.playerSprites, playerData.x - 100, playerData.y, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
-				App->render->Blit(playerData.playerSprites, playerData.x, playerData.y + 100, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
-			}
-
-			switch (dir) {
-			case 0:
-				playerData.x += 100.0f;
-				break;
-			case 1:
-				playerData.x -= 100.0f;
-				break;
-			case 2:
-				playerData.y -= 100.0f;
-				break;
-			}
-
+			playerData.playerState = PLAYER_STATE::HABILITY_Q;
 		}
 	}
-	return ret;
 }
-
-//bool ModulePlayer::AccioTp() {
-//	bool ret = false;
-//	if (playerData.tempoPerTP > SDL_GetTicks() + 300) {
-//		App->render->Blit(playerData.playerSprites, playerData.xFum, playerData.yFum, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
-//		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
-//	}
-//	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
-//		playerData.xFum = playerData.x;
-//		playerData.yFum = playerData.y;
-//		int dir = 0;
-//		while (dir == 0) {
-//			if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_DOWN)
-//				dir = 1;
-//		}
-//
-//		if (playerData.tempoPerTP < SDL_GetTicks()) {
-//			playerData.tempoPerTP = SDL_GetTicks() + 1000; // temps de cooldown
-//			if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT) {
-//				playerData.y -= 100.0f;
-//				ret = true;
-//			}
-//			else if (playerData.lookingWay == L_RIGHT) {
-//				playerData.x += 100.0f;
-//				ret = true;
-//			}
-//			else {
-//				playerData.x -= 100.0f;
-//				ret = true;
-//			}
-//		}
-//	}
-//	return ret;
-//}

@@ -11,6 +11,7 @@ enum PLAYER_STATE {
 	STAND,
 	RUNING,
 	JUMPING,
+	HABILITY_Q,
 	DEAD
 };
 
@@ -22,13 +23,12 @@ enum LOOKING_DIRECTION {
 struct PlayerData {
 
 	// VARIABLES
-	float x, y, xFum, yFum;
+	float x, y, w, h, xFum, yFum;
 	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP
 	uint tempoJump, timeOnAir, tempoPerTP;
 	SDL_Texture* playerSprites;
 
 	// CONTROL POSICIO I SITUACIO
-	SDL_Rect playerRect;
 	PLAYER_STATE playerState;
 	LOOKING_DIRECTION lookingWay;
 
@@ -57,7 +57,7 @@ public:
 	void DrawPlayer();
 	void MovimentPlayer();
 private:
-	bool AccioTp();
+	void AccioTp();
 	bool AccioMovLaterals(bool col[4]);
 	bool AccioMovJump_Gravity(bool col[4]);
 public:
