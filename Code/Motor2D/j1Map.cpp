@@ -83,12 +83,43 @@ void j1Map::Draw()
 					SDL_Rect r = tileset->GetTileRect(tile_id);
 					iPoint pos = MapToWorld(x, y);
 
-					App->render->Blit(tileset->texture, pos.x, pos.y, &r);
+					App->render->Blit(tileset->texture, pos.x, pos.y, &r, item->data->speed);
 				}
 			}
 		}
 	}
 }
+
+//void j1Map::Draw()
+//{
+//	if (map_loaded == false)
+//		return;
+//
+//	SDL_Rect* rect;
+//	int x, y, h, w;
+//	int layerss = 0;
+//	for (p2List_item<TileSet*>* blit_tilesets = data.tilesets.start; blit_tilesets != nullptr; blit_tilesets = blit_tilesets->next) {
+//		for (p2List_item<MapLayer*>* layer = this->data.layers.start; layer->next != nullptr; layer = layer->next) {
+//			layerss++;
+//			x = y = h = w = 0;
+//
+//			for (int id = 0; id < layer->data->size_data; id++) {
+//				rect = &blit_tilesets->data->GetTileRect(layer->data->data[id]);
+//
+//				App->render->Blit(blit_tilesets->data->texture, x, y, rect, layer->data->speed);
+//
+//				w++;
+//				if (w == layer->data->width) {
+//					w = 0;
+//					h++;
+//				}
+//
+//				x = w * blit_tilesets->data->tile_width;
+//				y = h * blit_tilesets->data->tile_height;
+//			}
+//		}
+//	}
+//}
 
 int Properties::Get(const char* value, int default_value) const
 {
@@ -261,10 +292,10 @@ bool j1Map::Load(const char* file_name)
 	{
 		MapLayer* lay = new MapLayer();
 
-		ret = LoadLayer(layer, lay);
+		if (ret == true)
+			ret = LoadLayer(layer, lay);
 
-		if(ret == true)
-			data.layers.add(lay);
+		data.layers.add(lay);
 	}
 
 	if(ret == true)
@@ -435,6 +466,12 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	layer->name = node.attribute("name").as_string();
 	layer->width = node.attribute("width").as_int();
 	layer->height = node.attribute("height").as_int();
+	const char* aux = node.child("properties").child("property").attribute("name").as_string();
+	if (strcmp(aux, "Speed") == 0)
+	{
+		layer->speed = node.child("properties").child("property").attribute("value").as_float();
+	}
+
 	LoadProperties(node, layer->properties);
 	pugi::xml_node layer_data = node.child("data");
 
@@ -446,7 +483,13 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	}
 	else
 	{
-		layer->data = new uint[layer->width*layer->height];
+		for (pugi::xml_node iterator = node.child("data").child("tile"); iterator != nullptr; iterator = iterator.next_sibling())
+		{
+			layer->size_data++;
+
+		}
+
+		layer->data = new uint[layer->size_data];
 		memset(layer->data, 0, layer->width*layer->height);
 
 		int i = 0;

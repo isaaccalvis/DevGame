@@ -55,6 +55,8 @@ struct MapLayer
 	int			height;
 	uint*		data;
 	Properties	properties;
+	float		speed = 1;
+	uint		size_data = 0;
 
 	MapLayer() : data(NULL)
 	{}

@@ -71,7 +71,6 @@ void j1App::AddModule(j1Module* module)
 bool j1App::Awake()
 {
 	pugi::xml_document	config_file;
-	pugi::xml_node		config;
 	pugi::xml_node		app_config;
 
 	bool ret = false;
