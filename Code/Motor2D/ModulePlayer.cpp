@@ -20,7 +20,8 @@ bool ModulePlayer::Start() {
 	playerData.timeOnAir = 200;
 	playerData.contadorAuxiliarAnimacions = 0;
 	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
-	playerData.tempoPerTP = 0;
+	playerData.tempoTP = 0;
+	playerData.tempoDead = -1;
 
 	playerData.playerAnimation_STAND_R.PushBack({ 11,20, 40, 70 });
 	playerData.playerAnimation_STAND_R.PushBack({ 57,20, 40, 70 });
@@ -58,8 +59,17 @@ bool ModulePlayer::Start() {
 	playerData.playerAnimation_JUMP_L.PushBack({ 59,346, 40, 60 });
 	playerData.playerAnimation_JUMP_L.speed = 0.025f;
 
-	playerData.playerAnimation_TP_SMOKE.PushBack({ 9,495, 100, 120 });
+	playerData.playerAnimation_DEAD.PushBack({ 9,495, 100, 120 });
+	playerData.playerAnimation_DEAD.PushBack({ 137,495, 100, 120 });
+	playerData.playerAnimation_DEAD.PushBack({ 250,495, 100, 120 });
+	playerData.playerAnimation_DEAD.speed = 0.01f;
 
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 9,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 137,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 250,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.speed = 0.01f;
+
+	playerData.playerAnimation_GHOST.PushBack({});
 	return true;
 }
 
@@ -170,23 +180,36 @@ void ModulePlayer::MovimentPlayer() {
 		
 		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_DOWN) {
 			playerData.x += 100.0f + (playerData.w / 2);
-			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_DOWN) {
 			playerData.x -= 100.0f + (playerData.w / 2);
-			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN) {
 			playerData.y -= 100.0f;
-			playerData.tempoPerTP = SDL_GetTicks() + 1000;
+			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
 		break;
 
 	case DEAD:
-
+		if (playerData.tempoDead == -1) {
+			playerData.tempoDead = SDL_GetTicks() + 500;
+			playerData.playerAnim = playerData.playerAnimation_DEAD;
+			playerData.contadorAuxiliarAnimacions = 5;
+		}
+		else {
+			if (playerData.tempoDead < SDL_GetTicks()) {
+				playerData.tempoDead = -1;
+				playerData.playerState = PLAYER_STATE::STAND;
+				playerData.playerAnim = playerData.playerAnimation_DEAD;
+				playerData.x = 0;
+				playerData.y = 0;
+			}
+		}
 		break;
 
 	default:
@@ -221,15 +244,18 @@ bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
 		ret = true;
 	}
-	else if (col[0] == false)
+	else if (col[0] == false) {
 		playerData.y += 0.5f;
+		if (playerData.y > App->map->data.tile_height * App->map->data.height)
+			playerData.playerState = PLAYER_STATE::DEAD;
+	}
 
 	return ret;
 }
 
 void ModulePlayer::AccioTp() {
 	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
-		if (playerData.tempoPerTP < SDL_GetTicks()) {
+		if (playerData.tempoTP < SDL_GetTicks()) {
 			playerData.playerState = PLAYER_STATE::HABILITY_Q;
 		}
 	}

@@ -23,9 +23,9 @@ enum LOOKING_DIRECTION {
 struct PlayerData {
 
 	// VARIABLES
-	float x, y, w, h, xFum, yFum;
+	float x, y, w, h;
 	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP
-	uint tempoJump, timeOnAir, tempoPerTP;
+	uint tempoJump, timeOnAir, tempoTP, tempoDead;
 	SDL_Texture* playerSprites;
 
 	// CONTROL POSICIO I SITUACIO
@@ -40,7 +40,9 @@ struct PlayerData {
 	Animation playerAnimation_RUN_L;
 	Animation playerAnimation_JUMP_R;
 	Animation playerAnimation_JUMP_L;
+	Animation playerAnimation_DEAD;
 	Animation playerAnimation_TP_SMOKE;
+	Animation playerAnimation_GHOST;
 };
 
 class ModulePlayer : public j1Module
