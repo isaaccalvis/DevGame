@@ -1,0 +1,49 @@
+#ifndef __EnemyWalker_H__
+#define __EnemyWalker_H__
+
+#include "BaseEnemies.h"
+#include "SDL_image\include\SDL_image.h"
+#include "Animation.h"
+
+#define MOVE_VELOCITY 5.0f;
+
+enum ENEMY_WALKER_STATES {
+	E_STAND,
+	E_WALK,
+	E_JUMP,
+	E_ATAC,
+	E_DEAD
+};
+
+class EnemyWalker : public BaseEnemy {
+public:
+
+	EnemyWalker(float x, float y);
+	~EnemyWalker();
+
+	void Update();
+
+	void ChargeAnimations();
+	void Draw();
+	void MoveDirection(LOOKING_DIRECTION direction);
+
+private:
+
+	ENEMY_WALKER_STATES enemyWalkerState;
+	LOOKING_DIRECTION enemyWalkerLookingDirection;
+
+	Animation Stand_R;
+	Animation Stand_L;
+	Animation Walk_R;
+	Animation Walk_L;
+	Animation Jump_R;
+	Animation Jump_L;
+	Animation Atac_R;
+	Animation Atac_L;
+	Animation Dead_R;
+	Animation Dead_L;
+
+	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL
+};
+
+#endif

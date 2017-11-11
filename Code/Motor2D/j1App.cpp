@@ -13,6 +13,7 @@
 #include "j1Map.h"
 #include "j1Pathfinding.h"
 #include "ModulePlayer.h"
+#include "ModuleEnemies.h"
 #include "j1App.h"
 
 // Constructor
@@ -30,6 +31,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	map = new j1Map();
 	pathfinding = new j1PathFinding();
 	player = new ModulePlayer();
+	enemies = new ModuleEnemies();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -41,6 +43,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(pathfinding);
 	AddModule(scene);
 	AddModule(player);
+	AddModule(enemies);
 
 	// render last to swap buffer
 	AddModule(render);

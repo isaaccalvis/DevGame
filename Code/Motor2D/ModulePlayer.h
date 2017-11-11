@@ -24,7 +24,7 @@ struct PlayerData {
 
 	// VARIABLES
 	float x, y, w, h;
-	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP
+	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP, 7->Ghost_R, 8->Ghost_L, 9->Caient_R, 10->Caient_L
 	uint tempoJump, timeOnAir, tempoTP, tempoDead;
 	SDL_Texture* playerSprites;
 
@@ -42,7 +42,10 @@ struct PlayerData {
 	Animation playerAnimation_JUMP_L;
 	Animation playerAnimation_DEAD;
 	Animation playerAnimation_TP_SMOKE;
-	Animation playerAnimation_GHOST;
+	Animation playerAnimation_GHOST_R;
+	Animation playerAnimation_GHOST_L;
+	Animation playerAnimation_CAIENT_R;
+	Animation playerAnimation_CAIENT_L;
 };
 
 class ModulePlayer : public j1Module
@@ -56,15 +59,20 @@ public:
 	bool Update(float dt);
 	bool CleanUp();
 
+private:
+
 	void DrawPlayer();
 	void MovimentPlayer();
-private:
+	void ChargeAnimations();
+
 	void AccioTp();
 	bool AccioMovLaterals(bool col[4]);
 	bool AccioMovJump_Gravity(bool col[4]);
+
 public:
+
 	PlayerData playerData;
-	
+	bool col[4] = { false,false,false,false };
 };
 
 #endif

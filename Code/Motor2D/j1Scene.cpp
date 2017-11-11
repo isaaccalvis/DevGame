@@ -102,12 +102,12 @@ bool j1Scene::Update(float dt)
 	if (App->player->playerData.x - (-App->render->camera.x + (App->render->camera.w / 2)) >= 0)
 	{
 		if (App->render->camera.x - App->render->camera.w > -(App->map->data.width*App->map->data.tile_width))
-			App->render->camera.x -= 2;
+			App->render->camera.x -= 5;
 	}
 	if (App->player->playerData.x - (-App->render->camera.x + (App->render->camera.w / 2)) <= 0)
 	{
 		if (App->render->camera.x < 0)
-			App->render->camera.x += 2;
+			App->render->camera.x += 5;
 	}
 
 	App->map->Draw();
