@@ -227,7 +227,7 @@ void ModulePlayer::MovimentPlayer() {
 
 	if (col[0] == true && col[1] == true && col[2] == true && col[3]) {
 		playerData.playerState = PLAYER_STATE::DEAD;
-	}
+	} 
 }
 
 void ModulePlayer::ChargeAnimations() {

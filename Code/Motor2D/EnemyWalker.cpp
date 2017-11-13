@@ -13,12 +13,86 @@ EnemyWalker::EnemyWalker(float x, float y) {
 	enemyWalkerLookingDirection = L_LEFT;
 	enemyWalkerState = E_STAND;
 	controladorAnimations = 0;
+	canAtacPlayer = false;
 }
 
 EnemyWalker::~EnemyWalker() {}
 
 void EnemyWalker::Update() {
+	UpdateInfo();
+	Move(enemyWalkerLookingDirection);
 	Draw();
+}
+
+void EnemyWalker::UpdateInfo() {
+	// MIRAR CAP AL PLAYER
+	if (App->player->playerData.x > x)
+		enemyWalkerLookingDirection = L_RIGHT;
+	else
+		enemyWalkerLookingDirection = L_LEFT;
+	// MIRAR SI TOCA AL PLAYER
+	if (enemyWalkerLookingDirection == L_RIGHT) {
+		if (App->player->playerData.x - x < DISTANCIA_MIN_ATAC)
+			enemyWalkerState = E_ATAC;
+		else
+			enemyWalkerState = E_WALK;
+	}
+	else {
+		if (x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
+			enemyWalkerState = E_ATAC;
+		else
+			enemyWalkerState = E_WALK;
+	}
+}
+// TXELL SEXY
+void EnemyWalker::Move(LOOKING_DIRECTION direction) {
+	if (enemyWalkerLookingDirection == L_RIGHT) {
+		switch (enemyWalkerState) {
+		case E_STAND:
+
+			break;
+		case E_WALK:
+			x += 3;
+			break;
+		case E_JUMP:
+
+			break;
+		case E_ATAC:
+
+			break;
+		case E_DEAD:
+
+			break;
+		}
+	}
+	else {
+		switch (enemyWalkerState) {
+		case E_STAND:
+
+			break;
+		case E_WALK:
+			x -= 3;
+			break;
+		case E_JUMP:
+
+			break;
+		case E_ATAC:
+
+			break;
+		case E_DEAD:
+
+			break;
+		}
+	}
+}
+
+void EnemyWalker::Jump(float x, float y) {
+	float nX = this->x - x;
+	float nY = this->y - y;
+	//if (nX < 0)
+	//	nX *= -1;
+	//if (nY < 0)
+	//	nY *= -1;
 }
 
 void EnemyWalker::ChargeAnimations() {
@@ -56,8 +130,18 @@ void EnemyWalker::ChargeAnimations() {
 	Jump_L.loop = false;
 	Jump_L.speed = 0.25f;
 
-	Atac_R;
-	Atac_L;
+	Atac_R.PushBack({ 1,160, 50, 70 });
+	Atac_R.PushBack({ 59,160, 50, 70 });
+	Atac_R.PushBack({ 119,160, 50, 70 });
+	Atac_R.PushBack({ 175,160, 50, 70 });
+	Atac_R.speed = 0.1f;
+
+	Atac_L.PushBack({ 258,160, 50, 70 });
+	Atac_L.PushBack({ 322,160, 50, 70 });
+	Atac_L.PushBack({ 381,160, 50, 70 });
+	Atac_L.PushBack({ 436,160, 50, 70 });
+	Atac_L.speed = 0.1f;
+
 	Dead_R;
 	Dead_L;
 }
@@ -131,19 +215,5 @@ void EnemyWalker::Draw() {
 				break;
 			}
 		App->render->Blit(texturaEnemy, x, y, &enemyAnim.GetCurrentFrame());
-	}
-}
-
-void EnemyWalker::MoveDirection(LOOKING_DIRECTION direction) {
-	switch (direction) {
-	case L_RIGHT:
-
-		break;
-	case L_LEFT:
-
-		break;
-	default:
-
-		break;
 	}
 }

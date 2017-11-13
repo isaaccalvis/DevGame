@@ -5,7 +5,8 @@
 #include "SDL_image\include\SDL_image.h"
 #include "Animation.h"
 
-#define MOVE_VELOCITY 5.0f;
+#define MOVE_VELOCITY 5.0f
+#define DISTANCIA_MIN_ATAC 30.0f
 
 enum ENEMY_WALKER_STATES {
 	E_STAND,
@@ -25,7 +26,9 @@ public:
 
 	void ChargeAnimations();
 	void Draw();
-	void MoveDirection(LOOKING_DIRECTION direction);
+	void UpdateInfo();
+	void Move(LOOKING_DIRECTION direction);
+	void Jump(float x, float y);
 
 private:
 
@@ -44,6 +47,7 @@ private:
 	Animation Dead_L;
 
 	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL
+	bool canAtacPlayer;
 };
 
 #endif
