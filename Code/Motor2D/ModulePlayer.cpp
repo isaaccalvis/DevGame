@@ -30,7 +30,7 @@ bool ModulePlayer::Start() {
 }
 
 bool ModulePlayer::Update(float dt) {
-	MovimentPlayer();
+	MovementPlayer();
 	DrawPlayer();
 	if (App->input->GetKey(SDL_SCANCODE_0) == j1KeyState::KEY_DOWN)
 		App->enemies->addEnemy(E_WALKER, playerData.x + 50, playerData.y);
@@ -39,6 +39,15 @@ bool ModulePlayer::Update(float dt) {
 
 bool ModulePlayer::CleanUp() {
 	return true;
+}
+
+void ModulePlayer::LoadPLayerTexture() {
+	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
+}
+
+void ModulePlayer::SpawnPLayer() {
+	playerData.x = App->map->data.spawnOnMap.x;
+	playerData.y = App->map->data.spawnOnMap.y;
 }
 
 void ModulePlayer::DrawPlayer() {
@@ -127,7 +136,7 @@ void ModulePlayer::DrawPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
-void ModulePlayer::MovimentPlayer() {
+void ModulePlayer::MovementPlayer() {
 	col[0] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y + playerData.h, DOWN);
 	col[1] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y, UP);
 	col[2] = App->map->IsCollidingWithTerrain(playerData.x, playerData.y + playerData.h / 2, LEFT);
@@ -181,11 +190,13 @@ void ModulePlayer::MovimentPlayer() {
 
 		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT) {
 			playerData.x += 100.0f + (playerData.w / 2);
+			App->render->camera.x -= 100.0f + (playerData.w / 2);
 			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT) {
 			playerData.x -= 100.0f + (playerData.w / 2);
+			App->render->camera.x += 100.0f + (playerData.w / 2);
 			playerData.tempoTP = SDL_GetTicks() + 1000;	
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
@@ -304,14 +315,14 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
 		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
 			playerData.playerState = RUNING;
-		playerData.x += 6.0f;
+		playerData.x += playerData.speed;
 		playerData.lookingWay = L_RIGHT;
 		ret = true;
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false) {
 		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
 			playerData.playerState = RUNING;
-		playerData.x -= 6.0f;
+		playerData.x -= playerData.speed;
 		playerData.lookingWay = L_LEFT;
 		ret = true;
 	}
@@ -326,8 +337,8 @@ bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 		ret = true;
 	}
 	else if (col[0] == false) {
-		playerData.y += 10.0f;
-		if (playerData.y > App->map->data.tile_height * App->map->data.height)
+		playerData.y += playerData.jumpSpeed;
+		if (playerData.y > App->map->data.tile_height * (App->map->data.height-1))
 			playerData.playerState = PLAYER_STATE::DEAD;
 	}
 

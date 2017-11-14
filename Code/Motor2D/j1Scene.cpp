@@ -21,10 +21,16 @@ j1Scene::~j1Scene()
 {}
 
 // Called before render is available
-bool j1Scene::Awake()
+bool j1Scene::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Scene");
 	bool ret = true;
+
+	for (pugi::xml_node iterator = config.child("maps"); iterator != nullptr; iterator = iterator.next_sibling("maps"))
+	{
+		maps.add(iterator.attribute("name").as_string());
+	}
+	current_map = maps.start;
 
 	return ret;
 }
@@ -32,7 +38,7 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	if(App->map->Load("Mapa1.tmx") == true)
+	if(App->map->Load(current_map->data.GetString()) == true)
 	{
 		int w, h;
 		uchar* data = NULL;
@@ -81,13 +87,15 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	/*if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
+	ChangeScene();
+
+	if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
 		App->LoadGame("save_game.xml");
 
 	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
 		App->SaveGame("save_game.xml");
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	/*if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y += 1;
 
 	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
@@ -102,12 +110,12 @@ bool j1Scene::Update(float dt)
 	if (App->player->playerData.x - (-App->render->camera.x + (App->render->camera.w / 2)) >= 0)
 	{
 		if (App->render->camera.x - App->render->camera.w > -(App->map->data.width*App->map->data.tile_width))
-			App->render->camera.x -= 5;
+			App->render->camera.x -= App->player->playerData.speed;
 	}
 	if (App->player->playerData.x - (-App->render->camera.x + (App->render->camera.w / 2)) <= 0)
 	{
 		if (App->render->camera.x < 0)
-			App->render->camera.x += 5;
+			App->render->camera.x += App->player->playerData.speed;
 	}
 
 	App->map->Draw();
@@ -159,5 +167,33 @@ bool j1Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	return true;
+}
+
+
+bool j1Scene::ChangeScene() {
+	if (App->map->IsCollidingWithGoal(App->player->playerData.x + App->player->playerData.w / 2, App->player->playerData.y + App->player->playerData.h, DOWN)
+		|| App->map->IsCollidingWithGoal(App->player->playerData.x + App->player->playerData.w / 2, App->player->playerData.y, UP)
+		|| App->map->IsCollidingWithGoal(App->player->playerData.x, App->player->playerData.y + App->player->playerData.h / 2, LEFT)
+		|| App->map->IsCollidingWithGoal(App->player->playerData.x + App->player->playerData.w, App->player->playerData.y + App->player->playerData.h / 2, RIGHT))
+	{
+		App->map->CleanUp();
+		App->tex->FreeTextures();
+		App->player->LoadPLayerTexture();
+		
+		/*App->audio->;*/
+
+		if (current_map->next == nullptr)
+			current_map = App->scene->maps.start;
+		else
+			current_map = App->scene->current_map->next;
+
+		App->map->Load(current_map->data.GetString());
+
+		App->render->camera.x = 0;
+		App->render->camera.y = 0;
+
+		App->player->SpawnPLayer();
+	}
 	return true;
 }
