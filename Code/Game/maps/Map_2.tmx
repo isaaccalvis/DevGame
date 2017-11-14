@@ -18,6 +18,7 @@
  </tileset>
  <layer name="CapaLogica" width="30" height="5" opacity="0.37">
   <data>
+   <tile gid="1"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
