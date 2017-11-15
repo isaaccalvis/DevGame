@@ -16,6 +16,7 @@ enum PLAYER_STATE {
 };
 
 enum LOOKING_DIRECTION {
+	L_NEUTRAL,
 	L_RIGHT,
 	L_LEFT
 };
@@ -24,6 +25,8 @@ struct PlayerData {
 
 	// VARIABLES
 	float x, y, w, h;
+	float speed = 6.0f;
+	float jumpSpeed = 10.0f;
 	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP, 7->Ghost_R, 8->Ghost_L, 9->Caient_R, 10->Caient_L
 	uint tempoJump, timeOnAir, tempoTP, tempoDead;
 	SDL_Texture* playerSprites;
@@ -59,10 +62,14 @@ public:
 	bool Update(float dt);
 	bool CleanUp();
 
+	void LoadPLayerTexture();
+
+	void SpawnPLayer();
+
 private:
 
 	void DrawPlayer();
-	void MovimentPlayer();
+	void MovementPlayer();
 	void ChargeAnimations();
 
 	void AccioTp();

@@ -4,6 +4,9 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "j1Map.h"
+#include "j1Scene.h"
+#include "j1Audio.h"
+#include "ModulePlayer.h"
 #include <math.h>
 
 j1Map::j1Map() : j1Module(), map_loaded(false)
@@ -47,6 +50,33 @@ void j1Map::ChargeColliders() {
 						for (int jj = 0; jj < cont; jj++) {
 							iPoint ret(x+ii, y+jj);
 							data.colliderOnMap.add(ret);
+
+						}
+				}
+				else if (tile_id == 10) {
+					int cont = 0;
+					while (cont < map_file.child("map").child("tileset").attribute("tilewidth").as_int()) {
+						cont += data.tile_width;
+					}
+					cont = cont / data.tile_width;
+					for (int ii = 0; ii < cont; ii++)
+						for (int jj = 0; jj < cont; jj++) {
+							iPoint ret(x + ii, y + jj);
+							data.winOnMap = ret;
+						}
+				}
+				else if (tile_id == 1) {
+					int cont = 0;
+					while (cont < map_file.child("map").child("tileset").attribute("tilewidth").as_int()) {
+						cont += data.tile_width;
+					}
+					cont = cont / data.tile_width;
+					for (int ii = 0; ii < cont; ii++)
+						for (int jj = 0; jj < cont; jj++) {
+							iPoint ret(x + ii, y + jj);
+							data.spawnOnMap = ret;
+							data.spawnOnMap.x *= data.tilesets.start->data->tile_width;
+							data.spawnOnMap.y *= data.tilesets.start->data->tile_height;
 						}
 				}
 				else if (tile_id == 5) {
@@ -68,10 +98,6 @@ void j1Map::ChargeColliders() {
 
 void j1Map::Draw()
 {
-	if (ac == false) {
-		ChargeColliders();		// AQUI ES CARREGUEN ELS COLLIDERS
-		ac = true;
-	}
 	if(map_loaded == false)
 		return;
 
@@ -106,7 +132,6 @@ void j1Map::Draw()
 //{
 //	if (map_loaded == false)
 //		return;
-//
 //	SDL_Rect* rect;
 //	int x, y, h, w;
 //	int layerss = 0;
@@ -252,6 +277,8 @@ bool j1Map::CleanUp()
 		item2 = item2->next;
 	}
 	data.layers.clear();
+	
+	data.colliderOnMap.clear();
 
 	// Clean up the pugui tree
 	map_file.reset();
@@ -339,6 +366,9 @@ bool j1Map::Load(const char* file_name)
 	}
 
 	map_loaded = ret;
+
+	ChargeColliders();		// AQUI ES CARREGUEN ELS COLLIDERS
+
 
 	return ret;
 }
@@ -674,6 +704,39 @@ bool j1Map::IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER po
 				}
 			break;
 		}
+	}
+	return ret;
+}
+
+bool j1Map::IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent) {
+	bool ret = false;
+	iPoint pos = WorldToMap(x, y);
+	iPoint rec = data.winOnMap;
+	switch (posCent) {
+	case POSITION_FROM_CENTER::DOWN:
+		if (rec.y >= pos.y)
+			if (rec.x == pos.x && rec.y == pos.y) {
+				ret = true;
+			}
+		break;
+	case POSITION_FROM_CENTER::UP:
+		if (rec.y <= pos.y)
+			if (rec.x == pos.x && rec.y == pos.y) {
+				ret = true;
+			}
+		break;
+	case POSITION_FROM_CENTER::LEFT:
+		if (rec.x <= pos.x)
+			if (rec.x == pos.x && rec.y == pos.y) {
+				ret = true;
+			}
+		break;
+	case POSITION_FROM_CENTER::RIGHT:
+		if (rec.x >= pos.x)
+			if (rec.x == pos.x && rec.y == pos.y) {
+				ret = true;
+			}
+		break;
 	}
 	return ret;
 }

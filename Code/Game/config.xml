@@ -11,13 +11,18 @@
   </renderer>
 
   <window>
-    <resolution width="1024" height="768" scale="1"/>
+    <resolution width="1024" height="640" scale="1"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
     <resizable value="false"/>
     <fullscreen_window value="false"/>
   </window>
 
+  <scene>
+    <maps name="Map_1.tmx"/>
+    <maps name="Map_2.tmx"/>
+  </scene>
+  
   <file_system>
     <path>data.zip</path>
   </file_system>

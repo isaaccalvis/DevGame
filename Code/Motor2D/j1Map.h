@@ -118,6 +118,8 @@ struct MapData
 	p2List<iPoint> colliderOnMap;
 	p2List<iPoint> walkableByEnemyOnMap;
 
+	iPoint winOnMap;
+	iPoint spawnOnMap;
 };
 
 // ----------------------------------------------------
@@ -139,8 +141,9 @@ public:
 
 	void ChargeColliders();
 	bool ac = false;
-	bool IsCollidingWithColliderTerrain(int x, int y, POSITION_FROM_CENTER posCent);
 	bool IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent);
 private:
 
 	bool LoadMap();
