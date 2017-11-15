@@ -128,10 +128,10 @@ void ModulePlayer::DrawPlayer() {
 }
 
 void ModulePlayer::MovimentPlayer() {
-	col[0] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y + playerData.h, DOWN);
-	col[1] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y, UP);
-	col[2] = App->map->IsCollidingWithTerrain(playerData.x, playerData.y + playerData.h / 2, LEFT);
-	col[3] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w, playerData.y + playerData.h / 2, RIGHT);
+	col[0] = App->map->IsCollidingWithColliderTerrain(playerData.x + playerData.w / 2, playerData.y + playerData.h, DOWN);
+	col[1] = App->map->IsCollidingWithColliderTerrain(playerData.x + playerData.w / 2, playerData.y, UP);
+	col[2] = App->map->IsCollidingWithColliderTerrain(playerData.x, playerData.y + playerData.h / 2, LEFT);
+	col[3] = App->map->IsCollidingWithColliderTerrain(playerData.x + playerData.w, playerData.y + playerData.h / 2, RIGHT);
 	// 0-Down, 1-Up, 2-Left, 3-Right
 
 	switch (playerData.playerState) {

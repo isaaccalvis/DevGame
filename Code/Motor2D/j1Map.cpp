@@ -49,6 +49,18 @@ void j1Map::ChargeColliders() {
 							data.colliderOnMap.add(ret);
 						}
 				}
+				else if (tile_id == 5) {
+					int cont = 0;
+					while (cont < map_file.child("map").child("tileset").attribute("tilewidth").as_int()) {
+						cont += data.tile_width;
+					}
+					cont = cont / data.tile_width;
+					for (int ii = 0; ii < cont; ii++)
+						for (int jj = 0; jj < cont; jj++) {
+							iPoint ret(x + ii, y + jj);
+							data.walkableByEnemyOnMap.add(ret);
+						}
+				}
 			}
 		}
 	}
@@ -588,7 +600,7 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 //	return RETURN_TILE_TYPE::NORMAL;
 //}
 
-bool j1Map::IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent) {
+bool j1Map::IsCollidingWithColliderTerrain(int x, int y, POSITION_FROM_CENTER posCent) {
 	bool ret = false;
 	iPoint pos = WorldToMap(x, y);
 	p2List_item<iPoint>* rec = data.colliderOnMap.start;
@@ -623,13 +635,45 @@ bool j1Map::IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent) {
 					}
 			break;
 		}
-		//if (rec->data.x == pos.x) {
-		//	if (rec->data.y == pos.y) {
-		//		printf_s("%i, %i ::: %i, %i\n", pos.x, pos.y, rec->data.x, rec->data.y);
-		//		ret = true;
-		//		rec = data.colliderOnMap.end;
-		//	}
-		//}
+	}
+	return ret;
+}
+
+bool j1Map::IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent) {
+	bool ret = false;
+	iPoint pos = WorldToMap(x, y);
+	p2List_item<iPoint>* rec = data.walkableByEnemyOnMap.start;
+	for (; rec != nullptr; rec = rec->next) {
+		switch (posCent) {
+		case POSITION_FROM_CENTER::DOWN:
+			if (rec->data.y >= pos.y)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::UP:
+			if (rec->data.y <= pos.y)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::LEFT:
+			if (rec->data.x <= pos.x)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::RIGHT:
+			if (rec->data.x >= pos.x)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		}
 	}
 	return ret;
 }

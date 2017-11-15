@@ -28,7 +28,8 @@ public:
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction);
-	void Jump(float x, float y);
+	void Jump(LOOKING_DIRECTION direction);
+	void gravityFall();
 
 private:
 
@@ -48,6 +49,8 @@ private:
 
 	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL
 	bool canAtacPlayer;
+	bool col[4];
+	bool walkable[4];
 };
 
 #endif

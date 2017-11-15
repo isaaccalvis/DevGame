@@ -14,6 +14,11 @@ enum POSITION_FROM_CENTER {
 	RIGHT
 };
 
+enum MAP_OBJECTS_TYPES {
+	TERRAIN_COLLIDER,
+	WALKABLE_BY_ENEMY
+};
+
 //enum RETURN_TILE_TYPE {
 //	NORMAL,
 //	COLLIDER,
@@ -111,6 +116,8 @@ struct MapData
 	p2List<TileSet*>	tilesets;
 	p2List<MapLayer*>	layers;
 	p2List<iPoint> colliderOnMap;
+	p2List<iPoint> walkableByEnemyOnMap;
+
 };
 
 // ----------------------------------------------------
@@ -132,7 +139,8 @@ public:
 
 	void ChargeColliders();
 	bool ac = false;
-	bool IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithColliderTerrain(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent);
 private:
 
 	bool LoadMap();
