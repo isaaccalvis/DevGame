@@ -3,6 +3,7 @@
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
+#include "ModuleEnemies.h"
 #include "j1Map.h"
 #include "j1Scene.h"
 #include "j1Audio.h"
@@ -30,6 +31,8 @@ bool j1Map::Awake(pugi::xml_node& config)
 }
 
 void j1Map::ChargeColliders() {
+	clearCollideRectList();
+	App->enemies->clearEnemies();
 	p2List_item<MapLayer*>* item = data.layers.start;
 	for (; item != NULL; item = item->next)
 	{
@@ -732,22 +735,6 @@ bool j1Map::IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_
 	return ret;
 }
 
-//bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent) {
-//	bool ret = false;
-//	p2List_item<SDL_Rect>* rec = data.collidersOnMapRect.start;
-//	while (rec != nullptr) {
-//		if (rect.x < rec->data.x + rec->data.w &&
-//			rect.x + rect.w > rec->data.x &&
-//			rect.y < rec->data.y + rec->data.h &&
-//			rect.h + rect.y > rec->data.y) {
-//			ret = true;
-//			rec = data.collidersOnMapRect.end;
-//		}
-//		rec = rec->next;
-//	}
-//	return ret;
-//}
-
 bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent) {
 	bool ret = false;
 	p2List_item<SDL_Rect>* rec = data.collidersOnMapRect.start;
@@ -816,6 +803,15 @@ void j1Map::deleteColliderPoint(int x, int y) {
 		}
 	}
 	delete rec;
+}
+
+void j1Map::clearCollideRectList() {
+	p2List_item<SDL_Rect>* rec = data.collidersOnMapRect.start;
+	while (rec != nullptr) {
+		p2List_item<SDL_Rect>* aux = rec;
+		rec = rec->next;
+		data.collidersOnMapRect.del(aux);
+	}
 }
 
 bool j1Map::IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent) {

@@ -32,18 +32,23 @@ void EnemyWalker::UpdateInfo() {
 	else
 		enemyWalkerLookingDirection = L_LEFT;
 	// MIRAR SI TOCA AL PLAYER
-	if (enemyWalkerState != E_JUMP && enemyWalkerState != E_DEAD && enemyWalkerState != E_SMOKE) {
+	if (enemyWalkerState != E_JUMP && enemyWalkerState != E_DEAD && enemyWalkerState != E_SMOKE && enemyWalkerState != E_ATAC) {
+		printf_s("a");
 		if (enemyWalkerLookingDirection == L_RIGHT) {
 			if (App->player->playerData.x - x < DISTANCIA_MIN_ATAC)
 				if (App->player->playerData.y < y) {
-					if (App->player->playerData.y - y > -10 && y - App->player->playerData.y < 10)
+					if (App->player->playerData.y - y > -10 && y - App->player->playerData.y < 10) {
 						enemyWalkerState = E_ATAC;
+						tempoAtac = SDL_GetTicks() + 600;
+					}
 					else
 						enemyWalkerState = E_STAND;
 				}
 				else {
-					if (y - App->player->playerData.y > -10 && App->player->playerData.y - y < 10)
+					if (y - App->player->playerData.y > -10 && App->player->playerData.y - y < 10) {
 						enemyWalkerState = E_ATAC;
+						tempoAtac = SDL_GetTicks() + 600;
+					}
 					else
 						enemyWalkerState = E_STAND;
 				}
@@ -53,14 +58,18 @@ void EnemyWalker::UpdateInfo() {
 		else {
 			if (x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
 				if (App->player->playerData.y < y) {
-					if (App->player->playerData.y - y > -10 && y - App->player->playerData.y < 10)
+					if (App->player->playerData.y - y > -10 && y - App->player->playerData.y < 10) {
 						enemyWalkerState = E_ATAC;
+						tempoAtac = SDL_GetTicks() + 600;
+					}
 					else
 						enemyWalkerState = E_STAND;
 				}
 				else {
-					if (y - App->player->playerData.y > -10 && App->player->playerData.y - y < 10)
+					if (y - App->player->playerData.y > -10 && App->player->playerData.y - y < 10) {
 						enemyWalkerState = E_ATAC;
+						tempoAtac = SDL_GetTicks() + 600;
+					}
 					else
 						enemyWalkerState = E_STAND;
 				}
@@ -102,7 +111,10 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 			Jump(L_RIGHT);
 			break;
 		case E_ATAC:
-
+			if (tempoAtac < SDL_GetTicks())
+				enemyWalkerState = E_STAND;
+			else if (tempoAtac - SDL_GetTicks() < 200)
+				App->player->receivDamageByPosition(SDL_Rect{ (int)(x + w / 2),(int)y,(int)w,(int)h });
 			break;
 		case E_DEAD:
 			gravityFall();
@@ -131,7 +143,10 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 			Jump(L_LEFT);
 			break;
 		case E_ATAC:
-
+			if (tempoAtac < SDL_GetTicks())
+				enemyWalkerState = E_STAND;
+			else if (tempoAtac - SDL_GetTicks() < 200)
+				App->player->receivDamageByPosition(SDL_Rect{ (int)(x - w / 2),(int)y,(int)w,(int)h });
 			break;
 		case E_DEAD:
 			gravityFall();
@@ -202,8 +217,8 @@ void EnemyWalker::ChargeAnimations() {
 	Stand_R.PushBack({ 56, 0, 50, 65 });
 	Stand_R.speed = 0.08f;
 
-	Stand_L.PushBack({ 387, 0, 50, 65 });
 	Stand_L.PushBack({ 436, 0, 50, 65 });
+	Stand_L.PushBack({ 387, 0, 50, 65 });
 	Stand_L.speed = 0.08f;
 
 	Walk_R.PushBack({ 0, 70, 42, 65 });
@@ -212,10 +227,10 @@ void EnemyWalker::ChargeAnimations() {
 	Walk_R.PushBack({ 154, 70, 42, 65 });
 	Walk_R.speed = 0.25f;
 
-	Walk_L.PushBack({ 290, 70, 42, 65 });
-	Walk_L.PushBack({ 340, 70, 42, 65 });
-	Walk_L.PushBack({ 391, 70, 42, 65 });
 	Walk_L.PushBack({ 444, 70, 42, 65 });
+	Walk_L.PushBack({ 391, 70, 42, 65 });
+	Walk_L.PushBack({ 340, 70, 42, 65 });
+	Walk_L.PushBack({ 290, 70, 42, 65 });
 	Walk_L.speed = 0.25f;
 
 	Jump_R.PushBack({ 1, 269, 50 , 64 });
@@ -225,24 +240,27 @@ void EnemyWalker::ChargeAnimations() {
 	Jump_R.loop = false;
 	Jump_R.speed = 0.25f;
 
-	Jump_L.PushBack({ 274, 269, 50 , 64 });
-	Jump_L.PushBack({ 329, 269, 50 , 64 });
-	Jump_L.PushBack({ 382, 269, 50 , 64 });
 	Jump_L.PushBack({ 436, 269, 50 , 64 });
+	Jump_L.PushBack({ 382, 269, 50 , 64 });
+	Jump_L.PushBack({ 329, 269, 50 , 64 });
+	Jump_L.PushBack({ 274, 269, 50 , 64 });
 	Jump_L.loop = false;
 	Jump_L.speed = 0.25f;
+
 
 	Atac_R.PushBack({ 1, 160, 50, 70 });
 	Atac_R.PushBack({ 59, 160, 50, 70 });
 	Atac_R.PushBack({ 119, 160, 50, 70 });
 	Atac_R.PushBack({ 175, 160, 50, 70 });
-	Atac_R.speed = 0.1f;
+	Atac_R.speed = 0.15f;
+	Atac_R.loop = false;
 
-	Atac_L.PushBack({ 258, 160, 50, 70 });
-	Atac_L.PushBack({ 322, 160, 50, 70 });
-	Atac_L.PushBack({ 381, 160, 50, 70 });
 	Atac_L.PushBack({ 436, 160, 50, 70 });
-	Atac_L.speed = 0.1f;
+	Atac_L.PushBack({ 381, 160, 50, 70 });
+	Atac_L.PushBack({ 322, 160, 50, 70 });
+	Atac_L.PushBack({ 258, 160, 50, 70 });
+	Atac_L.speed = 0.15f;
+	Atac_L.loop = false;
 
 	Dead_R.PushBack({ 8, 342, 50, 65 });
 	Dead_R.PushBack({ 68, 342, 50, 65 });

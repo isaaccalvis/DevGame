@@ -68,3 +68,12 @@ void ModuleEnemies::receivDamageEnemyAtThisPosition(SDL_Rect rect) {
 		rec = rec->next;
 	}
 }
+
+void ModuleEnemies::clearEnemies() {
+	p2List_item<BaseEnemy*>* rec = enemies.start;
+	while (rec != nullptr) {
+		p2List_item<BaseEnemy*>* aux = rec;
+		rec = rec->next;
+		enemies.del(aux);
+	}
+}

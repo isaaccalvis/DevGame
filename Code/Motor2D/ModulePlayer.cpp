@@ -58,17 +58,7 @@ void ModulePlayer::MovementPlayer() {
 	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, LEFT);
 	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x + (int)playerData.w, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, RIGHT);
 
-	printf_s("%i %i %i %i \n", (int)playerData.x, (int)playerData.y, (int)playerData.w, (int)playerData.h);
-	printf_s("%i %i %i %i \n", col[0], col[1], col[2], col[3]);
-
-	/*col[0] = App->map->IsCollidingWithTerraint(playerData.x + playerData.w / 2, playerData.y + playerData.h, DOWN);
-	col[1] = App->map->IsCollidingWithTerraint(playerData.x + playerData.w / 2, playerData.y, UP);
-	col[2] = App->map->IsCollidingWithTerraint(playerData.x, playerData.y + playerData.h / 2, LEFT);
-	col[3] = App->map->IsCollidingWithTerraint(playerData.x + playerData.w, playerData.y + playerData.h / 2, RIGHT);*/
-	// 0-Down, 1-Up, 2-Left, 3-Right
-
 	switch (playerData.playerState) {
-
 	case STAND:
 		AccioMovLaterals(col);
 		AccioMovJump_Gravity(col);
@@ -248,17 +238,13 @@ void ModulePlayer::ChargeAnimations() {
 	playerData.playerAnimation_CAIENT_L.PushBack({ 59, 345, 50, 80 });
 	playerData.playerAnimation_CAIENT_L.loop = false;
 
-	//playerData.playerAnimation_ATAC_R.PushBack({ 0,643,35 ,78 });
 	playerData.playerAnimation_ATAC_R.PushBack({ 47,643,35 ,78 });
 	playerData.playerAnimation_ATAC_R.PushBack({ 89,643,69 ,78 });
-	//playerData.playerAnimation_ATAC_R.PushBack({ 47,643,35 ,78 });
-	//playerData.playerAnimation_ATAC_R.PushBack({ 0,643,35 ,78 });
 	playerData.playerAnimation_ATAC_R.speed = 0.2f;
 	playerData.playerAnimation_ATAC_R.loop = false;
 
 	playerData.playerAnimation_ATAC_L.PushBack({ 252 ,643,35 ,78 });
 	playerData.playerAnimation_ATAC_L.PushBack({ 179 ,643,69 ,78 });
-	//playerData.playerAnimation_ATAC_L.PushBack({ 296,643,35 ,78 });
 	playerData.playerAnimation_ATAC_L.speed = 0.2f;
 	playerData.playerAnimation_ATAC_L.loop = false;
 }
@@ -362,6 +348,14 @@ void ModulePlayer::DrawPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
+void ModulePlayer::receivDamageByPosition(SDL_Rect rect) {
+	if (rect.x < playerData.x + playerData.w &&
+		rect.x + rect.w > playerData.x &&
+		rect.y < playerData.y + playerData.h &&
+		rect.h + rect.y > playerData.y)
+		playerData.playerState = PLAYER_STATE::DEAD;
+}
+
 bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 	bool ret = false;
 	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
@@ -405,21 +399,20 @@ void ModulePlayer::AccioTp() {
 	}
 }
 
-void ModulePlayer::RecolocarPeusPlayer() {
-
-	//int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
-	//if (col[0] == true && comprobacio < 5) {
-	//	float aux = (playerData.y + playerData.h) * -1;
-	//	while (aux < 0) {
-	//		aux += App->map->data.tile_height;
-	//	}
-	//	aux -= App->map->data.tile_height;
-	//	playerData.y -= aux;
-	//}
-	printf_s("Aquesta funcio no esta acabada !!!!!!!!!!!");
-}
+//void ModulePlayer::RecolocarPeusPlayer() {
+//	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
+//	if (col[0] == true && comprobacio < 5) {
+//		float aux = (playerData.y + playerData.h) * -1;
+//		while (aux < 0) {
+//			aux += App->map->data.tile_height;
+//		}
+//		aux -= App->map->data.tile_height;
+//		playerData.y -= aux;
+//	}
+//}
 
 void ModulePlayer::Atac() {
+
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
 		playerData.tempoAtac = SDL_GetTicks() + 400;
 		playerData.playerState = PLAYER_STATE::ATAC;

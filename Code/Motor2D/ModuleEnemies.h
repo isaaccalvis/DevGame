@@ -25,7 +25,7 @@ public:
 	void addEnemy(ENEMY_TYPES type, float x, float y);
 	void updateEnemies();
 	void receivDamageEnemyAtThisPosition(SDL_Rect rect);
-
+	void clearEnemies();
 private:
 	p2List<BaseEnemy*> enemies;
 

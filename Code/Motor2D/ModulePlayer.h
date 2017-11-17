@@ -66,8 +66,8 @@ public:
 	bool CleanUp();
 
 	void LoadPLayerTexture();
-
 	void SpawnPLayer();
+	void receivDamageByPosition(SDL_Rect rect);
 
 private:
 

@@ -147,6 +147,7 @@ public:
 	bool IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_CENTER posCent);
 	bool IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent);
 	void deleteColliderPoint(int x, int y);
+	void clearCollideRectList();
 	bool IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent);
 private:
 

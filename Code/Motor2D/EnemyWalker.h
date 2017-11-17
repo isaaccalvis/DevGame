@@ -31,7 +31,6 @@ public:
 	void Move(LOOKING_DIRECTION direction);
 	void Jump(LOOKING_DIRECTION direction);
 	void gravityFall();
-
 private:
 
 	ENEMY_WALKER_STATES enemyWalkerState;
@@ -50,7 +49,7 @@ private:
 	Animation Smoke;
 
 	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL, 10->smoke
-	uint tempoSmokeJump;
+	uint tempoSmokeJump, tempoAtac;
 	bool canAtacPlayer;
 	bool col[4];
 	bool walkable[4];
