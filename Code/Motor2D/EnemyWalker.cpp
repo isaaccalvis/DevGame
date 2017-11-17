@@ -32,7 +32,7 @@ void EnemyWalker::UpdateInfo() {
 	else
 		enemyWalkerLookingDirection = L_LEFT;
 	// MIRAR SI TOCA AL PLAYER
-	if (enemyWalkerState != E_JUMP && enemyWalkerState != E_DEAD) {
+	if (enemyWalkerState != E_JUMP && enemyWalkerState != E_DEAD && enemyWalkerState != E_SMOKE) {
 		if (enemyWalkerLookingDirection == L_RIGHT) {
 			if (App->player->playerData.x - x < DISTANCIA_MIN_ATAC)
 				if (App->player->playerData.y < y) {
@@ -68,11 +68,15 @@ void EnemyWalker::UpdateInfo() {
 				enemyWalkerState = E_WALK;
 		}
 	}
+	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)x, (int)y, (int)w, (int)h }, DOWN);
+	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)x, (int)y, (int)w, (int)h }, UP);
+	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)x, (int)y, (int)w, (int)h }, LEFT);
+	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)x, (int)y, (int)w, (int)h }, RIGHT);
 
-	col[0] = App->map->IsCollidingWithColliderTerrain(x + w / 2, y + h, DOWN);
-	col[1] = App->map->IsCollidingWithColliderTerrain(x + w / 2, y, UP);
-	col[2] = App->map->IsCollidingWithColliderTerrain(x, y + h / 2, LEFT);
-	col[3] = App->map->IsCollidingWithColliderTerrain(x + w, y + h / 2, RIGHT);
+	//col[0] = App->map->IsCollidingWithTerrain(x + w / 2, y + h, DOWN);
+	//col[1] = App->map->IsCollidingWithTerrain(x + w / 2, y, UP);
+	//col[2] = App->map->IsCollidingWithTerrain(x, y + h / 2, LEFT);
+	//col[3] = App->map->IsCollidingWithTerrain(x + w, y + h / 2, RIGHT);
 
 	walkable[0] = App->map->IsCollidingWithWalkableByEnemy(x + w / 2, y + h, DOWN);
 	walkable[1] = App->map->IsCollidingWithWalkableByEnemy(x + w / 2, y, UP);
@@ -103,6 +107,10 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 		case E_DEAD:
 			gravityFall();
 			break;
+		case E_SMOKE:
+			if (tempoSmokeJump < SDL_GetTicks())
+				enemyWalkerState = E_STAND;
+			break;
 		}
 	}
 	else {
@@ -128,6 +136,10 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 		case E_DEAD:
 			gravityFall();
 			break;
+		case E_SMOKE:
+			if (tempoSmokeJump < SDL_GetTicks())
+				enemyWalkerState = E_STAND;
+			break;
 		}
 	}
 }
@@ -136,41 +148,53 @@ void EnemyWalker::Jump(LOOKING_DIRECTION direction) {
 	// SEARCH NEXT BLOC TO JUMP
 	float nx = -1;
 	float ny = -1;
-	if (enemyWalkerLookingDirection == L_RIGHT) {
-		for (int i = -4; i < 4; i++)
-			for (int j = 3; j > 0; j--) {
-				if (App->map->IsCollidingWithWalkableByEnemy(x + i, y + j, RIGHT) == true) {
-					nx = x + i;
-					ny = y + j;
-					j = 0;
-					i = 4;
+	if (nx == -1) {
+		if (enemyWalkerLookingDirection == L_RIGHT) {
+			for (int i = -4; i < 4; i++)
+				for (int j = 3; j > 1; j--) {
+					if (App->map->IsCollidingWithWalkableByEnemy(x + i, y + j, RIGHT) == true) {
+						nx = x + i * App->map->data.tile_width;
+						ny = y + j * App->map->data.tile_height;
+						i = 4;
+						j = 1;
+					}
 				}
-			}
-	}
-	else {
-		for (int i = -4; i < 4; i++)
-			for (int j = -3; j < -1; j++) {
-				if (App->map->IsCollidingWithWalkableByEnemy(x + i, y + j, LEFT) == true) {
-					nx = x + i;
-					ny = y + i;
-					j = -1;
-					i = 4;
+		}
+		else {
+			for (int i = -4; i < 4; i++)
+				for (int j = -3; j < 0; j++) {
+					if (App->map->IsCollidingWithWalkableByEnemy(x + i, y + j, LEFT) == true) {
+						nx = x + i * App->map->data.tile_width;
+						ny = y + j * App->map->data.tile_height;
+						j = 0;
+						i = 4;
+					}
 				}
-			}
+		}
 	}
 
-//	if (nx != -1) {
+	if (nx != -1) {
 		float xRes = nx - this->x;
 		float yRes = ny - this->y;
-		x -= xRes / 3;
-		y -= yRes / 3;
-		printf_s("%f %f ,, %f %f ::", nx, ny, x, y);
-		printf_s("%f %f\n", xRes / 3, yRes / 3);
+		if (xRes < 0) {
+			x -= xRes / 3;
+			y -= yRes / 3;
+			enemyWalkerState = E_SMOKE;
+			tempoSmokeJump = SDL_GetTicks() + 1000;
+		}
+		else {
+			x -= xRes / 3;
+			y -= yRes / 3;
+			enemyWalkerState = E_SMOKE;
+			tempoSmokeJump = SDL_GetTicks() + 1000;
+		}
+		printf_s("%f %f -- %f %f\n\n ", nx, ny, xRes / 3, yRes / 3);
+	}
+
+	//if (walkable[0] == true && walkable[3] == true && walkable[2] == true) {
+	//	enemyWalkerState = E_SMOKE;
 
 	//}
-
-	if (walkable[0] == true && walkable[3] == true && walkable[2] == true)
-		enemyWalkerState = E_STAND;
 }
 
 void EnemyWalker::ChargeAnimations() {
@@ -228,6 +252,9 @@ void EnemyWalker::ChargeAnimations() {
 	Dead_L.PushBack({ 369, 342, 50, 65 });
 	Dead_L.speed = 0.1f;
 
+	Smoke.PushBack({201, 0, 73, 85});
+	Smoke.PushBack({ 201, 331, 73, 85 });
+	Smoke.speed = 0.025f;
 }
 
 void EnemyWalker::Draw() {
@@ -264,6 +291,12 @@ void EnemyWalker::Draw() {
 					controladorAnimations = 8;
 				}
 				break;
+			case E_SMOKE:
+				if (controladorAnimations != 10) {
+					enemyAnim = Smoke;
+					controladorAnimations = 10;
+				}
+				break;
 			}
 		else
 			switch (enemyWalkerState) {
@@ -295,6 +328,12 @@ void EnemyWalker::Draw() {
 				if (controladorAnimations != 9) {
 					enemyAnim = Dead_L;
 					controladorAnimations = 9;
+				}
+				break;
+			case E_SMOKE:
+				if (controladorAnimations != 10) {
+					enemyAnim = Smoke;
+					controladorAnimations = 10;
 				}
 				break;
 			}

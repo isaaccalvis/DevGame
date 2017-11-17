@@ -1,6 +1,7 @@
 #include "j1App.h"
 #include "ModuleEnemies.h"
 #include "EnemyWalker.h"
+#include "EnemyBat.h"
 
 ModuleEnemies::ModuleEnemies() {}
 ModuleEnemies::~ModuleEnemies() {}
@@ -34,6 +35,9 @@ void ModuleEnemies::addEnemy(ENEMY_TYPES type , float x, float y) {
 	case E_WALKER:
 		b = new EnemyWalker(x, y);
 		break;
+	case E_BAT:
+		b = new EnemyBat(x, y);
+		break;
 	}
 	enemies.add(b);
 }
@@ -45,6 +49,20 @@ void ModuleEnemies::updateEnemies() {
 			rec->data->Update();
 		else {
 			delete rec->data;
+			enemies.del(rec);
+		}
+		rec = rec->next;
+	}
+}
+
+void ModuleEnemies::receivDamageEnemyAtThisPosition(SDL_Rect rect) {
+	p2List_item<BaseEnemy*>* rec = enemies.start;
+	while (rec != nullptr) {
+		if (rect.x < rec->data->x + rec->data->w &&
+			rect.x + rect.w > rec->data->x &&
+			rect.y < rec->data->y + rec->data->h &&
+			rect.h + rect.y > rec->data->y){
+			rec->data->~BaseEnemy();
 			enemies.del(rec);
 		}
 		rec = rec->next;

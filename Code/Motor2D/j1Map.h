@@ -116,6 +116,7 @@ struct MapData
 	p2List<TileSet*>	tilesets;
 	p2List<MapLayer*>	layers;
 	p2List<iPoint> colliderOnMap;
+	p2List<SDL_Rect> collidersOnMapRect;
 	p2List<iPoint> walkableByEnemyOnMap;
 
 	iPoint winOnMap;
@@ -140,9 +141,12 @@ public:
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
 
 	void ChargeColliders();
+	void CompressColliders();
 	bool ac = false;
 	bool IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent);
-	bool IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent);
+	void deleteColliderPoint(int x, int y);
 	bool IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent);
 private:
 
