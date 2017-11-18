@@ -117,7 +117,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 			if (tempoAtac < SDL_GetTicks())
 				enemyWalkerState = E_STAND;
 			else if (tempoAtac - SDL_GetTicks() < 200)
-				App->player->receivDamageByPosition(SDL_Rect{ (int)(pos.x + w / 2),(int)pos.y,(int)w,(int)h });
+				App->player->receiveDamageByPosition(SDL_Rect{ (int)(pos.x + w / 2),(int)pos.y,(int)w,(int)h });
 			break;
 		case E_DEAD:
 			gravityFall();
@@ -149,7 +149,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 			if (tempoAtac < SDL_GetTicks())
 				enemyWalkerState = E_STAND;
 			else if (tempoAtac - SDL_GetTicks() < 200)
-				App->player->receivDamageByPosition(SDL_Rect{ (int)(pos.x - w / 2),(int)pos.y,(int)w,(int)h });
+				App->player->receiveDamageByPosition(SDL_Rect{ (int)(pos.x - w / 2),(int)pos.y,(int)w,(int)h });
 			break;
 		case E_DEAD:
 			gravityFall();

@@ -199,7 +199,7 @@ int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 			PathList neighbours;
 			close.list.end->data.FindWalkableAdjacents(neighbours); // Fill a list of all adjancent nodes
 
-			for (p2List_item<PathNode>* it = neighbours.list.start; it->next != nullptr; it = it->next) // Iterate adjancent nodes:
+			for (p2List_item<PathNode>* it = neighbours.list.start; it != nullptr; it = it->next) // Iterate adjancent nodes:
 			{
 				if (close.Find(it->data.pos) == NULL) // ignore nodes in the closed list
 				{

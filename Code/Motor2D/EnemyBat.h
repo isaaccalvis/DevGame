@@ -26,7 +26,7 @@ public:
 	void ChargeAnimations();
 	void Draw();
 	void UpdateInfo();
-	void Move(LOOKING_DIRECTION direction);
+	void Move(LOOKING_DIRECTION direction, float dt);
 
 	p2DynArray<iPoint>* lastpath;
 

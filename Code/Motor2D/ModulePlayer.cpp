@@ -19,7 +19,7 @@ bool ModulePlayer::Start() {
 	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
 	playerData.tempoJump = 0;
 	playerData.timeOnAir = 300;
-	playerData.contadorAuxiliarAnimacions = 0;
+	playerData.contAuxAnim = 0;
 	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
 	playerData.tempoTP = 0;
 	playerData.tempoDead = -1;
@@ -70,18 +70,18 @@ void ModulePlayer::MovementPlayer() {
 	case STAND:
 		AccioMovLaterals(col);
 		AccioMovJump_Gravity(col);
-		AccioTp();
-		Atac();
-		//RecolocarPeusPlayer();
+		ActionTp();
+		Attack();
+		RelocatePlayer();
 		break;
 
 	case RUNING:
 		if (!AccioMovLaterals(col))
 			playerData.playerState = PLAYER_STATE::STAND;
 		AccioMovJump_Gravity(col);
-		AccioTp();
-		Atac();
-		//RecolocarPeusPlayer();
+		ActionTp();
+		Attack();
+		RelocatePlayer();
 		break;
 
 	case JUMPING:
@@ -105,8 +105,8 @@ void ModulePlayer::MovementPlayer() {
 		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false)
 			playerData.x -= playerData.speed * dt;
 
-		AccioTp();
-		Atac();
+		ActionTp();
+		Attack();
 		break;
 
 	case HABILITY_Q:
@@ -146,7 +146,7 @@ void ModulePlayer::MovementPlayer() {
 		if (playerData.tempoDead == -1) {
 			playerData.tempoDead = SDL_GetTicks() + 500;
 			playerData.playerAnim = playerData.playerAnimation_DEAD;
-			playerData.contadorAuxiliarAnimacions = 5;
+			playerData.contAuxAnim = 5;
 		}
 		else {
 			if (playerData.tempoDead < SDL_GetTicks()) {
@@ -160,7 +160,7 @@ void ModulePlayer::MovementPlayer() {
 			}
 		}
 		break;
-	case PLAYER_STATE::ATAC:
+	case PLAYER_STATE::ATTACK:
 		if (playerData.lookingWay == L_RIGHT) {
 			if (playerData.tempoAtac - SDL_GetTicks() < 350 && playerData.tempoAtac - SDL_GetTicks() > 200)
 				App->enemies->receivDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x + playerData.w), (int)playerData.y, (int)(playerData.w / 2), (int)playerData.h });
@@ -243,21 +243,21 @@ void ModulePlayer::ChargeAnimations() {
 	playerData.playerAnimation_GHOST_L.PushBack({ 323,442,32,40 });
 	playerData.playerAnimation_GHOST_L.speed = 0.25f;
 
-	playerData.playerAnimation_CAIENT_R.PushBack({ 283, 247, 50, 80 });
-	playerData.playerAnimation_CAIENT_R.loop = false;
+	playerData.playerAnimation_FALLING_R.PushBack({ 283, 247, 50, 80 });
+	playerData.playerAnimation_FALLING_R.loop = false;
 
-	playerData.playerAnimation_CAIENT_L.PushBack({ 59, 345, 50, 80 });
-	playerData.playerAnimation_CAIENT_L.loop = false;
+	playerData.playerAnimation_FALLING_L.PushBack({ 59, 345, 50, 80 });
+	playerData.playerAnimation_FALLING_L.loop = false;
 
-	playerData.playerAnimation_ATAC_R.PushBack({ 47,643,35 ,78 });
-	playerData.playerAnimation_ATAC_R.PushBack({ 89,643,69 ,78 });
-	playerData.playerAnimation_ATAC_R.speed = 0.2f;
-	playerData.playerAnimation_ATAC_R.loop = false;
+	playerData.playerAnimation_ATTACK_R.PushBack({ 47,643,35 ,78 });
+	playerData.playerAnimation_ATTACK_R.PushBack({ 89,643,69 ,78 });
+	playerData.playerAnimation_ATTACK_R.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_R.loop = false;
 
-	playerData.playerAnimation_ATAC_L.PushBack({ 252 ,643,35 ,78 });
-	playerData.playerAnimation_ATAC_L.PushBack({ 179 ,643,69 ,78 });
-	playerData.playerAnimation_ATAC_L.speed = 0.2f;
-	playerData.playerAnimation_ATAC_L.loop = false;
+	playerData.playerAnimation_ATTACK_L.PushBack({ 252 ,643,35 ,78 });
+	playerData.playerAnimation_ATTACK_L.PushBack({ 179 ,643,69 ,78 });
+	playerData.playerAnimation_ATTACK_L.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_L.loop = false;
 }
 
 void ModulePlayer::DrawPlayer() {
@@ -266,30 +266,30 @@ void ModulePlayer::DrawPlayer() {
 	case PLAYER_STATE::STAND:
 		if (playerData.lookingWay == L_RIGHT) {
 			if (col[0] == true) {
-				if (playerData.contadorAuxiliarAnimacions != -1) {
+				if (playerData.contAuxAnim != -1) {
 					playerData.playerAnim = playerData.playerAnimation_STAND_R;
-					playerData.contadorAuxiliarAnimacions = -1;
+					playerData.contAuxAnim = -1;
 				}
 			}
 			else {
-				if (playerData.contadorAuxiliarAnimacions != 9) {
-					playerData.playerAnim = playerData.playerAnimation_CAIENT_R;
-					playerData.contadorAuxiliarAnimacions = 9;
+				if (playerData.contAuxAnim != 9) {
+					playerData.playerAnim = playerData.playerAnimation_FALLING_R;
+					playerData.contAuxAnim = 9;
 				}
 			}
 
 		}
 		else if (playerData.lookingWay == L_LEFT) {
 			if (col[0] == true) {
-				if (playerData.contadorAuxiliarAnimacions != 0) {
+				if (playerData.contAuxAnim != 0) {
 					playerData.playerAnim = playerData.playerAnimation_STAND_L;
-					playerData.contadorAuxiliarAnimacions = 0;
+					playerData.contAuxAnim = 0;
 				}
 			}
 			else {
-				if (playerData.contadorAuxiliarAnimacions != 10) {
-					playerData.playerAnim = playerData.playerAnimation_CAIENT_L;
-					playerData.contadorAuxiliarAnimacions = 10;
+				if (playerData.contAuxAnim != 10) {
+					playerData.playerAnim = playerData.playerAnimation_FALLING_L;
+					playerData.contAuxAnim = 10;
 				}
 			}
 		}
@@ -297,59 +297,59 @@ void ModulePlayer::DrawPlayer() {
 
 	case PLAYER_STATE::RUNING:
 		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 1) {
+			if (playerData.contAuxAnim != 1) {
 				playerData.playerAnim = playerData.playerAnimation_RUN_R;
-				playerData.contadorAuxiliarAnimacions = 1;
+				playerData.contAuxAnim = 1;
 			}
 		}
 		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 2) {
+			if (playerData.contAuxAnim != 2) {
 				playerData.playerAnim = playerData.playerAnimation_RUN_L;
-				playerData.contadorAuxiliarAnimacions = 2;
+				playerData.contAuxAnim = 2;
 			}
 		}
 		break;
 
 	case PLAYER_STATE::JUMPING:
 		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 3) {
+			if (playerData.contAuxAnim != 3) {
 				playerData.playerAnim = playerData.playerAnimation_JUMP_R;
-				playerData.contadorAuxiliarAnimacions = 3;
+				playerData.contAuxAnim = 3;
 			}
 		}
 		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 4) {
+			if (playerData.contAuxAnim != 4) {
 				playerData.playerAnim = playerData.playerAnimation_JUMP_L;
-				playerData.contadorAuxiliarAnimacions = 4;
+				playerData.contAuxAnim = 4;
 			}
 		}
 		break;
 
 	case PLAYER_STATE::HABILITY_Q:
 		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 7) {
+			if (playerData.contAuxAnim != 7) {
 				playerData.playerAnim = playerData.playerAnimation_GHOST_R;
-				playerData.contadorAuxiliarAnimacions = 7;
+				playerData.contAuxAnim = 7;
 			}
 		}
 		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 8) {
+			if (playerData.contAuxAnim != 8) {
 				playerData.playerAnim = playerData.playerAnimation_GHOST_L;
-				playerData.contadorAuxiliarAnimacions = 8;
+				playerData.contAuxAnim = 8;
 			}
 		}
 		break;
-	case PLAYER_STATE::ATAC:
+	case PLAYER_STATE::ATTACK:
 		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 11) {
-				playerData.playerAnim = playerData.playerAnimation_ATAC_R;
-				playerData.contadorAuxiliarAnimacions = 11;
+			if (playerData.contAuxAnim != 11) {
+				playerData.playerAnim = playerData.playerAnimation_ATTACK_R;
+				playerData.contAuxAnim = 11;
 			}
 		}
 		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 12) {
-				playerData.playerAnim = playerData.playerAnimation_ATAC_L;
-				playerData.contadorAuxiliarAnimacions = 12;
+			if (playerData.contAuxAnim != 12) {
+				playerData.playerAnim = playerData.playerAnimation_ATTACK_L;
+				playerData.contAuxAnim = 12;
 			}
 		}
 		break;
@@ -359,7 +359,7 @@ void ModulePlayer::DrawPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
-void ModulePlayer::receivDamageByPosition(SDL_Rect rect) {
+void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
 	if (rect.x < playerData.x + playerData.w &&
 		rect.x + rect.w > playerData.x &&
 		rect.y < playerData.y + playerData.h &&
@@ -402,7 +402,7 @@ bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	return ret;
 }
 
-void ModulePlayer::AccioTp() {
+void ModulePlayer::ActionTp() {
 	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
 		if (playerData.tempoTP < SDL_GetTicks()) {
 			playerData.playerState = PLAYER_STATE::HABILITY_Q;
@@ -410,22 +410,22 @@ void ModulePlayer::AccioTp() {
 	}
 }
 
-//void ModulePlayer::RecolocarPeusPlayer() {
-//	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
-//	if (col[0] == true && comprobacio < 5) {
-//		float aux = (playerData.y + playerData.h) * -1;
-//		while (aux < 0) {
-//			aux += App->map->data.tile_height;
-//		}
-//		aux -= App->map->data.tile_height;
-//		playerData.y -= aux;
-//	}
-//}
+void ModulePlayer::RelocatePlayer() {
+	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
+	if (col[0] == true && comprobacio < 5) {
+		float aux = (playerData.y + playerData.h) * -1;
+		while (aux < 0) {
+			aux += App->map->data.tile_height;
+		}
+		aux -= App->map->data.tile_height;
+		playerData.y -= aux;
+	}
+}
 
-void ModulePlayer::Atac() {
+void ModulePlayer::Attack() {
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
 		playerData.tempoAtac = SDL_GetTicks() + 400;
-		playerData.playerState = PLAYER_STATE::ATAC;
+		playerData.playerState = PLAYER_STATE::ATTACK;
 	}
 }
