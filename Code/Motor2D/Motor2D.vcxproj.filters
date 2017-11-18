@@ -160,6 +160,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Game\maps\Mapa1.tmx" />
+    <None Include="..\Game\maps\Map_1.tmx" />
+    <None Include="..\Game\maps\Map_2.tmx" />
   </ItemGroup>
 </Project>

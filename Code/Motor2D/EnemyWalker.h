@@ -13,7 +13,8 @@ enum ENEMY_WALKER_STATES {
 	E_WALK,
 	E_JUMP,
 	E_ATAC,
-	E_DEAD
+	E_DEAD,
+	E_SMOKE
 };
 
 class EnemyWalker : public BaseEnemy {
@@ -28,8 +29,8 @@ public:
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction);
-	void Jump(float x, float y);
-
+	void Jump(LOOKING_DIRECTION direction);
+	void gravityFall();
 private:
 
 	ENEMY_WALKER_STATES enemyWalkerState;
@@ -45,9 +46,13 @@ private:
 	Animation Atac_L;
 	Animation Dead_R;
 	Animation Dead_L;
+	Animation Smoke;
 
-	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL
+	int controladorAnimations;	// 0->StandR, 1->StandL, 2->WalkR, 3->WalkL, 4->JumpR, 5->JumpL, 6->AtacR, 7->AtacL, 8->DeadR, 9->DeadL, 10->smoke
+	uint tempoSmokeJump, tempoAtac;
 	bool canAtacPlayer;
+	bool col[4];
+	bool walkable[4];
 };
 
 #endif

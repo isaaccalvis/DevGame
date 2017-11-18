@@ -33,8 +33,11 @@ bool ModulePlayer::Update(float dt) {
 	this->dt = dt;
 	MovementPlayer();
 	DrawPlayer();
-	if (App->input->GetKey(SDL_SCANCODE_0) == j1KeyState::KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == j1KeyState::KEY_DOWN)
 		App->enemies->addEnemy(E_WALKER, playerData.x + 50, playerData.y);
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == j1KeyState::KEY_DOWN)
+		App->enemies->addEnemy(E_BAT, playerData.x + 50, playerData.y);
 
 	App->render->camera.x = App->render->cam.x;
 	App->render->camera.y = App->render->cam.y;
@@ -57,105 +60,19 @@ void ModulePlayer::SpawnPLayer() {
 	playerData.y = App->map->data.spawnOnMap.y;
 }
 
-void ModulePlayer::DrawPlayer() {
-	switch (playerData.playerState) {
-
-	case PLAYER_STATE::STAND:
-		if (playerData.lookingWay == L_RIGHT) {
-			if (col[0] == true) {
-				if (playerData.contadorAuxiliarAnimacions != -1) {
-					playerData.playerAnim = playerData.playerAnimation_STAND_R;
-					playerData.contadorAuxiliarAnimacions = -1;
-				}
-			}
-			else {
-				if (playerData.contadorAuxiliarAnimacions != 9) {
-					playerData.playerAnim = playerData.playerAnimation_CAIENT_R;
-					playerData.contadorAuxiliarAnimacions = 9;
-				}
-			}
-
-		}
-		else if (playerData.lookingWay == L_LEFT) {
-			if (col[0] == true) {
-				if (playerData.contadorAuxiliarAnimacions != 0) {
-					playerData.playerAnim = playerData.playerAnimation_STAND_L;
-					playerData.contadorAuxiliarAnimacions = 0;
-				}
-			}
-			else {
-				if (playerData.contadorAuxiliarAnimacions != 10) {
-					playerData.playerAnim = playerData.playerAnimation_CAIENT_L;
-					playerData.contadorAuxiliarAnimacions = 10;
-				}
-			}
-		}
-		break;
-
-	case PLAYER_STATE::RUNING:
-		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 1) {
-				playerData.playerAnim = playerData.playerAnimation_RUN_R;
-				playerData.contadorAuxiliarAnimacions = 1;
-			}
-		}
-		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 2) {
-				playerData.playerAnim = playerData.playerAnimation_RUN_L;
-				playerData.contadorAuxiliarAnimacions = 2;
-			}
-		}
-		break;
-
-	case PLAYER_STATE::JUMPING:
-		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 3) {
-				playerData.playerAnim = playerData.playerAnimation_JUMP_R;
-				playerData.contadorAuxiliarAnimacions = 3;
-			}
-		}
-		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 4) {
-				playerData.playerAnim = playerData.playerAnimation_JUMP_L;
-				playerData.contadorAuxiliarAnimacions = 4;
-			}
-		}
-		break;
-		
-	case PLAYER_STATE::HABILITY_Q:
-		if (playerData.lookingWay == L_RIGHT) {
-			if (playerData.contadorAuxiliarAnimacions != 7) {
-				playerData.playerAnim = playerData.playerAnimation_GHOST_R;
-				playerData.contadorAuxiliarAnimacions = 7;
-			}
-		}
-		else if (playerData.lookingWay == L_LEFT) {
-			if (playerData.contadorAuxiliarAnimacions != 8) {
-				playerData.playerAnim = playerData.playerAnimation_GHOST_L;
-				playerData.contadorAuxiliarAnimacions = 8;
-			}
-		}
-			
-		break;
-	}
-
-	if (playerData.playerSprites != nullptr)
-		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
-}
-
 void ModulePlayer::MovementPlayer() {
-	col[0] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y + playerData.h, DOWN);
-	col[1] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w / 2, playerData.y, UP);
-	col[2] = App->map->IsCollidingWithTerrain(playerData.x, playerData.y + playerData.h / 2, LEFT);
-	col[3] = App->map->IsCollidingWithTerrain(playerData.x + playerData.w, playerData.y + playerData.h / 2, RIGHT);
-	// 0-Down, 1-Up, 2-Left, 3-Right
+	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h, (int)(playerData.w / 2), 1 }, DOWN);
+	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y, (int)(playerData.w / 2), 1 }, UP);
+	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, LEFT);
+	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x + (int)playerData.w, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, RIGHT);
 
 	switch (playerData.playerState) {
-
 	case STAND:
 		AccioMovLaterals(col);
 		AccioMovJump_Gravity(col);
 		AccioTp();
+		Atac();
+		//RecolocarPeusPlayer();
 		break;
 
 	case RUNING:
@@ -163,6 +80,8 @@ void ModulePlayer::MovementPlayer() {
 			playerData.playerState = PLAYER_STATE::STAND;
 		AccioMovJump_Gravity(col);
 		AccioTp();
+		Atac();
+		//RecolocarPeusPlayer();
 		break;
 
 	case JUMPING:
@@ -187,6 +106,7 @@ void ModulePlayer::MovementPlayer() {
 			playerData.x -= playerData.speed * dt;
 
 		AccioTp();
+		Atac();
 		break;
 
 	case HABILITY_Q:
@@ -207,6 +127,7 @@ void ModulePlayer::MovementPlayer() {
 			if (App->render->cam.x + 100.0f + (playerData.w / 2) < 0)
 				App->render->cam.x += 100.0f + (playerData.w / 2);
 			playerData.tempoTP = SDL_GetTicks() + 1000;	
+
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
 		else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN) {
@@ -239,7 +160,18 @@ void ModulePlayer::MovementPlayer() {
 			}
 		}
 		break;
-
+	case PLAYER_STATE::ATAC:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (playerData.tempoAtac - SDL_GetTicks() < 350 && playerData.tempoAtac - SDL_GetTicks() > 200)
+				App->enemies->receivDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x + playerData.w), (int)playerData.y, (int)(playerData.w / 2), (int)playerData.h });
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (playerData.tempoAtac - SDL_GetTicks() < 350 && playerData.tempoAtac - SDL_GetTicks() > 200)
+				App->enemies->receivDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x - (playerData.w / 2)), (int)playerData.y, (int)playerData.w, (int)playerData.h });
+		}
+		if (playerData.tempoAtac < SDL_GetTicks())
+			playerData.playerState = STAND;
+		break;
 	default:
 		playerData.playerState = STAND;
 		break;
@@ -247,7 +179,7 @@ void ModulePlayer::MovementPlayer() {
 
 	if (col[0] == true && col[1] == true && col[2] == true && col[3]) {
 		playerData.playerState = PLAYER_STATE::DEAD;
-	} 
+	}
 }
 
 void ModulePlayer::ChargeAnimations() {
@@ -316,8 +248,124 @@ void ModulePlayer::ChargeAnimations() {
 
 	playerData.playerAnimation_CAIENT_L.PushBack({ 59, 345, 50, 80 });
 	playerData.playerAnimation_CAIENT_L.loop = false;
+
+	playerData.playerAnimation_ATAC_R.PushBack({ 47,643,35 ,78 });
+	playerData.playerAnimation_ATAC_R.PushBack({ 89,643,69 ,78 });
+	playerData.playerAnimation_ATAC_R.speed = 0.2f;
+	playerData.playerAnimation_ATAC_R.loop = false;
+
+	playerData.playerAnimation_ATAC_L.PushBack({ 252 ,643,35 ,78 });
+	playerData.playerAnimation_ATAC_L.PushBack({ 179 ,643,69 ,78 });
+	playerData.playerAnimation_ATAC_L.speed = 0.2f;
+	playerData.playerAnimation_ATAC_L.loop = false;
 }
 
+void ModulePlayer::DrawPlayer() {
+	switch (playerData.playerState) {
+
+	case PLAYER_STATE::STAND:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (col[0] == true) {
+				if (playerData.contadorAuxiliarAnimacions != -1) {
+					playerData.playerAnim = playerData.playerAnimation_STAND_R;
+					playerData.contadorAuxiliarAnimacions = -1;
+				}
+			}
+			else {
+				if (playerData.contadorAuxiliarAnimacions != 9) {
+					playerData.playerAnim = playerData.playerAnimation_CAIENT_R;
+					playerData.contadorAuxiliarAnimacions = 9;
+				}
+			}
+
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (col[0] == true) {
+				if (playerData.contadorAuxiliarAnimacions != 0) {
+					playerData.playerAnim = playerData.playerAnimation_STAND_L;
+					playerData.contadorAuxiliarAnimacions = 0;
+				}
+			}
+			else {
+				if (playerData.contadorAuxiliarAnimacions != 10) {
+					playerData.playerAnim = playerData.playerAnimation_CAIENT_L;
+					playerData.contadorAuxiliarAnimacions = 10;
+				}
+			}
+		}
+		break;
+
+	case PLAYER_STATE::RUNING:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (playerData.contadorAuxiliarAnimacions != 1) {
+				playerData.playerAnim = playerData.playerAnimation_RUN_R;
+				playerData.contadorAuxiliarAnimacions = 1;
+			}
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (playerData.contadorAuxiliarAnimacions != 2) {
+				playerData.playerAnim = playerData.playerAnimation_RUN_L;
+				playerData.contadorAuxiliarAnimacions = 2;
+			}
+		}
+		break;
+
+	case PLAYER_STATE::JUMPING:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (playerData.contadorAuxiliarAnimacions != 3) {
+				playerData.playerAnim = playerData.playerAnimation_JUMP_R;
+				playerData.contadorAuxiliarAnimacions = 3;
+			}
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (playerData.contadorAuxiliarAnimacions != 4) {
+				playerData.playerAnim = playerData.playerAnimation_JUMP_L;
+				playerData.contadorAuxiliarAnimacions = 4;
+			}
+		}
+		break;
+
+	case PLAYER_STATE::HABILITY_Q:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (playerData.contadorAuxiliarAnimacions != 7) {
+				playerData.playerAnim = playerData.playerAnimation_GHOST_R;
+				playerData.contadorAuxiliarAnimacions = 7;
+			}
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (playerData.contadorAuxiliarAnimacions != 8) {
+				playerData.playerAnim = playerData.playerAnimation_GHOST_L;
+				playerData.contadorAuxiliarAnimacions = 8;
+			}
+		}
+		break;
+	case PLAYER_STATE::ATAC:
+		if (playerData.lookingWay == L_RIGHT) {
+			if (playerData.contadorAuxiliarAnimacions != 11) {
+				playerData.playerAnim = playerData.playerAnimation_ATAC_R;
+				playerData.contadorAuxiliarAnimacions = 11;
+			}
+		}
+		else if (playerData.lookingWay == L_LEFT) {
+			if (playerData.contadorAuxiliarAnimacions != 12) {
+				playerData.playerAnim = playerData.playerAnimation_ATAC_L;
+				playerData.contadorAuxiliarAnimacions = 12;
+			}
+		}
+		break;
+	}
+
+	if (playerData.playerSprites != nullptr)
+		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
+}
+
+void ModulePlayer::receivDamageByPosition(SDL_Rect rect) {
+	if (rect.x < playerData.x + playerData.w &&
+		rect.x + rect.w > playerData.x &&
+		rect.y < playerData.y + playerData.h &&
+		rect.h + rect.y > playerData.y)
+		playerData.playerState = PLAYER_STATE::DEAD;
+}
 
 bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 	bool ret = false;
@@ -359,5 +407,25 @@ void ModulePlayer::AccioTp() {
 		if (playerData.tempoTP < SDL_GetTicks()) {
 			playerData.playerState = PLAYER_STATE::HABILITY_Q;
 		}
+	}
+}
+
+//void ModulePlayer::RecolocarPeusPlayer() {
+//	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
+//	if (col[0] == true && comprobacio < 5) {
+//		float aux = (playerData.y + playerData.h) * -1;
+//		while (aux < 0) {
+//			aux += App->map->data.tile_height;
+//		}
+//		aux -= App->map->data.tile_height;
+//		playerData.y -= aux;
+//	}
+//}
+
+void ModulePlayer::Atac() {
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
+		playerData.tempoAtac = SDL_GetTicks() + 400;
+		playerData.playerState = PLAYER_STATE::ATAC;
 	}
 }

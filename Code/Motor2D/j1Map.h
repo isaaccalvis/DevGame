@@ -14,6 +14,11 @@ enum POSITION_FROM_CENTER {
 	RIGHT
 };
 
+enum MAP_OBJECTS_TYPES {
+	TERRAIN_COLLIDER,
+	WALKABLE_BY_ENEMY
+};
+
 //enum RETURN_TILE_TYPE {
 //	NORMAL,
 //	COLLIDER,
@@ -111,6 +116,9 @@ struct MapData
 	p2List<TileSet*>	tilesets;
 	p2List<MapLayer*>	layers;
 	p2List<iPoint> colliderOnMap;
+	p2List<SDL_Rect> collidersOnMapRect;
+	p2List<iPoint> walkableByEnemyOnMap;
+
 	iPoint winOnMap;
 	iPoint spawnOnMap;
 };
@@ -134,8 +142,13 @@ public:
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
 
 	void ChargeColliders();
+	void CompressColliders();
 	bool ac = false;
-	bool IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_CENTER posCent);
+	bool IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent);
+	void deleteColliderPoint(int x, int y);
+	void clearCollideRectList();
 	bool IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent);
 
 	bool logic_draw = false;

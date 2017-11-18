@@ -9,7 +9,7 @@
 
 enum ENEMY_TYPES{
 	E_WALKER,
-	E_FLYER
+	E_BAT
 };
 
 class ModuleEnemies : public j1Module
@@ -23,9 +23,13 @@ public:
 	bool CleanUp();
 
 	void addEnemy(ENEMY_TYPES type, float x, float y);
+
 	void updateEnemies(float dt);
 
 	void FindEnemies();
+
+	void receivDamageEnemyAtThisPosition(SDL_Rect rect);
+	void clearEnemies();
 
 private:
 	p2List<BaseEnemy*> enemies;

@@ -14,7 +14,7 @@ EnemyBat::EnemyBat(float x, float y) {
 	enemyAnim = Still;
 	enemyBatLookingDirection = L_NEUTRAL;
 	enemyBatState = EF_STILL;
-	controladorAnimations = 0;
+	controladorAnimations = -1;
 	canAtacPlayer = false;
 }
 
@@ -27,6 +27,10 @@ void EnemyBat::Update(float dt) {
 }
 
 void EnemyBat::UpdateInfo() {
+	if (App->player->playerData.x - this->x > (-3 * App->map->data.tile_width)&& App->player->playerData.x - this->x < (3 * App->map->data.tile_width))
+		canAtacPlayer = true;
+	else
+		canAtacPlayer = false;
 	if (!canAtacPlayer)
 		enemyBatLookingDirection = L_NEUTRAL;
 	else {

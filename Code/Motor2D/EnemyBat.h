@@ -12,7 +12,7 @@ enum ENEMY_BAT_STATES {
 	EF_STILL,
 	EF_FLY,
 	EF_DEAD,
-	EF_EXPLOSION
+	EF_EXPLOSION  
 };
 
 class EnemyBat : public BaseEnemy {

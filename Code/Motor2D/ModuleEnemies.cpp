@@ -2,6 +2,7 @@
 #include "ModuleEnemies.h"
 #include "EnemyWalker.h"
 #include "EnemyBat.h"
+
 #include "j1Map.h"
 
 ModuleEnemies::ModuleEnemies() {}
@@ -38,7 +39,8 @@ void ModuleEnemies::addEnemy(ENEMY_TYPES type , float x, float y) {
 	case E_WALKER:
 		b = new EnemyWalker(x, y);
 		break;
-	case E_FLYER:
+
+	case E_BAT:
 		b = new EnemyBat(x, y);
 		break;
 	}
@@ -58,6 +60,7 @@ void ModuleEnemies::updateEnemies(float dt) {
 	}
 }
 
+
 void ModuleEnemies::FindEnemies() {
 	p2List_item<MapLayer*>* item = App->map->data.layers.end;
 
@@ -66,7 +69,30 @@ void ModuleEnemies::FindEnemies() {
 		if (item->data->data[i] == 23)
 		{
 			iPoint ret = App->map->TiletoWorld(i);
-			addEnemy(ENEMY_TYPES::E_FLYER, ret.x, ret.y);
+			addEnemy(ENEMY_TYPES::E_BAT, ret.x, ret.y);
 		}
+	}
+}
+
+void ModuleEnemies::receivDamageEnemyAtThisPosition(SDL_Rect rect) {
+	p2List_item<BaseEnemy*>* rec = enemies.start;
+	while (rec != nullptr) {
+		if (rect.x < rec->data->pos.x + rec->data->w &&
+			rect.x + rect.w > rec->data->pos.x &&
+			rect.y < rec->data->pos.y + rec->data->h &&
+			rect.h + rect.y > rec->data->pos.y){
+			rec->data->~BaseEnemy();
+			enemies.del(rec);
+		}
+		rec = rec->next;
+	}
+}
+
+void ModuleEnemies::clearEnemies() {
+	p2List_item<BaseEnemy*>* rec = enemies.start;
+	while (rec != nullptr) {
+		p2List_item<BaseEnemy*>* aux = rec;
+		rec = rec->next;
+		enemies.del(aux);
 	}
 }

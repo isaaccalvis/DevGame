@@ -8,40 +8,23 @@
 #define DEFAULT_PATH_LENGTH 50
 #define INVALID_WALK_CODE 255
 
-// --------------------------------------------------
-// Recommended reading:
-// Intro: http://www.raywenderlich.com/4946/introduction-to-a-pathfinding
-// Details: http://theory.stanford.edu/~amitp/GameProgramming/
-// --------------------------------------------------
-
 class j1PathFinding : public j1Module
 {
 public:
 
 	j1PathFinding();
-
-	// Destructor
 	~j1PathFinding();
 
-	// Called before quitting
 	bool CleanUp();
-
-	// Sets up the walkability map
 	void SetMap(uint width, uint height, uchar* data);
-
-	// Main function to request a path from A to B
 	int CreatePath(const iPoint& origin, const iPoint& destination);
 
 	// To request all tiles involved in the last generated path
 	p2DynArray<iPoint>* GetLastPath();
 
-	// Utility: return true if pos is inside the map boundaries
 	bool CheckBoundaries(const iPoint& pos) const;
 
-	// Utility: returns true is the tile is walkable
 	bool IsWalkable(const iPoint& pos) const;
-
-	// Utility: return the walkability value of a tile
 	uchar GetTileAt(const iPoint& pos) const;
 
 private:
@@ -55,7 +38,6 @@ private:
 	p2DynArray<iPoint> last_path;
 };
 
-// forward declaration
 struct PathList;
 
 // ---------------------------------------------------------------------
@@ -63,7 +45,6 @@ struct PathList;
 // ---------------------------------------------------------------------
 struct PathNode
 {
-	// Convenient constructors
 	PathNode();
 	PathNode(int g, int h, const iPoint& pos, const PathNode* parent);
 	PathNode(const PathNode& node);
@@ -75,7 +56,6 @@ struct PathNode
 	// Calculate the F for a specific destination tile
 	int CalculateF(const iPoint& destination);
 
-	// -----------
 	int g;
 	int h;
 	iPoint pos;
@@ -89,15 +69,12 @@ struct PathList
 {
 	// Looks for a node in this list and returns it's list node or NULL
 	p2List_item<PathNode>* Find(const iPoint& point) const;
-
 	// Returns the Pathnode with lowest score in this list or NULL if empty
 	p2List_item<PathNode>* GetNodeLowestScore() const;
-
-	// -----------
 	// The list itself, note they are not pointers!
 	p2List<PathNode> list;
 };
 
 
 
-#endif // __j1PATHFINDING_H__
+#endif

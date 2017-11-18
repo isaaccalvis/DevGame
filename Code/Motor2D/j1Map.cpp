@@ -3,6 +3,7 @@
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
+#include "ModuleEnemies.h"
 #include "j1Map.h"
 #include "j1Scene.h"
 #include "j1Audio.h"
@@ -30,6 +31,8 @@ bool j1Map::Awake(pugi::xml_node& config)
 }
 
 void j1Map::ChargeColliders() {
+	clearCollideRectList();
+	App->enemies->clearEnemies();
 	p2List_item<MapLayer*>* item = data.layers.start;
 	for (; item != NULL; item = item->next)
 	{
@@ -48,9 +51,8 @@ void j1Map::ChargeColliders() {
 					cont = cont / data.tile_width;
 					for (int ii = 0; ii < cont; ii++)
 						for (int jj = 0; jj < cont; jj++) {
-							iPoint ret(x+ii, y+jj);
+							iPoint ret(x + ii, y + jj);
 							data.colliderOnMap.add(ret);
-
 						}
 				}
 				else if (tile_id == 10) {
@@ -79,8 +81,77 @@ void j1Map::ChargeColliders() {
 							data.spawnOnMap.y *= data.tilesets.start->data->tile_height;
 						}
 				}
+				else if (tile_id == 5) {
+					int cont = 0;
+					while (cont < map_file.child("map").child("tileset").attribute("tilewidth").as_int()) {
+						cont += data.tile_width;
+					}
+					cont = cont / data.tile_width;
+					for (int ii = 0; ii < cont; ii++)
+						for (int jj = 0; jj < cont; jj++) {
+							iPoint ret(x + ii, y + jj);
+							data.walkableByEnemyOnMap.add(ret);
+						}
+				}
 			}
 		}
+	}
+
+	int varAux1 = -1;
+	while (varAux1 != 0) {
+		varAux1 = 0;
+		p2List_item<iPoint> *recAuxBuble = data.colliderOnMap.start;
+		if (recAuxBuble != nullptr)
+			while (recAuxBuble->next != nullptr) {
+				if (recAuxBuble->data.x > recAuxBuble->next->data.x) {
+					varAux1++;
+					iPoint aux2 = recAuxBuble->data;
+					recAuxBuble->data = recAuxBuble->next->data;
+					recAuxBuble->next->data = aux2;
+				}
+					recAuxBuble = recAuxBuble->next;
+			}
+	}
+	CompressColliders();
+}
+
+void j1Map::CompressColliders() {
+	p2List_item<iPoint> *rec = data.colliderOnMap.start;
+
+	while (rec != nullptr) {
+		SDL_Rect aux = { rec->data.x , rec->data.y , 1 , 1 };
+		int corrX = 1;
+		while (corrX != -1) {
+			if (IsCollidingWithTerrainWithoutMapToWORLD(aux.x + corrX, aux.y, RIGHT)) {
+				aux.w += 1;
+				deleteColliderPoint(aux.x + corrX, aux.y);
+				corrX++;
+			}
+			else {
+				corrX = -1;
+			}
+		}
+		data.collidersOnMapRect.add(aux);
+		rec = rec->next;
+	}
+
+	p2List_item<SDL_Rect> *rec2 = data.collidersOnMapRect.start;
+	while (rec2 != nullptr) {
+		int i = 1;
+		while (i != -1) {
+			if (rec2 != nullptr && rec2->next != nullptr) {
+				if (rec2->data.x == rec2->next->data.x && rec2->data.y + i == rec2->next->data.y && rec2->data.w == rec2->next->data.w) {
+					rec2->data.h++;
+					data.collidersOnMapRect.del(rec2->next);
+					i++;
+				}
+				else
+					i = -1;
+			}
+			else
+				i = -1;
+		}
+		rec2 = rec2->next;
 	}
 }
 
@@ -622,48 +693,159 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 //	return RETURN_TILE_TYPE::NORMAL;
 //}
 
-bool j1Map::IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent) {
+bool j1Map::IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_CENTER posCent) { // Aquest es fa servir per compress
 	bool ret = false;
-	iPoint pos = WorldToMap(x, y);
+	iPoint pos(x, y);
 	p2List_item<iPoint>* rec = data.colliderOnMap.start;
 	for (; rec != nullptr; rec = rec->next) {
 		switch (posCent) {
 		case POSITION_FROM_CENTER::DOWN:
 			if (rec->data.y >= pos.y)
 				if (rec->data.x == pos.x && rec->data.y == pos.y) {
-						ret = true;
-						rec = data.colliderOnMap.end;
-					}
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
 			break;
 		case POSITION_FROM_CENTER::UP:
 			if (rec->data.y <= pos.y)
 				if (rec->data.x == pos.x && rec->data.y == pos.y) {
-						ret = true;
-						rec = data.colliderOnMap.end;
-					}
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
 			break;
 		case POSITION_FROM_CENTER::LEFT:
 			if (rec->data.x <= pos.x)
 				if (rec->data.x == pos.x && rec->data.y == pos.y) {
-						ret = true;
-						rec = data.colliderOnMap.end;
-					}
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
 			break;
 		case POSITION_FROM_CENTER::RIGHT:
 			if (rec->data.x >= pos.x)
 				if (rec->data.x == pos.x && rec->data.y == pos.y) {
-						ret = true;
-						rec = data.colliderOnMap.end;
-					}
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
 			break;
 		}
-		//if (rec->data.x == pos.x) {
-		//	if (rec->data.y == pos.y) {
-		//		printf_s("%i, %i ::: %i, %i\n", pos.x, pos.y, rec->data.x, rec->data.y);
-		//		ret = true;
-		//		rec = data.colliderOnMap.end;
-		//	}
-		//}
+	}
+	return ret;
+}
+
+bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent) {
+	bool ret = false;
+	p2List_item<SDL_Rect>* rec = data.collidersOnMapRect.start;
+	switch (posCent) {
+	case DOWN:
+		while (rec != nullptr) {
+			if (rec->data.x * data.tile_width < rect.x + rect.w &&
+				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
+				rec->data.y * data.tile_height < rect.y + rect.h &&
+				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				ret = true;
+				rec = nullptr;
+			}
+			if (rec != nullptr)
+				rec = rec->next;
+		}
+		break;
+	case UP:
+		while (rec != nullptr) {
+			if (rec->data.x * data.tile_width < rect.x + rect.w &&
+				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
+				rec->data.y * data.tile_height < rect.y + rect.h &&
+				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				ret = true;
+				rec = nullptr;
+			}
+			if (rec != nullptr)
+				rec = rec->next;
+		}
+		break;
+	case RIGHT:
+		while (rec != nullptr) {
+			if (rec->data.x * data.tile_width < rect.x + rect.w &&
+				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
+				rec->data.y * data.tile_height < rect.y + rect.h &&
+				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				ret = true;
+				rec = nullptr;
+			}
+			if (rec != nullptr)
+				rec = rec->next;
+		}
+		break;
+	case LEFT:
+		while (rec != nullptr) {
+			if (rec->data.x * data.tile_width < rect.x + rect.w &&
+				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
+				rec->data.y * data.tile_height < rect.y + rect.h &&
+				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				ret = true;
+				rec = nullptr;
+			}
+			if (rec != nullptr)
+				rec = rec->next;
+		}
+		break;
+	}
+	return ret;
+}
+
+void j1Map::deleteColliderPoint(int x, int y) {
+	p2List_item<iPoint>* rec = data.colliderOnMap.start;
+	for (; rec != nullptr; rec = rec->next) {
+		if (rec->data.x == x && rec->data.y == y) {
+			data.colliderOnMap.del(rec);
+		}
+	}
+	delete rec;
+}
+
+void j1Map::clearCollideRectList() {
+	p2List_item<SDL_Rect>* rec = data.collidersOnMapRect.start;
+	while (rec != nullptr) {
+		p2List_item<SDL_Rect>* aux = rec;
+		rec = rec->next;
+		data.collidersOnMapRect.del(aux);
+	}
+}
+
+bool j1Map::IsCollidingWithWalkableByEnemy(int x, int y, POSITION_FROM_CENTER posCent) {
+	bool ret = false;
+	iPoint pos = WorldToMap(x, y);
+	p2List_item<iPoint>* rec = data.walkableByEnemyOnMap.start;
+	for (; rec != nullptr; rec = rec->next) {
+		switch (posCent) {
+		case POSITION_FROM_CENTER::DOWN:
+			if (rec->data.y >= pos.y)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::UP:
+			if (rec->data.y <= pos.y)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::LEFT:
+			if (rec->data.x <= pos.x)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		case POSITION_FROM_CENTER::RIGHT:
+			if (rec->data.x >= pos.x)
+				if (rec->data.x == pos.x && rec->data.y == pos.y) {
+					ret = true;
+					rec = data.colliderOnMap.end;
+				}
+			break;
+		}
 	}
 	return ret;
 }

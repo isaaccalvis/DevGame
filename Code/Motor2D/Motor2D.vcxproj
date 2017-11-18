@@ -124,9 +124,8 @@
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Game\maps\Mapa1.tmx">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="..\Game\maps\Map_1.tmx" />
+    <None Include="..\Game\maps\Map_2.tmx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
