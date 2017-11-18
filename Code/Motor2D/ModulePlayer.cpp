@@ -30,10 +30,17 @@ bool ModulePlayer::Start() {
 }
 
 bool ModulePlayer::Update(float dt) {
+	this->dt = dt;
 	MovementPlayer();
 	DrawPlayer();
 	if (App->input->GetKey(SDL_SCANCODE_0) == j1KeyState::KEY_DOWN)
 		App->enemies->addEnemy(E_WALKER, playerData.x + 50, playerData.y);
+
+	App->render->camera.x = App->render->cam.x;
+	App->render->camera.y = App->render->cam.y;
+	playerData.pos.x = playerData.x;
+	playerData.pos.y = playerData.y;
+
 	return true;
 }
 
@@ -163,21 +170,21 @@ void ModulePlayer::MovementPlayer() {
 			playerData.playerState = STAND;
 		else if ((playerData.tempoJump - SDL_GetTicks()) < playerData.timeOnAir / 3) {
 			if (col[1] == false)
-				playerData.y -= 8.0f;
+				playerData.y -= 800.0f * dt;
 		}
 		else if (((playerData.tempoJump - SDL_GetTicks()) < playerData.timeOnAir / 2)) {
 			if (col[1] == false)
-				playerData.y -= 12.0f;
+				playerData.y -= 800.0f * dt;
 		}
 		else if (((playerData.tempoJump - SDL_GetTicks()) < playerData.timeOnAir)) {
 			if (col[1] == false)
-				playerData.y -= 15.0f;
+				playerData.y -= 800.0f * dt;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false)
-			playerData.x += 6.0f;
+			playerData.x += playerData.speed * dt;
 		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false)
-			playerData.x -= 6.0f;
+			playerData.x -= playerData.speed * dt;
 
 		AccioTp();
 		break;
@@ -188,24 +195,26 @@ void ModulePlayer::MovementPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x - (playerData.w / 2) - 10, playerData.y - 100 - 50, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
 		App->render->Blit(playerData.playerSprites, playerData.x - (playerData.w / 2) - 10, playerData.y + 100 - 50, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
 
-		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT) {
+		if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_DOWN) {
 			playerData.x += 100.0f + (playerData.w / 2);
-			App->render->camera.x -= 100.0f + (playerData.w / 2);
+			if (App->render->cam.x - App->render->camera.w - 100.0f + (playerData.w / 2) > -(App->map->data.width*App->map->data.tile_width))
+				App->render->cam.x -= 100.0f + (playerData.w / 2);
 			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT) {
+		else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_DOWN) {
 			playerData.x -= 100.0f + (playerData.w / 2);
-			App->render->camera.x += 100.0f + (playerData.w / 2);
+			if (App->render->cam.x + 100.0f + (playerData.w / 2) < 0)
+				App->render->cam.x += 100.0f + (playerData.w / 2);
 			playerData.tempoTP = SDL_GetTicks() + 1000;	
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT) {
+		else if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN) {
 			playerData.y -= 100.0f;
 			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
 		}
-		else if (App->input->GetKey(SDL_SCANCODE_S) == j1KeyState::KEY_REPEAT) {
+		else if (App->input->GetKey(SDL_SCANCODE_S) == j1KeyState::KEY_DOWN) {
 			playerData.y += 100.0f;
 			playerData.tempoTP = SDL_GetTicks() + 1000;
 			playerData.playerState = PLAYER_STATE::STAND;
@@ -225,8 +234,8 @@ void ModulePlayer::MovementPlayer() {
 				playerData.playerAnim = playerData.playerAnimation_DEAD;
 				playerData.x = 0;
 				playerData.y = 0;
-				App->render->camera.x = 0;
-				App->render->camera.y = 0;
+				App->render->camera.x = App->render->cam.x = 0;
+				App->render->camera.y = App->render->cam.y = 0;
 			}
 		}
 		break;
@@ -315,14 +324,14 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
 		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
 			playerData.playerState = RUNING;
-		playerData.x += playerData.speed;
+		playerData.x += playerData.speed * dt;
 		playerData.lookingWay = L_RIGHT;
 		ret = true;
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false) {
 		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
 			playerData.playerState = RUNING;
-		playerData.x -= playerData.speed;
+		playerData.x -= playerData.speed * dt;
 		playerData.lookingWay = L_LEFT;
 		ret = true;
 	}
@@ -331,13 +340,13 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 
 bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	bool ret = false;
-	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
+	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
 		playerData.playerState = JUMPING;
 		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
 		ret = true;
 	}
 	else if (col[0] == false) {
-		playerData.y += playerData.jumpSpeed;
+		playerData.y += playerData.jumpSpeed * dt;
 		if (playerData.y > App->map->data.tile_height * (App->map->data.height-1))
 			playerData.playerState = PLAYER_STATE::DEAD;
 	}

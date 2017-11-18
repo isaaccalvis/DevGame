@@ -21,12 +21,16 @@ public:
 	EnemyBat(float x, float y);
 	~EnemyBat();
 
-	void Update();
+	void Update(float dt);
 
 	void ChargeAnimations();
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction);
+
+	p2DynArray<iPoint>* lastpath;
+
+	iPoint nextpos;
 
 private:
 

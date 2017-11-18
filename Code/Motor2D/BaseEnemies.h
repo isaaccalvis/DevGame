@@ -2,17 +2,22 @@
 #define __BaseEnemy_H__
 
 #include "SDL_image\include\SDL_image.h"
+#include "p2Point.h"
 #include "ModulePlayer.h"
+#include "j1Pathfinding.h"
 
 class BaseEnemy {
 public:
 	BaseEnemy() {}
 	~BaseEnemy() {}
 
-	virtual void Update() = 0;
+	virtual void Update(float dt) = 0;
 	
 	bool GetIsAlive() { return isAlive; }
-	float x, y, w, h;
+	float w, h;
+
+	iPoint pos;
+
 protected:
 	SDL_Texture* texturaEnemy;
 	Animation enemyAnim;

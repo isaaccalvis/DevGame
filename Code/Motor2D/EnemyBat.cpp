@@ -2,14 +2,16 @@
 #include "j1App.h"
 #include "j1Textures.h"
 #include "j1Render.h"
+#include "j1Map.h"
 
 EnemyBat::EnemyBat(float x, float y) {
-	this->x = x;
-	this->y = y;
+	pos.x = x;
+	pos.y = y;
 	w = 50;
 	h = 65;
 	texturaEnemy = App->tex->Load("textures/Enemy_Air_1.png");
 	ChargeAnimations();
+	enemyAnim = Still;
 	enemyBatLookingDirection = L_NEUTRAL;
 	enemyBatState = EF_STILL;
 	controladorAnimations = 0;
@@ -18,7 +20,7 @@ EnemyBat::EnemyBat(float x, float y) {
 
 EnemyBat::~EnemyBat() {}
 
-void EnemyBat::Update() {
+void EnemyBat::Update(float dt) {
 	UpdateInfo();
 	Move(enemyBatLookingDirection);
 	Draw();
@@ -29,28 +31,50 @@ void EnemyBat::UpdateInfo() {
 		enemyBatLookingDirection = L_NEUTRAL;
 	else {
 		// MIRAR CAP AL PLAYER
-		if (App->player->playerData.x > x)
+		if (App->player->playerData.x > pos.x)
 			enemyBatLookingDirection = L_RIGHT;
 		else
 			enemyBatLookingDirection = L_LEFT;
 		// MIRAR SI TOCA AL PLAYER
 		if (enemyBatLookingDirection == L_RIGHT) {
-			if (App->player->playerData.x - x < DISTANCIA_MIN_ATAC)
+			if (App->player->playerData.x - pos.x < DISTANCIA_MIN_ATAC)
 				enemyBatState = EF_EXPLOSION;
 			else
 				enemyBatState = EF_FLY;
 		}
 		else {
-			if (x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
+			if (pos.x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
 				enemyBatState = EF_EXPLOSION;
 			else
 				enemyBatState = EF_FLY;
 		}
 	}
 }
-// TXELL SEXY
+
 void EnemyBat::Move(LOOKING_DIRECTION direction) {
-	if (enemyBatLookingDirection == L_RIGHT) {
+	
+	float posp = sqrt(pow(pos.x, 2)*pow(pos.y, 2));
+	float pose = sqrt(pow(App->player->playerData.pos.x, 2)*pow(App->player->playerData.pos.y, 2));
+
+	
+	iPoint pospl;
+	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
+	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
+		
+	iPoint posen;
+	posen.x = pos.x / App->map->data.tilesets.start->data->tile_width;
+	posen.y = pos.y / App->map->data.tilesets.start->data->tile_height;
+	
+	/*if (abs(posp - pose) <= 405)*/
+	App->pathfinding->CreatePath(posen, pospl);
+	
+	lastpath = App->pathfinding->GetLastPath();
+
+	lastpath->Pop(nextpos);
+
+	pos = App->map->MapToWorld(nextpos.x, nextpos.y);
+	
+	/*if (enemyBatLookingDirection == L_RIGHT) {
 		switch (enemyBatState) {
 		case EF_EXPLOSION:
 
@@ -75,7 +99,7 @@ void EnemyBat::Move(LOOKING_DIRECTION direction) {
 
 			break;
 		}
-	}
+	}*/
 }
 
 
@@ -84,17 +108,17 @@ void EnemyBat::ChargeAnimations() {
 	Still.PushBack({ 33, 1, 31, 26 });
 	Still.PushBack({ 65, 1, 31, 26 });
 	Still.PushBack({ 97, 1, 31, 26 });
-	Still.speed = 0.08f;
+	Still.speed = 0.5f;
 
 	Fly_R.PushBack({ 41, 33, 17, 26 });
 	Fly_R.PushBack({ 73, 33, 17, 26 });
 	Fly_R.PushBack({ 106, 33, 17, 26 });
-	Fly_R.speed = 0.08f;
+	Fly_R.speed = 0.5f;
 
 	Fly_L.PushBack({ 38, 97, 17, 26 });
 	Fly_L.PushBack({ 70, 97, 17, 26 });
 	Fly_L.PushBack({ 101, 97, 17, 26 });
-	Fly_L.speed = 0.08f;
+	Fly_L.speed = 0.5f;
 
 	Dead_R.PushBack({ 7, 49, 19, 15 });
 
@@ -143,6 +167,6 @@ void EnemyBat::Draw() {
 				}
 				break;
 			}
-		App->render->Blit(texturaEnemy, x, y, &enemyAnim.GetCurrentFrame());
+		App->render->Blit(texturaEnemy, pos.x, pos.y, &enemyAnim.GetCurrentFrame());
 	}
 }

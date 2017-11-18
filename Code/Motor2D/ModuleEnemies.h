@@ -23,10 +23,13 @@ public:
 	bool CleanUp();
 
 	void addEnemy(ENEMY_TYPES type, float x, float y);
-	void updateEnemies();
+	void updateEnemies(float dt);
+
+	void FindEnemies();
 
 private:
 	p2List<BaseEnemy*> enemies;
+	float dt;
 
 };
 #endif

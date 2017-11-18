@@ -130,12 +130,16 @@ public:
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
+	iPoint TiletoWorld(int i) const;
 	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
 
 	void ChargeColliders();
 	bool ac = false;
 	bool IsCollidingWithTerrain(int x, int y, POSITION_FROM_CENTER posCent);
 	bool IsCollidingWithGoal(int x, int y, POSITION_FROM_CENTER posCent);
+
+	bool logic_draw = false;
+
 private:
 
 	bool LoadMap();

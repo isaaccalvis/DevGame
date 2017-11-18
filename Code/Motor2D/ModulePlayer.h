@@ -3,6 +3,7 @@
 
 #include "j1Module.h"
 #include "Animation.h"
+#include "p2Point.h"
 
 #include "SDL_image\include\SDL_image.h"
 
@@ -24,9 +25,10 @@ enum LOOKING_DIRECTION {
 struct PlayerData {
 
 	// VARIABLES
+	iPoint pos;
 	float x, y, w, h;
-	float speed = 6.0f;
-	float jumpSpeed = 10.0f;
+	float speed = 350.0f;
+	float jumpSpeed = 800.0f;
 	int contadorAuxiliarAnimacions;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP, 7->Ghost_R, 8->Ghost_L, 9->Caient_R, 10->Caient_L
 	uint tempoJump, timeOnAir, tempoTP, tempoDead;
 	SDL_Texture* playerSprites;
@@ -76,7 +78,10 @@ private:
 	bool AccioMovLaterals(bool col[4]);
 	bool AccioMovJump_Gravity(bool col[4]);
 
+	float dt;
+
 public:
+
 
 	PlayerData playerData;
 	bool col[4] = { false,false,false,false };

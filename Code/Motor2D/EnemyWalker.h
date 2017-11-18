@@ -22,7 +22,7 @@ public:
 	EnemyWalker(float x, float y);
 	~EnemyWalker();
 
-	void Update();
+	void Update(float dt);
 
 	void ChargeAnimations();
 	void Draw();

@@ -86,23 +86,23 @@ void j1Map::ChargeColliders() {
 
 void j1Map::Draw()
 {
-	if(map_loaded == false)
+	if (map_loaded == false)
 		return;
 
 	p2List_item<MapLayer*>* item = data.layers.start;
-	for(; item != NULL; item = item->next)
+	for (; item->next->next != nullptr; item = item->next)
 	{
 		MapLayer* layer = item->data;
 
 		//if(layer->properties.Get("Nodraw") != 0)
 			//continue;
 
-		for(int y = 0; y < data.height; ++y)
+		for (int y = 0; y < data.height; ++y)
 		{
-			for(int x = 0; x < data.width; ++x)
+			for (int x = 0; x < data.width; ++x)
 			{
 				int tile_id = layer->Get(x, y);
-				if(tile_id > 0)
+				if (tile_id > 0)
 				{
 					TileSet* tileset = GetTilesetFromTileId(tile_id);
 
@@ -114,37 +114,28 @@ void j1Map::Draw()
 			}
 		}
 	}
-}
+	if (logic_draw)
+	{
+		item = data.layers.end;
+		MapLayer* layer = item->data;
+		for (int y = 0; y < data.height; ++y)
+		{
+			for (int x = 0; x < data.width; ++x)
+			{
+				int tile_id = layer->Get(x, y);
+				if (tile_id > 0)
+				{
+					TileSet* tileset = GetTilesetFromTileId(tile_id);
 
-//void j1Map::Draw()
-//{
-//	if (map_loaded == false)
-//		return;
-//	SDL_Rect* rect;
-//	int x, y, h, w;
-//	int layerss = 0;
-//	for (p2List_item<TileSet*>* blit_tilesets = data.tilesets.start; blit_tilesets != nullptr; blit_tilesets = blit_tilesets->next) {
-//		for (p2List_item<MapLayer*>* layer = this->data.layers.start; layer->next != nullptr; layer = layer->next) {
-//			layerss++;
-//			x = y = h = w = 0;
-//
-//			for (int id = 0; id < layer->data->size_data; id++) {
-//				rect = &blit_tilesets->data->GetTileRect(layer->data->data[id]);
-//
-//				App->render->Blit(blit_tilesets->data->texture, x, y, rect, layer->data->speed);
-//
-//				w++;
-//				if (w == layer->data->width) {
-//					w = 0;
-//					h++;
-//				}
-//
-//				x = w * blit_tilesets->data->tile_width;
-//				y = h * blit_tilesets->data->tile_height;
-//			}
-//		}
-//	}
-//}
+					SDL_Rect r = tileset->GetTileRect(tile_id);
+					iPoint pos = MapToWorld(x, y);
+
+					App->render->Blit(tileset->texture, pos.x, pos.y, &r, item->data->speed, 0, 75.0f);
+				}
+			}
+		}
+	}
+}
 
 int Properties::Get(const char* value, int default_value) const
 {
@@ -224,6 +215,21 @@ iPoint j1Map::WorldToMap(int x, int y) const
 		LOG("Unknown map type");
 		ret.x = x; ret.y = y;
 	}
+
+	return ret;
+}
+
+iPoint j1Map::TiletoWorld(int i) const
+{
+	iPoint ret(0, 0);
+	float k;
+	p2List_item<MapLayer*>* layer = data.layers.start;
+	k = (float)i / layer->data->width;
+	ret.y = k;
+	ret.x = (k - ret.y) * layer->data->width;
+
+	ret.x *= data.tile_width;
+	ret.y *= data.tile_height;
 
 	return ret;
 }
@@ -562,7 +568,7 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 	bool ret = false;
 	p2List_item<MapLayer*>* item;
 	item = data.layers.start;
-
+	int k = 0;
 	for(item = data.layers.start; item != NULL; item = item->next)
 	{
 		MapLayer* layer = item->data;
@@ -579,18 +585,16 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 			{
 				int i = (y*layer->width) + x;
 
+				k = i;
+
 				int tile_id = layer->Get(x, y);
-				TileSet* tileset = (tile_id > 0) ? GetTilesetFromTileId(tile_id) : NULL;
 				
-				if(tileset != NULL)
+				if (tile_id == 21) 
 				{
-					map[i] = (tile_id - tileset->firstgid) > 0 ? 0 : 1;
-					/*TileType* ts = tileset->GetTileType(tile_id);
-					if(ts != NULL)
-					{
-						map[i] = ts->properties.Get("walkable", 1);
-					}*/
+					++k;
+					map[i] = 1;
 				}
+				else map[i] = 0;
 			}
 		}
 

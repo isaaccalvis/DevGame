@@ -59,7 +59,7 @@ uchar j1PathFinding::GetTileAt(const iPoint& pos) const
 }
 
 // To request all tiles involved in the last generated path
-const p2DynArray<iPoint>* j1PathFinding::GetLastPath() const
+p2DynArray<iPoint>* j1PathFinding::GetLastPath()
 {
 	return &last_path;
 }
@@ -167,26 +167,59 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination)
 {
-	// TODO 1: if origin or destination are not walkable, return -1
-
-	// TODO 2: Create two lists: open, close
-	// Add the origin tile to open
-	// Iterate while we have tile in the open list
-
-	// TODO 3: Move the lowest score cell from open list to the closed list
 	
-	// TODO 4: If we just added the destination, we are done!
-	// Backtrack to create the final path
-	// Use the Pathnode::parent and Flip() the path when you are finish
+	int ret = -1;  // if origin or destination are not walkable, return -1
 
-	// TODO 5: Fill a list of all adjancent nodes
+	if (IsWalkable(origin) || IsWalkable(destination))
+	{
+		ret = 0;
 
-	// TODO 6: Iterate adjancent nodes:
-	// ignore nodes in the closed list
-	// If it is NOT found, calculate its F and add it to the open list
-	// If it is already in the open list, check if it is a better path (compare G)
-	// If it is a better path, Update the parent
+		PathList open; // Create two lists: open, close
+		PathList close;
+		PathNode orgn(1, origin.DistanceTo(destination), origin, nullptr); // Add the origin tile to open
+		open.list.add(orgn);
+		while (open.list.count() > 0)  // Iterate while we have tile in the open list
+		{
+			++ret;
+			close.list.add(open.GetNodeLowestScore()->data); // Move the lowest score cell from open list to the closed list
+			open.list.del(open.GetNodeLowestScore());
+			if (close.list.end->data.pos == destination) // If we just added the destination, we are done!
+			{
+				last_path.Clear();
 
-	return -1;
+				for (p2List_item<PathNode>* it = close.list.end; it->data.pos != origin; it = close.Find(it->data.parent->pos)) // Backtrack to create the final path
+				{
+					last_path.PushBack(it->data.pos);
+				}
+				last_path.PushBack(origin);
+				last_path.Flip(); // Use the Pathnode::parent and Flip() the path when you are finish
+				break;
+			}
+
+			PathList neighbours;
+			close.list.end->data.FindWalkableAdjacents(neighbours); // Fill a list of all adjancent nodes
+
+			for (p2List_item<PathNode>* it = neighbours.list.start; it->next != nullptr; it = it->next) // Iterate adjancent nodes:
+			{
+				if (close.Find(it->data.pos) == NULL) // ignore nodes in the closed list
+				{
+					it->data.CalculateF(destination); // If it is NOT found, calculate its F and add it to the open list
+					p2List_item<PathNode>* iterator = open.Find(it->data.pos);
+					if (iterator != NULL) // If it is already in the open list, check if it is a better path (compare G)
+					{
+						if (iterator->data.g > it->data.g)
+						{
+							iterator->data.g = it->data.g;
+							iterator->data.parent = it->data.parent; // If it is a better path, Update the parent
+						}
+					}
+					else {
+						open.list.add(it->data);
+					}
+				}
+			}
+		}
+	}
+	return ret;
 }
 

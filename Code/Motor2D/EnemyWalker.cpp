@@ -4,8 +4,8 @@
 #include "j1Render.h"
 
 EnemyWalker::EnemyWalker(float x, float y) {
-	this->x = x;
-	this->y = y;
+	pos.x = x;
+	pos.y = y;
 	w = 50;
 	h = 65;
 	texturaEnemy = App->tex->Load("textures/Enemy_Walker_1.png");
@@ -18,7 +18,7 @@ EnemyWalker::EnemyWalker(float x, float y) {
 
 EnemyWalker::~EnemyWalker() {}
 
-void EnemyWalker::Update() {
+void EnemyWalker::Update(float dt) {
 	UpdateInfo();
 	Move(enemyWalkerLookingDirection);
 	Draw();
@@ -26,19 +26,19 @@ void EnemyWalker::Update() {
 
 void EnemyWalker::UpdateInfo() {
 	// MIRAR CAP AL PLAYER
-	if (App->player->playerData.x > x)
+	if (App->player->playerData.x > pos.x)
 		enemyWalkerLookingDirection = L_RIGHT;
 	else
 		enemyWalkerLookingDirection = L_LEFT;
 	// MIRAR SI TOCA AL PLAYER
 	if (enemyWalkerLookingDirection == L_RIGHT) {
-		if (App->player->playerData.x - x < DISTANCIA_MIN_ATAC)
+		if (App->player->playerData.x - pos.x < DISTANCIA_MIN_ATAC)
 			enemyWalkerState = E_ATAC;
 		else
 			enemyWalkerState = E_WALK;
 	}
 	else {
-		if (x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
+		if (pos.x - App->player->playerData.x < DISTANCIA_MIN_ATAC)
 			enemyWalkerState = E_ATAC;
 		else
 			enemyWalkerState = E_WALK;
@@ -52,7 +52,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 
 			break;
 		case E_WALK:
-			x += 3;
+			pos.x += 3;
 			break;
 		case E_JUMP:
 
@@ -71,7 +71,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 
 			break;
 		case E_WALK:
-			x -= 3;
+			pos.x -= 3;
 			break;
 		case E_JUMP:
 
@@ -87,8 +87,8 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 }
 
 void EnemyWalker::Jump(float x, float y) {
-	float nX = this->x - x;
-	float nY = this->y - y;
+	float nX = pos.x - x;
+	float nY = pos.y - y;
 	//if (nX < 0)
 	//	nX *= -1;
 	//if (nY < 0)
@@ -220,6 +220,6 @@ void EnemyWalker::Draw() {
 				}
 				break;
 			}
-		App->render->Blit(texturaEnemy, x, y, &enemyAnim.GetCurrentFrame());
+		App->render->Blit(texturaEnemy, pos.x, pos.y, &enemyAnim.GetCurrentFrame());
 	}
 }

@@ -70,9 +70,6 @@ bool j1Render::PreUpdate()
 
 bool j1Render::Update(float dt)
 {
-	/*if (App->input->GetKey(SDL_SCANCODE_F12) == j1KeyState::KEY_DOWN)
-		App->config.child("vsync").append_attribute("value") = !App->config.child("vsync").attribute("value").as_bool();*/
-
 	return true;
 }
 
@@ -138,10 +135,12 @@ iPoint j1Render::ScreenToWorld(int x, int y) const
 }
 
 // Blit to screen
-bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y) const
+bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, double angle, float alpha, int pivot_x, int pivot_y) const
 {
 	bool ret = true;
 	uint scale = App->win->GetScale();
+
+	SDL_SetTextureAlphaMod(texture, alpha);
 
 	SDL_Rect rect;
 	rect.x = (int)(camera.x * speed) + x * scale;

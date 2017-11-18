@@ -40,6 +40,8 @@ private:
 public:
 	p2List<p2SString> maps;
 	p2List_item<p2SString>* current_map;
+
+	bool godmode = false;
 };
 
 #endif // __j1SCENE_H__
