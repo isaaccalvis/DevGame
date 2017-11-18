@@ -22,12 +22,12 @@ EnemyBat::~EnemyBat() {}
 
 void EnemyBat::Update(float dt) {
 	UpdateInfo();
-	Move(enemyBatLookingDirection);
+	Move(enemyBatLookingDirection, dt);
 	Draw();
 }
 
 void EnemyBat::UpdateInfo() {
-	if (App->player->playerData.x - this->x > (-3 * App->map->data.tile_width)&& App->player->playerData.x - this->x < (3 * App->map->data.tile_width))
+	if (App->player->playerData.x - this->pos.x > (-3 * App->map->data.tile_width)&& App->player->playerData.x - this->pos.x < (3 * App->map->data.tile_width))
 		canAtacPlayer = true;
 	else
 		canAtacPlayer = false;
@@ -55,11 +55,7 @@ void EnemyBat::UpdateInfo() {
 	}
 }
 
-void EnemyBat::Move(LOOKING_DIRECTION direction) {
-	
-	float posp = sqrt(pow(pos.x, 2)*pow(pos.y, 2));
-	float pose = sqrt(pow(App->player->playerData.pos.x, 2)*pow(App->player->playerData.pos.y, 2));
-
+void EnemyBat::Move(LOOKING_DIRECTION direction, float dt) {
 	
 	iPoint pospl;
 	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
@@ -69,14 +65,37 @@ void EnemyBat::Move(LOOKING_DIRECTION direction) {
 	posen.x = pos.x / App->map->data.tilesets.start->data->tile_width;
 	posen.y = pos.y / App->map->data.tilesets.start->data->tile_height;
 	
-	/*if (abs(posp - pose) <= 405)*/
-	App->pathfinding->CreatePath(posen, pospl);
-	
-	lastpath = App->pathfinding->GetLastPath();
+	if (abs(pospl.x - posen.x) < 4)
+	{
+		App->pathfinding->CreatePath(posen, pospl);
 
-	lastpath->Pop(nextpos);
+		lastpath = App->pathfinding->GetLastPath();
 
-	pos = App->map->MapToWorld(nextpos.x, nextpos.y);
+		lastpath->Flip();
+
+		lastpath->Pop(nextpos);
+		lastpath->Pop(nextpos);
+
+		if (nextpos.x > posen.x)
+		{
+			pos.x += 200.0 * App->dt;
+		}
+
+		else if (nextpos.x < posen.x)
+		{
+			pos.x -= 200.0 * App->dt;
+		}
+
+		if (nextpos.y > posen.y)
+		{
+			pos.y += 200.0 * App->dt;
+		}
+
+		else if (nextpos.y < posen.y)
+		{
+			pos.y -= 200.0 * App->dt;
+		}
+	}
 	
 	/*if (enemyBatLookingDirection == L_RIGHT) {
 		switch (enemyBatState) {
@@ -105,7 +124,6 @@ void EnemyBat::Move(LOOKING_DIRECTION direction) {
 		}
 	}*/
 }
-
 
 void EnemyBat::ChargeAnimations() {
 
