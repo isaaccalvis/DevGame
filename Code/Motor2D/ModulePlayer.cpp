@@ -31,6 +31,8 @@ bool ModulePlayer::Start() {
 	LoadPlayerProperties();
 	ChargeAnimations();
 
+	playerData.playerState = PLAYER_STATE::DEAD;
+
 	return true;
 }
 
@@ -256,6 +258,8 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 
 bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	bool ret = false;
+	if (col[0] == true && col[2] == true && col[3] == true)
+		playerData.y -= 1;
 	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
 		playerData.playerState = JUMPING;
 		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;

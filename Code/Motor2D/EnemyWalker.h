@@ -29,7 +29,7 @@ public:
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction);
-	//void Jump(LOOKING_DIRECTION direction);
+	void Jump(LOOKING_DIRECTION direction);
 	void gravityFall();
 
 	p2DynArray<iPoint>* lastpath;

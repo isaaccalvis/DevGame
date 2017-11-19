@@ -120,17 +120,15 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 		lastpath->Pop(nextpos);
 		lastpath->Pop(nextpos);
 
-		if (nextpos.x > posen.x)
+
+		if (nextpos.y > posen.y)
+			pos.y += 300.0 * App->dt;
+
+		else if (nextpos.x > posen.x)
 			pos.x += 200.0 * App->dt;
 
 		else if (nextpos.x < posen.x)
 			pos.x -= 200.0 * App->dt;
-
-		if (nextpos.y > posen.y)
-			pos.y += 200.0 * App->dt;
-
-		else if (nextpos.y < posen.y)
-			pos.y -= 200.0 * App->dt;
 	}
 
 	gravityFall();
