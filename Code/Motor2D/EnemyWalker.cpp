@@ -3,6 +3,7 @@
 #include "j1Textures.h"
 #include "j1Render.h"
 #include "j1Map.h"
+#include "ModulePlayer.h"
 
 EnemyWalker::EnemyWalker(float x, float y) {
 	pos.x = x;
@@ -76,17 +77,11 @@ void EnemyWalker::UpdateInfo() {
 			else
 				enemyWalkerState = E_WALK;
 		}
-
 	}
-	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, DOWN);
-	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, UP);
-	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, LEFT);
-	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, RIGHT);
-
-	//col[0] = App->map->IsCollidingWithTerrain(x + w / 2, y + h, DOWN);
-	//col[1] = App->map->IsCollidingWithTerrain(x + w / 2, y, UP);
-	//col[2] = App->map->IsCollidingWithTerrain(x, y + h / 2, LEFT);
-	//col[3] = App->map->IsCollidingWithTerrain(x + w, y + h / 2, RIGHT);
+	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, DOWN);
+	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, UP);
+	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)(pos.y + h / 2), (int)w, (int)h }, LEFT);
+	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w), (int)(pos.y + h / 2), (int)w, (int)h }, RIGHT);
 
 	walkable[0] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w / 2, pos.y + h, DOWN);
 	walkable[1] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w / 2, pos.y, UP);
@@ -94,8 +89,9 @@ void EnemyWalker::UpdateInfo() {
 	walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h / 2, RIGHT);
 }
 
-void EnemyWalker::Move(LOOKING_DIRECTION direction) 
+void EnemyWalker::Move(LOOKING_DIRECTION direction)
 {
+	printf_s("%i \n", enemyWalkerState);
 	iPoint pospl;
 	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
 	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
@@ -104,7 +100,14 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 	posen.x = pos.x / App->map->data.tilesets.start->data->tile_width;
 	posen.y = pos.y / App->map->data.tilesets.start->data->tile_height;
 
-	if (abs(pospl.x - posen.x) < 5)
+	if (enemyWalkerState == E_ATAC) {
+
+		if (tempoAtac < SDL_GetTicks())
+			enemyWalkerState = E_STAND;
+		else if (tempoAtac - SDL_GetTicks() < 200)
+			App->player->receiveDamageByPosition(SDL_Rect{ (int)(pos.x - w / 2),(int)pos.y,(int)w,(int)h });
+	}
+	else if (abs(pospl.x - posen.x) < 5)
 	{
 		App->pathfinding->CreatePath(posen, pospl, ENEMY_TYPES::E_WALKER);
 
@@ -116,19 +119,13 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 		lastpath->Pop(nextpos);
 
 		if (nextpos.x > posen.x)
-		{
 			pos.x += 200.0 * App->dt;
-		}
 
 		else if (nextpos.x < posen.x)
-		{
 			pos.x -= 200.0 * App->dt;
-		}
 
 		if (nextpos.y > posen.y)
-		{
 			pos.y += 200.0 * App->dt;
-		}
 
 		else if (nextpos.y < posen.y)
 		{
@@ -136,124 +133,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 	}
 
 	gravityFall();
-
-	/*if (enemyWalkerLookingDirection == L_RIGHT) {
-		switch (enemyWalkerState) {
-		case E_STAND:
-			gravityFall();
-			break;
-		case E_WALK:
-			gravityFall();
-			if (walkable[3] == true)
-				pos.x += speed * dt;
-			else
-				if (col[0] == true)
-					enemyWalkerState = E_JUMP;
-			break;
-		case E_JUMP:
-			//Jump(L_RIGHT);
-			break;
-		case E_ATAC:
-			if (tempoAtac < SDL_GetTicks())
-				enemyWalkerState = E_STAND;
-			else if (tempoAtac - SDL_GetTicks() < 200)
-				App->player->receiveDamageByPosition(SDL_Rect{ (int)(pos.x + w / 2),(int)pos.y,(int)w,(int)h });
-			break;
-		case E_DEAD:
-			gravityFall();
-			break;
-		case E_SMOKE:
-			if (tempoSmokeJump < SDL_GetTicks())
-				enemyWalkerState = E_STAND;
-			break;
-		}
-	}
-	else {
-		switch (enemyWalkerState) {
-		case E_STAND:
-			gravityFall();
-
-			break;
-		case E_WALK:
-			gravityFall();
-			if (walkable[2] == true)
-				pos.x -= speed * dt;
-			else
-				if (col[0] == true)
-					enemyWalkerState = E_JUMP;
-			break;
-		case E_JUMP:
-			//Jump(L_LEFT);
-			break;
-		case E_ATAC:
-			if (tempoAtac < SDL_GetTicks())
-				enemyWalkerState = E_STAND;
-			else if (tempoAtac - SDL_GetTicks() < 200)
-				App->player->receiveDamageByPosition(SDL_Rect{ (int)(pos.x - w / 2),(int)pos.y,(int)w,(int)h });
-			break;
-		case E_DEAD:
-			gravityFall();
-			break;
-		case E_SMOKE:
-			if (tempoSmokeJump < SDL_GetTicks())
-				enemyWalkerState = E_STAND;
-			break;
-		}
-	}*/
 }
-
-
-/*void EnemyWalker::Jump(LOOKING_DIRECTION direction) {
-	// SEARCH NEXT BLOC TO JUMP
-	float nx = -1;
-	float ny = -1;
-	if (nx == -1) {
-		if (enemyWalkerLookingDirection == L_RIGHT) {
-			for (int i = -4; i < 4; i++)
-				for (int j = 3; j > 1; j--) {
-					if (App->map->IsCollidingWithWalkableByEnemy(pos.x + i, pos.y + j, RIGHT) == true) {
-						nx = pos.x + i * App->map->data.tile_width;
-						ny = pos.y + j * App->map->data.tile_height;
-						i = 4;
-						j = 1;
-					}
-				}
-		}
-		else {
-			for (int i = -4; i < 4; i++)
-				for (int j = -3; j < 0; j++) {
-					if (App->map->IsCollidingWithWalkableByEnemy(pos.x + i, pos.y + j, LEFT) == true) {
-						nx = pos.x + i * App->map->data.tile_width;
-						ny = pos.y + j * App->map->data.tile_height;
-						j = 0;
-						i = 4;
-					}
-				}
-		}
-	}
-
-	if (nx != -1) {
-		float xRes = nx - this->pos.x;
-		float yRes = ny - this->pos.y;
-		if (xRes < 0) {
-			pos.x -= xRes / 3;
-			pos.y -= yRes / 3;
-			enemyWalkerState = E_SMOKE;
-			tempoSmokeJump = SDL_GetTicks() + 1000;
-		}
-		else {
-			pos.x -= xRes / 3;
-			pos.y -= yRes / 3;
-			enemyWalkerState = E_SMOKE;
-			tempoSmokeJump = SDL_GetTicks() + 1000;
-		}
-	}
-
-	//if (walkable[0] == true && walkable[3] == true && walkable[2] == true) {
-	//	enemyWalkerState = E_SMOKE;
-
-	//}
-}*/
 
 void EnemyWalker::gravityFall() {
 	if (col[0] == false) {
@@ -301,14 +181,14 @@ void EnemyWalker::ChargeAnimations() {
 	Atac_R.PushBack({ 59, 160, 50, 70 });
 	Atac_R.PushBack({ 119, 160, 50, 70 });
 	Atac_R.PushBack({ 175, 160, 50, 70 });
-	Atac_R.speed = 0.15f;
+	Atac_R.speed = 0.9f;
 	Atac_R.loop = false;
 
 	Atac_L.PushBack({ 436, 160, 50, 70 });
 	Atac_L.PushBack({ 381, 160, 50, 70 });
 	Atac_L.PushBack({ 322, 160, 50, 70 });
 	Atac_L.PushBack({ 258, 160, 50, 70 });
-	Atac_L.speed = 0.15f;
+	Atac_L.speed = 0.9f;
 	Atac_L.loop = false;
 
 	Dead_R.PushBack({ 8, 342, 50, 65 });

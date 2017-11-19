@@ -16,7 +16,7 @@ public:
 	bool GetIsAlive() { return isAlive; }
 	float w, h;
 
-	iPoint pos;
+	fPoint pos;
 	float dt;
 protected:
 	SDL_Texture* texturaEnemy;
