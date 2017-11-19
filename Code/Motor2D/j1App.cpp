@@ -16,6 +16,7 @@
 #include "ModuleEnemies.h"
 #include "j1App.h"
 
+
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
@@ -79,8 +80,7 @@ bool j1App::Awake()
 		app_config = config.child("app");
 		title.create(app_config.child("title").child_value());
 		organization.create(app_config.child("organization").child_value());
-		//maxfps = app_config.attribute("framerate_cap").as_int();
-		maxfps = 0;
+		maxfps = app_config.attribute("framerate_cap").as_int();
 		load_game = save_game = app_config.child("save_game").child_value();
 		
 	}
@@ -116,6 +116,8 @@ bool j1App::Start()
 
 bool j1App::Update()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::Orchid)
+
 	bool ret = true;
 	PrepareUpdate();
 
@@ -202,6 +204,7 @@ void j1App::FinishUpdate()
 
 bool j1App::PreUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::Orchid)
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
@@ -244,6 +247,7 @@ bool j1App::DoUpdate()
 
 bool j1App::PostUpdate()
 {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::Orchid)
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	j1Module* pModule = NULL;

@@ -10,6 +10,10 @@
 #pragma comment( lib, "SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "SDL/libx86/SDL2main.lib" )
 
+#include "Brofiler\Brofiler.h"
+#pragma comment( lib, "Brofiler/ProfilerCore32.lib")
+
+
 enum MainState
 {
 	CREATE = 1,
@@ -32,6 +36,8 @@ int main(int argc, char* args[])
 
 	while(state != EXIT)
 	{
+		BROFILER_FRAME("Swaggity_Rabbity");
+
 		switch(state)
 		{
 
@@ -76,12 +82,6 @@ int main(int argc, char* args[])
 			}
 			break;
 
-			// Loop all modules until we are asked to leave ---------------------
-			case LOOP:
-			if(App->Update() == false)
-				state = CLEAN;
-			break;
-
 			// Cleanup allocated memory -----------------------------------------
 			case CLEAN:
 			LOG("CLEANUP PHASE ===============================");
@@ -101,6 +101,15 @@ int main(int argc, char* args[])
 			LOG("Exiting with errors :(");
 			result = EXIT_FAILURE;
 			state = EXIT;
+			break;
+
+			// Loop all modules until we are asked to leave ---------------------
+			case LOOP:
+
+			BROFILER_CATEGORY("LOOP", Profiler::Color::Orchid);
+
+			if (App->Update() == false)
+						state = CLEAN;
 			break;
 		}
 	}

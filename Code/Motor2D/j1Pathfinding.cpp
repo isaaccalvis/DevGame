@@ -175,7 +175,7 @@ int PathNode::CalculateF(const iPoint& destination)
 // ----------------------------------------------------------------------------------
 int j1PathFinding::CreatePath(const iPoint& origin, const iPoint& destination, ENEMY_TYPES type)
 {
-	
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::Orchid)
 	int ret = -1;  // if origin or destination are not walkable, return -1
 
 	if (IsWalkable(origin, type) || IsWalkable(destination, type))
