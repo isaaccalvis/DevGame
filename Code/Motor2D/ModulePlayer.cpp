@@ -8,7 +8,10 @@
 
 #include "ModuleEnemies.h"
 
-ModulePlayer::ModulePlayer() {}
+ModulePlayer::ModulePlayer() 
+{ 
+	name.create("player"); 
+}
 ModulePlayer::~ModulePlayer() {}
 
 bool ModulePlayer::Start() {
@@ -59,8 +62,8 @@ void ModulePlayer::LoadPLayerTexture() {
 
 bool ModulePlayer::Load(pugi::xml_node& data)
 {
-	playerData.pos.x = data.child("pos").attribute("x").as_int();
-	playerData.pos.y = data.child("pos").attribute("y").as_int();
+	playerData.x = data.child("pos").attribute("x").as_int();
+	playerData.y = data.child("pos").attribute("y").as_int();
 
 	return true;
 }
@@ -68,10 +71,10 @@ bool ModulePlayer::Load(pugi::xml_node& data)
 // Save Game State
 bool ModulePlayer::Save(pugi::xml_node& data) const
 {
-	pugi::xml_node position = data.append_child("camera");
+	pugi::xml_node position = data.append_child("pos");
 
-	position.append_attribute("x") = playerData.pos.x;
-	position.append_attribute("y") = playerData.pos.y;
+	position.append_attribute("x") = (int)playerData.x;
+	position.append_attribute("y") = (int)playerData.y;
 
 	return true;
 }

@@ -162,7 +162,7 @@ void j1App::PrepareUpdate()
 void j1App::FinishUpdate()
 {
 	if(want_to_save == true)
-		SavegameNow();
+		SaveGameNow();
 
 	if(want_to_load == true)
 		LoadGameNow();
@@ -311,7 +311,7 @@ void j1App::SaveGame() const
 
 void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
 {
-	// need to add functionality to file_system module for this to work
+	//need to add functionality to file_system module for this to work
 }
 
 bool j1App::LoadGameNow()
@@ -352,7 +352,7 @@ bool j1App::LoadGameNow()
 	return ret;
 }
 
-bool j1App::SavegameNow() const
+bool j1App::SaveGameNow() const
 {
 	bool ret = true;
 
@@ -375,7 +375,7 @@ bool j1App::SavegameNow() const
 	{
 		data.save_file(save_game.GetString());
 	
-		LOG("... finished saving", save_game.GetString());
+		LOG("%s finished saving", save_game.GetString());
 	}
 	else
 		LOG("Save process halted from an error in module %s", (item != NULL) ? item->data->name.GetString() : "unknown");

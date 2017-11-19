@@ -31,7 +31,7 @@ void EnemyBat::Update(float dt) {
 
 void EnemyBat::UpdateInfo() {
 	if (App->player->playerData.x - this->pos.x > (-3 * App->map->data.tile_width) && App->player->playerData.x - this->pos.x < (3 * App->map->data.tile_width))
-		printf_s("a");
+		canAtacPlayer = true;
 	else
 		canAtacPlayer = false;
 	if (!canAtacPlayer)

@@ -89,17 +89,17 @@ bool j1Render::CleanUp()
 
 bool j1Render::Load(pugi::xml_node& data)
 {
-	camera.x = data.child("camera").attribute("x").as_int();
-	camera.y = data.child("camera").attribute("y").as_int();
+	cam.x = data.child("camera").attribute("x").as_int();
+	cam.y = data.child("camera").attribute("y").as_int();
 	return true;
 }
 
 bool j1Render::Save(pugi::xml_node& data) const
 {
-	pugi::xml_node cam = data.append_child("camera");
+	pugi::xml_node c = data.append_child("camera");
 
-	cam.append_attribute("x") = camera.x;
-	cam.append_attribute("y") = camera.y;
+	c.append_attribute("x") = cam.x;
+	c.append_attribute("y") = cam.y;
 
 	return true;
 }

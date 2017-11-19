@@ -104,7 +104,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 	posen.x = pos.x / App->map->data.tilesets.start->data->tile_width;
 	posen.y = pos.y / App->map->data.tilesets.start->data->tile_height;
 
-	if (abs(pospl.x - posen.x) < 5)
+	if (abs(pospl.x - posen.x) < 3)
 	{
 		App->pathfinding->CreatePath(posen, pospl, ENEMY_TYPES::E_WALKER);
 
@@ -256,8 +256,9 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 }*/
 
 void EnemyWalker::gravityFall() {
-	if (col[0] == false) {
-		pos.y += 5;
+	if (col[0] == false) 
+	{
+		pos.y += 200.0 * App->dt;
 	}
 }
 

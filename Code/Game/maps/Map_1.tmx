@@ -327,7 +327,7 @@
    <tile gid="12"/>
   </data>
  </layer>
- <layer name="CapaNavigation" width="30" height="5">
+ <layer name="CapaNavigation" width="30" height="5" opacity="0.34">
   <properties>
    <property name="Navigation" type="int" value="1"/>
   </properties>
@@ -504,7 +504,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="5"/>
-   <tile gid="22"/>
+   <tile gid="5"/>
    <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="6"/>
@@ -541,7 +541,7 @@
    <tile gid="6"/>
    <tile gid="6"/>
    <tile gid="0"/>
-   <tile gid="22"/>
+   <tile gid="0"/>
    <tile gid="5"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -600,7 +600,7 @@
    <tile gid="5"/>
    <tile gid="5"/>
    <tile gid="5"/>
-   <tile gid="5"/>
+   <tile gid="22"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
