@@ -2,35 +2,29 @@
 #include "ModuleEnemies.h"
 #include "EnemyWalker.h"
 #include "EnemyBat.h"
-
 #include "j1Map.h"
 
 ModuleEnemies::ModuleEnemies() {}
 ModuleEnemies::~ModuleEnemies() {}
 
 bool ModuleEnemies::Start() {
-	bool ret = true;
-	
 	FindEnemies();
-
-	return ret;
+	return true;
 }
 
 bool ModuleEnemies::Update(float dt) {
-	bool ret = true;
 	updateEnemies(dt);
-	return ret;
+	return true;
 }
 
 bool ModuleEnemies::CleanUp() {
-	bool ret = true;
 	p2List_item<BaseEnemy*>* rec = enemies.start;
 	while (rec != nullptr) {
 		delete rec->data;
 		enemies.del(rec);
 		rec = rec->next;
 	}
-	return ret;
+	return true;
 }
 
 void ModuleEnemies::addEnemy(ENEMY_TYPES type , float x, float y) {

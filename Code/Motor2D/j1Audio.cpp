@@ -13,11 +13,8 @@ j1Audio::j1Audio() : j1Module()
 	name.create("audio");
 }
 
-// Destructor
-j1Audio::~j1Audio()
-{}
+j1Audio::~j1Audio() {}
 
-// Called before render is available
 bool j1Audio::Awake(pugi::xml_node& config)
 {
 	LOG("Loading Audio Mixer");
@@ -31,7 +28,6 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	// load support for the JPG and PNG image formats
 	int flags = MIX_INIT_OGG;
 	int init = Mix_Init(flags);
 
@@ -42,18 +38,16 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
-	//Initialize SDL_mixer
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		LOG("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
 		active = false;
 		ret = true;
 	}
-
+	PlayMusic("audio/music/SchemingWeasel.ogg");
 	return ret;
 }
 
-// Called before quitting
 bool j1Audio::CleanUp()
 {
 	if(!active)
@@ -79,7 +73,6 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
-// Play a music file
 bool j1Audio::PlayMusic(const char* path, float fade_time)
 {
 	bool ret = true;
@@ -133,7 +126,6 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 	return ret;
 }
 
-// Load WAV
 unsigned int j1Audio::LoadFx(const char* path)
 {
 	unsigned int ret = 0;
@@ -156,7 +148,6 @@ unsigned int j1Audio::LoadFx(const char* path)
 	return ret;
 }
 
-// Play WAV
 bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;

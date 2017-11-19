@@ -29,7 +29,7 @@ public:
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction);
-	void Jump(LOOKING_DIRECTION direction);
+	//void Jump(LOOKING_DIRECTION direction);
 	void gravityFall();
 private:
 
@@ -53,6 +53,7 @@ private:
 	bool canAtacPlayer;
 	bool col[4];
 	bool walkable[4];
+	float speed = 350.0f;
 };
 
 #endif

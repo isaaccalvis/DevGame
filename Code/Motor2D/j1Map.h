@@ -52,7 +52,6 @@ struct Properties
 	p2List<Property*>	list;
 };
 
-// ----------------------------------------------------
 struct MapLayer
 {
 	p2SString	name;
@@ -77,7 +76,6 @@ struct MapLayer
 	}
 };
 
-// ----------------------------------------------------
 struct TileSet
 {
 	SDL_Rect GetTileRect(int id) const;
@@ -104,7 +102,7 @@ enum MapTypes
 	MAPTYPE_ISOMETRIC,
 	MAPTYPE_STAGGERED
 };
-// ----------------------------------------------------
+
 struct MapData
 {
 	int					width;
@@ -123,7 +121,6 @@ struct MapData
 	iPoint spawnOnMap;
 };
 
-// ----------------------------------------------------
 class j1Map : public j1Module
 {
 public:
@@ -174,4 +171,4 @@ private:
 	bool				map_loaded;
 };
 
-#endif // __j1MAP_H__
+#endif

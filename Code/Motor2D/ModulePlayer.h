@@ -25,22 +25,19 @@ enum LOOKING_DIRECTION {
 
 struct PlayerData {
 
-	// VARIABLES
 	iPoint pos;
 	float x, y, w, h;
 
 	float speed = 350.0f;
 	float jumpSpeed = 800.0f;
-	int contAuxAnim;							// -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP, 7->Ghost_R, 8->Ghost_L, 9->Caient_R, 10->Caient_L
+	int contAuxAnim; // -1->Stand_R 0->Stand_L, 1->Run_R, 2->Run_L, 3->Jump_R, 4->Jump_L, 5_Dead, 6->TP, 7->Ghost_R, 8->Ghost_L, 9->Caient_R, 10->Caient_L
 	uint tempoJump, timeOnAir, tempoTP, tempoDead, tempoAtac;
 
 	SDL_Texture* playerSprites;
 
-	// CONTROL POSICIO I SITUACIO
 	PLAYER_STATE playerState;
 	LOOKING_DIRECTION lookingWay;
 
-	// ANIMATIONS
 	Animation playerAnim;
 	Animation playerAnimation_STAND_R;
 	Animation playerAnimation_STAND_L;
@@ -70,6 +67,7 @@ public:
 	bool CleanUp();
 
 	void LoadPLayerTexture();
+	void LoadPlayerProperties();
 	void SpawnPLayer();
 	void receiveDamageByPosition(SDL_Rect rect);
 
@@ -80,7 +78,6 @@ private:
 	void ChargeAnimations();
 
 	void ActionTp();
-	void RelocatePlayer();
 	bool AccioMovLaterals(bool col[4]);
 	bool AccioMovJump_Gravity(bool col[4]);
 	void Attack();
@@ -88,7 +85,6 @@ private:
 	float dt;
 
 public:
-
 
 	PlayerData playerData;
 	bool col[4] = { false,false,false,false };

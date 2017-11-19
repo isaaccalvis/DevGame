@@ -17,7 +17,7 @@ public:
 	float w, h;
 
 	iPoint pos;
-
+	float dt;
 protected:
 	SDL_Texture* texturaEnemy;
 	Animation enemyAnim;

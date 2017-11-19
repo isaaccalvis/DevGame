@@ -20,6 +20,7 @@ EnemyWalker::EnemyWalker(float x, float y) {
 EnemyWalker::~EnemyWalker() {}
 
 void EnemyWalker::Update(float dt) {
+	this->dt = dt;
 	UpdateInfo();
 	Move(enemyWalkerLookingDirection);
 	Draw();
@@ -33,7 +34,6 @@ void EnemyWalker::UpdateInfo() {
 		enemyWalkerLookingDirection = L_LEFT;
 	// MIRAR SI TOCA AL PLAYER
 	if (enemyWalkerState != E_JUMP && enemyWalkerState != E_DEAD && enemyWalkerState != E_SMOKE && enemyWalkerState != E_ATAC) {
-		printf_s("a");
 		if (enemyWalkerLookingDirection == L_RIGHT) {
 			if (App->player->playerData.x - pos.x < DISTANCIA_MIN_ATAC)
 				if (App->player->playerData.y < pos.y) {
@@ -101,17 +101,15 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 			gravityFall();
 			break;
 		case E_WALK:
-
 			gravityFall();
 			if (walkable[3] == true)
-				pos.x += 3;
+				pos.x += speed * dt;
 			else
 				if (col[0] == true)
 					enemyWalkerState = E_JUMP;
-
 			break;
 		case E_JUMP:
-			Jump(L_RIGHT);
+			//Jump(L_RIGHT);
 			break;
 		case E_ATAC:
 			if (tempoAtac < SDL_GetTicks())
@@ -137,13 +135,13 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 		case E_WALK:
 			gravityFall();
 			if (walkable[2] == true)
-				pos.x -= 3;
+				pos.x -= speed * dt;
 			else
 				if (col[0] == true)
 					enemyWalkerState = E_JUMP;
 			break;
 		case E_JUMP:
-			Jump(L_LEFT);
+			//Jump(L_LEFT);
 			break;
 		case E_ATAC:
 			if (tempoAtac < SDL_GetTicks())
@@ -163,7 +161,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 }
 
 
-void EnemyWalker::Jump(LOOKING_DIRECTION direction) {
+/*void EnemyWalker::Jump(LOOKING_DIRECTION direction) {
 	// SEARCH NEXT BLOC TO JUMP
 	float nx = -1;
 	float ny = -1;
@@ -207,13 +205,18 @@ void EnemyWalker::Jump(LOOKING_DIRECTION direction) {
 			enemyWalkerState = E_SMOKE;
 			tempoSmokeJump = SDL_GetTicks() + 1000;
 		}
-		printf_s("%f %f -- %f %f\n\n ", nx, ny, xRes / 3, yRes / 3);
 	}
 
 	//if (walkable[0] == true && walkable[3] == true && walkable[2] == true) {
 	//	enemyWalkerState = E_SMOKE;
 
 	//}
+}*/
+
+void EnemyWalker::gravityFall() {
+	if (col[0] == false) {
+		pos.y += 5;
+	}
 }
 
 void EnemyWalker::ChargeAnimations() {
@@ -360,11 +363,5 @@ void EnemyWalker::Draw() {
 				break;
 			}
 		App->render->Blit(texturaEnemy, pos.x, pos.y, &enemyAnim.GetCurrentFrame());
-	}
-}
-
-void EnemyWalker::gravityFall() {
-	if (col[0] == false) {
-		pos.y += 5;
 	}
 }

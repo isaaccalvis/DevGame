@@ -16,7 +16,6 @@
 #include "ModuleEnemies.h"
 #include "j1App.h"
 
-// Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
 	frames = 0;
@@ -33,8 +32,6 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	player = new ModulePlayer();
 	enemies = new ModuleEnemies();
 
-	// Ordered for awake / Start / Update
-	// Reverse order of CleanUp
 	AddModule(input);
 	AddModule(win);
 	AddModule(tex);
@@ -49,10 +46,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(render);
 }
 
-// Destructor
 j1App::~j1App()
 {
-	// release modules
 	p2List_item<j1Module*>* item = modules.end;
 
 	while(item != NULL)
@@ -64,13 +59,11 @@ j1App::~j1App()
 	modules.clear();
 }
 
-void j1App::AddModule(j1Module* module)
-{
+void j1App::AddModule(j1Module* module){
 	module->Init();
 	modules.add(module);
 }
 
-// Called before render is available
 bool j1App::Awake()
 {
 	pugi::xml_document	config_file;
@@ -82,14 +75,12 @@ bool j1App::Awake()
 
 	if(config.empty() == false)
 	{
-		// self-config
 		ret = true;
 		app_config = config.child("app");
 		title.create(app_config.child("title").child_value());
 		organization.create(app_config.child("organization").child_value());
-
-		maxfps = app_config.attribute("framerate_cap").as_int(0);
-		
+		//maxfps = app_config.attribute("framerate_cap").as_int();
+		maxfps = 0;
 	}
 
 	if(ret == true)
@@ -107,7 +98,6 @@ bool j1App::Awake()
 	return ret;
 }
 
-// Called before the first frame
 bool j1App::Start()
 {
 	bool ret = true;
@@ -123,7 +113,6 @@ bool j1App::Start()
 	return ret;
 }
 
-// Called each loop iteration
 bool j1App::Update()
 {
 	bool ret = true;
@@ -145,7 +134,6 @@ bool j1App::Update()
 	return ret;
 }
 
-// ---------------------------------------------
 pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 {
 	pugi::xml_node ret;
@@ -160,7 +148,6 @@ pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 	return ret;
 }
 
-// ---------------------------------------------
 void j1App::PrepareUpdate()
 {
 	dt = dtime.ReadMs()/1000;
@@ -171,7 +158,6 @@ void j1App::PrepareUpdate()
 	dtime.Start();
 }
 
-// ---------------------------------------------
 void j1App::FinishUpdate()
 {
 	if(want_to_save == true)
@@ -213,7 +199,6 @@ void j1App::FinishUpdate()
 	
 }
 
-// Call modules before each loop iteration
 bool j1App::PreUpdate()
 {
 	bool ret = true;
@@ -235,7 +220,6 @@ bool j1App::PreUpdate()
 	return ret;
 }
 
-// Call modules on each loop iteration
 bool j1App::DoUpdate()
 {
 	bool ret = true;
@@ -257,7 +241,6 @@ bool j1App::DoUpdate()
 	return ret;
 }
 
-// Call modules after each loop iteration
 bool j1App::PostUpdate()
 {
 	bool ret = true;
@@ -278,15 +261,12 @@ bool j1App::PostUpdate()
 	return ret;
 }
 
-// Called before quitting
-bool j1App::CleanUp()
-{
+bool j1App::CleanUp(){
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.end;
 
-	while(item != NULL && ret == true)
-	{
+	while(item != NULL && ret == true){
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
@@ -294,38 +274,28 @@ bool j1App::CleanUp()
 	return ret;
 }
 
-// ---------------------------------------
-int j1App::GetArgc() const
-{
+int j1App::GetArgc() const{
 	return argc;
 }
 
-// ---------------------------------------
-const char* j1App::GetArgv(int index) const
-{
+const char* j1App::GetArgv(int index) const{
 	if(index < argc)
 		return args[index];
 	else
 		return NULL;
 }
 
-// ---------------------------------------
-const char* j1App::GetTitle() const
-{
+const char* j1App::GetTitle() const{
 	return title.GetString();
 }
 
-// ---------------------------------------
 const char* j1App::GetOrganization() const
 {
 	return organization.GetString();
 }
 
-// Load / Save
 void j1App::LoadGame(const char* file)
 {
-	// we should be checking if that file actually exist
-	// from the "GetSaveGames" list
 	want_to_load = true;
 	//load_game.create("%s%s", fs->GetSaveDirectory(), file);
 }
@@ -333,14 +303,11 @@ void j1App::LoadGame(const char* file)
 // ---------------------------------------
 void j1App::SaveGame(const char* file) const
 {
-	// we should be checking if that file actually exist
-	// from the "GetSaveGames" list ... should we overwrite ?
 
 	want_to_save = true;
 	//save_game.create(file);
 }
 
-// ---------------------------------------
 void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
 {
 	// need to add functionality to file_system module for this to work
@@ -390,7 +357,6 @@ bool j1App::SavegameNow() const
 
 	LOG("Saving Game State to %s...", save_game.GetString());
 
-	// xml object were we will store all data
 	pugi::xml_document data;
 	pugi::xml_node root;
 	

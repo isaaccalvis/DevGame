@@ -10,24 +10,16 @@
 #include "ModulePlayer.h"
 #include <math.h>
 
-j1Map::j1Map() : j1Module(), map_loaded(false)
-{
+j1Map::j1Map() : j1Module(), map_loaded(false){
 	name.create("map");
 }
 
-// Destructor
-j1Map::~j1Map()
-{}
+j1Map::~j1Map() {}
 
-// Called before render is available
 bool j1Map::Awake(pugi::xml_node& config)
 {
-	LOG("Loading Map Parser");
-	bool ret = true;
-
 	folder.create(config.child("folder").child_value());
-
-	return ret;
+	return true;
 }
 
 void j1Map::ChargeColliders() {

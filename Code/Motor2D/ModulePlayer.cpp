@@ -11,19 +11,8 @@ ModulePlayer::ModulePlayer() {}
 ModulePlayer::~ModulePlayer() {}
 
 bool ModulePlayer::Start() {
-	playerData.x = 0;
-	playerData.y = 0;
-	playerData.w = 40;
-	playerData.h = 70;
-	playerData.playerState = PLAYER_STATE::STAND;
-	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
-	playerData.tempoJump = 0;
-	playerData.timeOnAir = 300;
-	playerData.contAuxAnim = 0;
-	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
-	playerData.tempoTP = 0;
-	playerData.tempoDead = -1;
 
+	LoadPlayerProperties();
 	ChargeAnimations();
 
 	return true;
@@ -51,15 +40,6 @@ bool ModulePlayer::CleanUp() {
 	return true;
 }
 
-void ModulePlayer::LoadPLayerTexture() {
-	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
-}
-
-void ModulePlayer::SpawnPLayer() {
-	playerData.x = App->map->data.spawnOnMap.x;
-	playerData.y = App->map->data.spawnOnMap.y;
-}
-
 void ModulePlayer::MovementPlayer() {
 	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h, (int)(playerData.w / 2), 1 }, DOWN);
 	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y, (int)(playerData.w / 2), 1 }, UP);
@@ -72,7 +52,6 @@ void ModulePlayer::MovementPlayer() {
 		AccioMovJump_Gravity(col);
 		ActionTp();
 		Attack();
-		RelocatePlayer();
 		break;
 
 	case RUNING:
@@ -81,7 +60,6 @@ void ModulePlayer::MovementPlayer() {
 		AccioMovJump_Gravity(col);
 		ActionTp();
 		Attack();
-		RelocatePlayer();
 		break;
 
 	case JUMPING:
@@ -182,82 +160,87 @@ void ModulePlayer::MovementPlayer() {
 	}
 }
 
-void ModulePlayer::ChargeAnimations() {
-	playerData.playerAnimation_STAND_R.PushBack({ 11,20, 40, 70 });
-	playerData.playerAnimation_STAND_R.PushBack({ 57,20, 40, 70 });
-	playerData.playerAnimation_STAND_R.PushBack({ 102,20, 40, 70 });
-	playerData.playerAnimation_STAND_R.PushBack({ 147,20, 40, 70 });
-	playerData.playerAnimation_STAND_R.speed = 0.25f;
+void ModulePlayer::LoadPlayerProperties() {
+	playerData.x = 0;
+	playerData.y = -300;
+	playerData.w = 40;
+	playerData.h = 70;
+	playerData.playerState = PLAYER_STATE::STAND;
+	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
+	playerData.tempoJump = 0;
+	playerData.timeOnAir = 300;
+	playerData.contAuxAnim = 0;
+	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
+	playerData.tempoTP = 0;
+	playerData.tempoDead = -1;
+}
 
-	playerData.playerAnimation_STAND_L.PushBack({ 227,20, 40, 70 });
-	playerData.playerAnimation_STAND_L.PushBack({ 272,20, 40, 70 });
-	playerData.playerAnimation_STAND_L.PushBack({ 317,20, 40, 70 });
-	playerData.playerAnimation_STAND_L.PushBack({ 362,20, 40, 70 });
-	playerData.playerAnimation_STAND_L.speed = 0.25f;
+void ModulePlayer::LoadPLayerTexture() {
+	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
+}
 
-	playerData.playerAnimation_RUN_R.PushBack({ 9,108, 50, 60 });
-	playerData.playerAnimation_RUN_R.PushBack({ 82,108, 50, 60 });
-	playerData.playerAnimation_RUN_R.PushBack({ 153,108, 50, 60 });
-	playerData.playerAnimation_RUN_R.PushBack({ 220,108, 50, 60 });
-	playerData.playerAnimation_RUN_R.speed = 0.4f;
+void ModulePlayer::SpawnPLayer() {
+	playerData.x = App->map->data.spawnOnMap.x;
+	playerData.y = App->map->data.spawnOnMap.y;
+}
 
-	playerData.playerAnimation_RUN_L.PushBack({ 9,177, 50, 60 });
-	playerData.playerAnimation_RUN_L.PushBack({ 70,177, 50, 60 });
-	playerData.playerAnimation_RUN_L.PushBack({ 139,177, 50, 60 });
-	playerData.playerAnimation_RUN_L.PushBack({ 204,177, 50, 60 });
-	playerData.playerAnimation_RUN_L.speed = 0.4f;
+void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
+	if (rect.x < playerData.x + playerData.w &&
+		rect.x + rect.w > playerData.x &&
+		rect.y < playerData.y + playerData.h &&
+		rect.h + rect.y > playerData.y)
+		playerData.playerState = PLAYER_STATE::DEAD;
+}
 
-	playerData.playerAnimation_JUMP_R.PushBack({ 139,248, 40, 80 });
-	playerData.playerAnimation_JUMP_R.PushBack({ 188,248, 40, 80 });
-	playerData.playerAnimation_JUMP_R.PushBack({ 233,248, 40, 80 });
-	playerData.playerAnimation_JUMP_R.PushBack({ 283,248, 40, 80 });
-	playerData.playerAnimation_JUMP_R.speed = 0.10f;
-	playerData.playerAnimation_JUMP_R.loop = false;
+bool ModulePlayer::AccioMovLaterals(bool col[4]) {
+	bool ret = false;
+	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
+		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
+			playerData.playerState = RUNING;
+		playerData.x += playerData.speed * dt;
+		playerData.lookingWay = L_RIGHT;
+		ret = true;
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false) {
+		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
+			playerData.playerState = RUNING;
+		playerData.x -= playerData.speed * dt;
+		playerData.lookingWay = L_LEFT;
+		ret = true;
+	}
+	return ret;
+}
 
-	playerData.playerAnimation_JUMP_L.PushBack({ 219,346, 40, 80 });
-	playerData.playerAnimation_JUMP_L.PushBack({ 171,346, 40, 80 });
-	playerData.playerAnimation_JUMP_L.PushBack({ 125,346, 40, 80 });
-	playerData.playerAnimation_JUMP_L.PushBack({ 59,346, 40, 80 });
-	playerData.playerAnimation_JUMP_L.speed = 0.10f;
-	playerData.playerAnimation_JUMP_L.loop = false;
+bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
+	bool ret = false;
+	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_REPEAT && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
+		playerData.playerState = JUMPING;
+		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
+		ret = true;
+	}
+	else if (col[0] == false) {
+		playerData.y += playerData.jumpSpeed * dt;
+		if (playerData.y > App->map->data.tile_height * (App->map->data.height-1))
+			playerData.playerState = PLAYER_STATE::DEAD;
+	}
 
-	playerData.playerAnimation_DEAD.PushBack({ 9,495, 100, 120 });
-	playerData.playerAnimation_DEAD.PushBack({ 137,495, 100, 120 });
-	playerData.playerAnimation_DEAD.PushBack({ 250,495, 100, 120 });
-	playerData.playerAnimation_DEAD.speed = 0.05f;
+	return ret;
+}
 
-	playerData.playerAnimation_TP_SMOKE.PushBack({ 9,495, 100, 120 });
-	playerData.playerAnimation_TP_SMOKE.PushBack({ 137,495, 100, 120 });
-	playerData.playerAnimation_TP_SMOKE.PushBack({ 250,495, 100, 120 });
-	playerData.playerAnimation_TP_SMOKE.speed = 0.05f;
+void ModulePlayer::ActionTp() {
+	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
+		if (playerData.tempoTP < SDL_GetTicks()) {
+			playerData.playerState = PLAYER_STATE::HABILITY_Q;
+		}
+	}
+}
 
-	playerData.playerAnimation_GHOST_R.PushBack({ 20,442,32,40 });
-	playerData.playerAnimation_GHOST_R.PushBack({ 59,442,32,40 });
-	playerData.playerAnimation_GHOST_R.PushBack({ 98,442,32,40 });
-	playerData.playerAnimation_GHOST_R.PushBack({ 132,442,32,40 });
-	playerData.playerAnimation_GHOST_R.speed = 0.25f;
+void ModulePlayer::Attack() {
 
-	playerData.playerAnimation_GHOST_L.PushBack({ 211,442,32,40 });
-	playerData.playerAnimation_GHOST_L.PushBack({ 245,442,32,40 });
-	playerData.playerAnimation_GHOST_L.PushBack({ 284,442,32,40 });
-	playerData.playerAnimation_GHOST_L.PushBack({ 323,442,32,40 });
-	playerData.playerAnimation_GHOST_L.speed = 0.25f;
-
-	playerData.playerAnimation_FALLING_R.PushBack({ 283, 247, 50, 80 });
-	playerData.playerAnimation_FALLING_R.loop = false;
-
-	playerData.playerAnimation_FALLING_L.PushBack({ 59, 345, 50, 80 });
-	playerData.playerAnimation_FALLING_L.loop = false;
-
-	playerData.playerAnimation_ATTACK_R.PushBack({ 47,643,35 ,78 });
-	playerData.playerAnimation_ATTACK_R.PushBack({ 89,643,69 ,78 });
-	playerData.playerAnimation_ATTACK_R.speed = 0.2f;
-	playerData.playerAnimation_ATTACK_R.loop = false;
-
-	playerData.playerAnimation_ATTACK_L.PushBack({ 252 ,643,35 ,78 });
-	playerData.playerAnimation_ATTACK_L.PushBack({ 179 ,643,69 ,78 });
-	playerData.playerAnimation_ATTACK_L.speed = 0.2f;
-	playerData.playerAnimation_ATTACK_L.loop = false;
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
+		playerData.tempoAtac = SDL_GetTicks() + 400;
+		playerData.playerState = PLAYER_STATE::ATTACK;
+	}
 }
 
 void ModulePlayer::DrawPlayer() {
@@ -359,73 +342,80 @@ void ModulePlayer::DrawPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
-void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
-	if (rect.x < playerData.x + playerData.w &&
-		rect.x + rect.w > playerData.x &&
-		rect.y < playerData.y + playerData.h &&
-		rect.h + rect.y > playerData.y)
-		playerData.playerState = PLAYER_STATE::DEAD;
-}
+void ModulePlayer::ChargeAnimations() {
+	playerData.playerAnimation_STAND_R.PushBack({ 11,20, 40, 70 });
+	playerData.playerAnimation_STAND_R.PushBack({ 57,20, 40, 70 });
+	playerData.playerAnimation_STAND_R.PushBack({ 102,20, 40, 70 });
+	playerData.playerAnimation_STAND_R.PushBack({ 147,20, 40, 70 });
+	playerData.playerAnimation_STAND_R.speed = 0.25f;
 
-bool ModulePlayer::AccioMovLaterals(bool col[4]) {
-	bool ret = false;
-	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
-		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
-			playerData.playerState = RUNING;
-		playerData.x += playerData.speed * dt;
-		playerData.lookingWay = L_RIGHT;
-		ret = true;
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false) {
-		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
-			playerData.playerState = RUNING;
-		playerData.x -= playerData.speed * dt;
-		playerData.lookingWay = L_LEFT;
-		ret = true;
-	}
-	return ret;
-}
+	playerData.playerAnimation_STAND_L.PushBack({ 227,20, 40, 70 });
+	playerData.playerAnimation_STAND_L.PushBack({ 272,20, 40, 70 });
+	playerData.playerAnimation_STAND_L.PushBack({ 317,20, 40, 70 });
+	playerData.playerAnimation_STAND_L.PushBack({ 362,20, 40, 70 });
+	playerData.playerAnimation_STAND_L.speed = 0.25f;
 
-bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
-	bool ret = false;
-	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
-		playerData.playerState = JUMPING;
-		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
-		ret = true;
-	}
-	else if (col[0] == false) {
-		playerData.y += playerData.jumpSpeed * dt;
-		if (playerData.y > App->map->data.tile_height * (App->map->data.height-1))
-			playerData.playerState = PLAYER_STATE::DEAD;
-	}
+	playerData.playerAnimation_RUN_R.PushBack({ 9,108, 50, 60 });
+	playerData.playerAnimation_RUN_R.PushBack({ 82,108, 50, 60 });
+	playerData.playerAnimation_RUN_R.PushBack({ 153,108, 50, 60 });
+	playerData.playerAnimation_RUN_R.PushBack({ 220,108, 50, 60 });
+	playerData.playerAnimation_RUN_R.speed = 1.0f;
 
-	return ret;
-}
+	playerData.playerAnimation_RUN_L.PushBack({ 9,177, 50, 60 });
+	playerData.playerAnimation_RUN_L.PushBack({ 70,177, 50, 60 });
+	playerData.playerAnimation_RUN_L.PushBack({ 139,177, 50, 60 });
+	playerData.playerAnimation_RUN_L.PushBack({ 204,177, 50, 60 });
+	playerData.playerAnimation_RUN_L.speed = 1.0f;
 
-void ModulePlayer::ActionTp() {
-	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
-		if (playerData.tempoTP < SDL_GetTicks()) {
-			playerData.playerState = PLAYER_STATE::HABILITY_Q;
-		}
-	}
-}
+	playerData.playerAnimation_JUMP_R.PushBack({ 139,248, 40, 80 });
+	playerData.playerAnimation_JUMP_R.PushBack({ 188,248, 40, 80 });
+	playerData.playerAnimation_JUMP_R.PushBack({ 233,248, 40, 80 });
+	playerData.playerAnimation_JUMP_R.PushBack({ 283,248, 40, 80 });
+	playerData.playerAnimation_JUMP_R.speed = 0.10f;
+	playerData.playerAnimation_JUMP_R.loop = false;
 
-void ModulePlayer::RelocatePlayer() {
-	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
-	if (col[0] == true && comprobacio < 5) {
-		float aux = (playerData.y + playerData.h) * -1;
-		while (aux < 0) {
-			aux += App->map->data.tile_height;
-		}
-		aux -= App->map->data.tile_height;
-		playerData.y -= aux;
-	}
-}
+	playerData.playerAnimation_JUMP_L.PushBack({ 219,346, 40, 80 });
+	playerData.playerAnimation_JUMP_L.PushBack({ 171,346, 40, 80 });
+	playerData.playerAnimation_JUMP_L.PushBack({ 125,346, 40, 80 });
+	playerData.playerAnimation_JUMP_L.PushBack({ 59,346, 40, 80 });
+	playerData.playerAnimation_JUMP_L.speed = 0.10f;
+	playerData.playerAnimation_JUMP_L.loop = false;
 
-void ModulePlayer::Attack() {
+	playerData.playerAnimation_DEAD.PushBack({ 9,495, 100, 120 });
+	playerData.playerAnimation_DEAD.PushBack({ 137,495, 100, 120 });
+	playerData.playerAnimation_DEAD.PushBack({ 250,495, 100, 120 });
+	playerData.playerAnimation_DEAD.speed = 0.05f;
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
-		playerData.tempoAtac = SDL_GetTicks() + 400;
-		playerData.playerState = PLAYER_STATE::ATTACK;
-	}
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 9,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 137,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 250,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.speed = 0.05f;
+
+	playerData.playerAnimation_GHOST_R.PushBack({ 20,442,32,40 });
+	playerData.playerAnimation_GHOST_R.PushBack({ 59,442,32,40 });
+	playerData.playerAnimation_GHOST_R.PushBack({ 98,442,32,40 });
+	playerData.playerAnimation_GHOST_R.PushBack({ 132,442,32,40 });
+	playerData.playerAnimation_GHOST_R.speed = 0.25f;
+
+	playerData.playerAnimation_GHOST_L.PushBack({ 211,442,32,40 });
+	playerData.playerAnimation_GHOST_L.PushBack({ 245,442,32,40 });
+	playerData.playerAnimation_GHOST_L.PushBack({ 284,442,32,40 });
+	playerData.playerAnimation_GHOST_L.PushBack({ 323,442,32,40 });
+	playerData.playerAnimation_GHOST_L.speed = 0.25f;
+
+	playerData.playerAnimation_FALLING_R.PushBack({ 283, 247, 50, 80 });
+	playerData.playerAnimation_FALLING_R.loop = false;
+
+	playerData.playerAnimation_FALLING_L.PushBack({ 59, 345, 50, 80 });
+	playerData.playerAnimation_FALLING_L.loop = false;
+
+	playerData.playerAnimation_ATTACK_R.PushBack({ 47,643,35 ,78 });
+	playerData.playerAnimation_ATTACK_R.PushBack({ 89,643,69 ,78 });
+	playerData.playerAnimation_ATTACK_R.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_R.loop = false;
+
+	playerData.playerAnimation_ATTACK_L.PushBack({ 252 ,643,35 ,78 });
+	playerData.playerAnimation_ATTACK_L.PushBack({ 179 ,643,69 ,78 });
+	playerData.playerAnimation_ATTACK_L.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_L.loop = false;
 }
