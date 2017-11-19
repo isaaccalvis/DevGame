@@ -12,11 +12,10 @@ public:
 	~BaseEnemy() {}
 
 	virtual void Update(float dt) = 0;
-	
 	bool GetIsAlive() { return isAlive; }
-	float w, h;
 
 	fPoint pos;
+	float w, h;
 	float dt;
 protected:
 	SDL_Texture* texturaEnemy;

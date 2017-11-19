@@ -10,7 +10,7 @@
 
 ModulePlayer::ModulePlayer() 
 { 
-	name.create("player"); 
+	name.create("player");
 }
 ModulePlayer::~ModulePlayer() {}
 
@@ -68,7 +68,6 @@ bool ModulePlayer::Load(pugi::xml_node& data)
 	return true;
 }
 
-// Save Game State
 bool ModulePlayer::Save(pugi::xml_node& data) const
 {
 	pugi::xml_node position = data.append_child("pos");
@@ -386,50 +385,6 @@ void ModulePlayer::DrawPlayer()
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
-//void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) 
-//{
-//	if (rect.x < playerData.x + playerData.w &&
-//		rect.x + rect.w > playerData.x &&
-//		rect.y < playerData.y + playerData.h &&
-//		rect.h + rect.y > playerData.y)
-//		playerData.playerState = PLAYER_STATE::DEAD;
-//}
-
-//bool ModulePlayer::AccioMovLaterals(bool col[4]) 
-//{
-//	bool ret = false;
-//	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
-//		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
-//			playerData.playerState = RUNING;
-//		playerData.x += playerData.speed * dt;
-//		playerData.lookingWay = L_RIGHT;
-//		ret = true;
-//	}
-//	else if (App->input->GetKey(SDL_SCANCODE_A) == j1KeyState::KEY_REPEAT && col[2] == false) {
-//		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
-//			playerData.playerState = RUNING;
-//		playerData.x -= playerData.speed * dt;
-//		playerData.lookingWay = L_LEFT;
-//		ret = true;
-//	}
-//	return ret;
-//}
-//
-//bool ModulePlayer::AccioMovJump_Gravity(bool col[4])
-//{
-//	bool ret = false;
-//	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
-//		playerData.playerState = JUMPING;
-//		playerData.tempoJump = SDL_GetTicks() + playerData.timeOnAir;
-//		ret = true;
-//	}
-//	else if (col[0] == false) {
-//		playerData.y += playerData.jumpSpeed * dt;
-//		if (playerData.y > App->map->data.tile_height * (App->map->data.height - 1))
-//			playerData.playerState = PLAYER_STATE::DEAD;
-//	}
-//}
-
 void ModulePlayer::ChargeAnimations() {
 	playerData.playerAnimation_STAND_R.PushBack({ 11,20, 40, 70 });
 	playerData.playerAnimation_STAND_R.PushBack({ 57,20, 40, 70 });
@@ -499,32 +454,11 @@ void ModulePlayer::ChargeAnimations() {
 
 	playerData.playerAnimation_ATTACK_R.PushBack({ 47,643,35 ,78 });
 	playerData.playerAnimation_ATTACK_R.PushBack({ 89,643,69 ,78 });
-	playerData.playerAnimation_ATTACK_R.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_R.speed = 0.9f;
 	playerData.playerAnimation_ATTACK_R.loop = false;
 
 	playerData.playerAnimation_ATTACK_L.PushBack({ 252 ,643,35 ,78 });
 	playerData.playerAnimation_ATTACK_L.PushBack({ 179 ,643,69 ,78 });
-	playerData.playerAnimation_ATTACK_L.speed = 0.2f;
+	playerData.playerAnimation_ATTACK_L.speed = 0.9f;
 	playerData.playerAnimation_ATTACK_L.loop = false;
 }
-
-//void ModulePlayer::RelocatePlayer() 
-//{
-//	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
-//	if (col[0] == true && comprobacio < 5) {
-//		float aux = (playerData.y + playerData.h) * -1;
-//		while (aux < 0) {
-//			aux += App->map->data.tile_height;
-//		}
-//		aux -= App->map->data.tile_height;
-//		playerData.y -= aux;
-//	}
-//}
-//
-//void ModulePlayer::Attack() 
-//{
-//	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
-//		playerData.tempoAtac = SDL_GetTicks() + 400;
-//		playerData.playerState = PLAYER_STATE::ATTACK;
-//	}
-//}

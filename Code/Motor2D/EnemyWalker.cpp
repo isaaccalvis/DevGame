@@ -84,15 +84,10 @@ void EnemyWalker::UpdateInfo() {
 	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, LEFT);
 	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, RIGHT);
 
-	/*col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, DOWN);
-	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, UP);
-	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)(pos.y + h / 2), (int)w, (int)h }, LEFT);
-	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w), (int)(pos.y + h / 2), (int)w, (int)h }, RIGHT);*/
-
-	walkable[0] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y + h, DOWN);
-	walkable[1] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y, UP);
-	walkable[2] = App->map->IsCollidingWithWalkableByEnemy(pos.x, pos.y + h , LEFT);
-	walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h, RIGHT);
+	//walkable[0] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y + h, DOWN);
+	//walkable[1] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y, UP);
+	//walkable[2] = App->map->IsCollidingWithWalkableByEnemy(pos.x, pos.y + h , LEFT);
+	//walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h, RIGHT);
 }
 
 void EnemyWalker::Move(LOOKING_DIRECTION direction)
@@ -133,8 +128,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 			pos.y += 200.0 * App->dt;
 
 		else if (nextpos.y < posen.y)
-		{
-		}
+			pos.y -= 200.0 * App->dt;
 	}
 
 	gravityFall();
@@ -142,9 +136,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction)
 
 void EnemyWalker::gravityFall() {
 	if (col[0] == false) 
-	{
 		pos.y += 200.0 * App->dt;
-	}
 }
 
 void EnemyWalker::ChargeAnimations() {
