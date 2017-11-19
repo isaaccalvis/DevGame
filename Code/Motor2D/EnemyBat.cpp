@@ -57,6 +57,7 @@ void EnemyBat::UpdateInfo() {
 }
 
 void EnemyBat::Move(LOOKING_DIRECTION direction, float dt) {
+	BROFILER_CATEGORY(__FUNCTION__, Profiler::Color::Orchid)
 	iPoint pospl;
 	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
 	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
