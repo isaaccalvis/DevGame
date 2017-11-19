@@ -121,7 +121,10 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_F10) == KEY_DOWN)
 	{
-		godmode = true;
+		if (godmode == false)
+			godmode = true;
+		else
+			godmode = false;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN) //Framerate Cap 30/infinite

@@ -228,11 +228,12 @@ void ModulePlayer::LoadPlayerProperties() {
 }
 
 void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
-	if (rect.x < playerData.x + playerData.w &&
-		rect.x + rect.w > playerData.x &&
-		rect.y < playerData.y + playerData.h &&
-		rect.h + rect.y > playerData.y)
-		playerData.playerState = PLAYER_STATE::DEAD;
+	if (App->scene->godmode == false)
+		if (rect.x < playerData.x + playerData.w &&
+			rect.x + rect.w > playerData.x &&
+			rect.y < playerData.y + playerData.h &&
+			rect.h + rect.y > playerData.y)
+			playerData.playerState = PLAYER_STATE::DEAD;
 }
 
 bool ModulePlayer::AccioMovLaterals(bool col[4]) {

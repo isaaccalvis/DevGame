@@ -31,7 +31,6 @@ public:
 	bool canGetCloser = false;
 
 	p2DynArray<iPoint>* lastpath;
-
 	iPoint nextpos;
 
 private:
