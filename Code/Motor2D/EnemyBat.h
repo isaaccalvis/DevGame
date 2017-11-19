@@ -48,7 +48,7 @@ private:
 
 	int controladorAnimations;	// 0->Still, 1->FlyL, 2->FlyR, 3->DeadR, 4->DeadL, 5->Explosion
 	bool canAtacPlayer;
-
+	uint tempoExplosio;
 };
 
 #endif

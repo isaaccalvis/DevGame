@@ -58,7 +58,6 @@ private:
 	bool canAtacPlayer;
 	bool col[4];
 	bool walkable[4];
-	float speed = 350.0f;
 };
 
 #endif
