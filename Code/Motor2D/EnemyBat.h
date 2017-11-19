@@ -27,6 +27,8 @@ public:
 	void Draw();
 	void UpdateInfo();
 	void Move(LOOKING_DIRECTION direction, float dt);
+	void getCloser();
+	bool canGetCloser = false;
 
 	p2DynArray<iPoint>* lastpath;
 

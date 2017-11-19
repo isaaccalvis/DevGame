@@ -66,20 +66,6 @@ bool j1Scene::PreUpdate()
 	iPoint p = App->render->ScreenToWorld(x, y);
 	p = App->map->WorldToMap(p.x, p.y);
 
-	if(App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN)
-	{
-		if(origin_selected == true)
-		{
-			App->pathfinding->CreatePath(origin, p);
-			origin_selected = false;
-		}
-		else
-		{
-			origin = p;
-			origin_selected = true;
-		}
-	}
-
 	return true;
 }
 
@@ -98,6 +84,8 @@ bool j1Scene::Update(float dt)
 
 		App->map->Load(current_map->data.GetString());
 
+		App->enemies->FindEnemies();
+
 		App->render->camera.x = App->render->cam.x = 0;
 		App->render->camera.y = App->render->cam.y = 0;
 
@@ -112,6 +100,8 @@ bool j1Scene::Update(float dt)
 
 		App->map->Load(current_map->data.GetString());
 
+		App->enemies->FindEnemies();
+
 		App->render->camera.x = App->render->cam.x = 0;
 		App->render->camera.y = App->render->cam.y = 0;
 
@@ -119,10 +109,10 @@ bool j1Scene::Update(float dt)
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
-		App->SaveGame("save_game.xml");
+		App->SaveGame();
 
 	if(App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
-		App->LoadGame("save_game.xml");
+		App->LoadGame();
 
 	if (App->input->GetKey(SDL_SCANCODE_F9) == KEY_DOWN) //Colliders/logic
 	{
@@ -231,8 +221,6 @@ bool j1Scene::ChangeScene() {
 		App->map->CleanUp();
 		App->tex->FreeTextures();
 		App->player->LoadPLayerTexture();
-		
-		/*App->audio->;*/
 
 		if (current_map->next == nullptr)
 			current_map = App->scene->maps.start;
@@ -240,6 +228,8 @@ bool j1Scene::ChangeScene() {
 			current_map = App->scene->current_map->next;
 
 		App->map->Load(current_map->data.GetString());
+
+		App->enemies->FindEnemies();
 
 		App->render->camera.x = App->render->cam.x = 0;
 		App->render->camera.y = App->render->cam.y = 0;

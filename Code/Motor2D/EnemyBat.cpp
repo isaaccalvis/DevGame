@@ -23,6 +23,9 @@ EnemyBat::~EnemyBat() {}
 void EnemyBat::Update(float dt) {
 	UpdateInfo();
 	Move(enemyBatLookingDirection, dt);
+	if (canGetCloser)
+		getCloser();
+	canGetCloser = false;
 	Draw();
 }
 
@@ -57,6 +60,7 @@ void EnemyBat::UpdateInfo() {
 
 void EnemyBat::Move(LOOKING_DIRECTION direction, float dt) {
 	
+
 	iPoint pospl;
 	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
 	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
@@ -67,7 +71,8 @@ void EnemyBat::Move(LOOKING_DIRECTION direction, float dt) {
 	
 	if (abs(pospl.x - posen.x) < 4)
 	{
-		App->pathfinding->CreatePath(posen, pospl);
+
+		App->pathfinding->CreatePath(posen, pospl, ENEMY_TYPES::E_BAT);
 
 		lastpath = App->pathfinding->GetLastPath();
 
@@ -95,7 +100,11 @@ void EnemyBat::Move(LOOKING_DIRECTION direction, float dt) {
 		{
 			pos.y -= 200.0 * App->dt;
 		}
+
+		canGetCloser = true;
 	}
+
+	
 	
 	/*if (enemyBatLookingDirection == L_RIGHT) {
 		switch (enemyBatState) {
@@ -190,5 +199,25 @@ void EnemyBat::Draw() {
 				break;
 			}
 		App->render->Blit(texturaEnemy, pos.x, pos.y, &enemyAnim.GetCurrentFrame());
+	}
+}
+
+void EnemyBat::getCloser()
+{
+	if (pos.x < App->player->playerData.pos.x)
+	{
+		pos.x += 200.0 * App->dt;
+	}
+	else if (pos.x > App->player->playerData.pos.x + App->player->playerData.w - 5)
+	{
+		pos.x -= 200.0 * App->dt;
+	}
+	if (pos.y < App->player->playerData.pos.y)
+	{
+		pos.y += 200.0 * App->dt;
+	}
+	else if (pos.y > App->player->playerData.pos.y + App->player->playerData.h)
+	{
+		pos.y -= 200.0 * App->dt;
 	}
 }

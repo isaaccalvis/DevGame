@@ -87,11 +87,11 @@ bool j1App::Awake()
 		app_config = config.child("app");
 		title.create(app_config.child("title").child_value());
 		organization.create(app_config.child("organization").child_value());
+		load_game = save_game = app_config.child("save_game").child_value();
 
 		maxfps = app_config.attribute("framerate_cap").as_int(0);
 		
 	}
-
 	if(ret == true)
 	{
 		p2List_item<j1Module*>* item;
@@ -322,7 +322,7 @@ const char* j1App::GetOrganization() const
 }
 
 // Load / Save
-void j1App::LoadGame(const char* file)
+void j1App::LoadGame()
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list
@@ -331,7 +331,7 @@ void j1App::LoadGame(const char* file)
 }
 
 // ---------------------------------------
-void j1App::SaveGame(const char* file) const
+void j1App::SaveGame() const
 {
 	// we should be checking if that file actually exist
 	// from the "GetSaveGames" list ... should we overwrite ?

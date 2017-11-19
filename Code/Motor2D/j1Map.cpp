@@ -639,7 +639,6 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 	bool ret = false;
 	p2List_item<MapLayer*>* item;
 	item = data.layers.start;
-	int k = 0;
 	for(item = data.layers.start; item != NULL; item = item->next)
 	{
 		MapLayer* layer = item->data;
@@ -656,14 +655,15 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 			{
 				int i = (y*layer->width) + x;
 
-				k = i;
-
 				int tile_id = layer->Get(x, y);
 				
 				if (tile_id == 21) 
 				{
-					++k;
 					map[i] = 1;
+				}
+				else if (tile_id == 24)
+				{
+					map[i] = 2;
 				}
 				else map[i] = 0;
 			}

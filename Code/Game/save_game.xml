@@ -1,0 +1,13 @@
+<!-- Game saved -->
+
+<save_game>
+  
+  <player>
+    <pos x ="0" y ="0"/>
+  </player>
+
+  <render>
+    <camera x="0" y="0"/>
+  </render>
+
+</save_game>

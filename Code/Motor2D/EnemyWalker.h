@@ -31,6 +31,11 @@ public:
 	void Move(LOOKING_DIRECTION direction);
 	void Jump(LOOKING_DIRECTION direction);
 	void gravityFall();
+
+	p2DynArray<iPoint>* lastpath;
+
+	iPoint nextpos;
+
 private:
 
 	ENEMY_WALKER_STATES enemyWalkerState;

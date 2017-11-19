@@ -4,6 +4,7 @@
 #include "j1Textures.h"
 #include "j1Input.h"
 #include "j1Map.h"
+#include "j1Scene.h"
 
 #include "ModuleEnemies.h"
 
@@ -16,7 +17,7 @@ bool ModulePlayer::Start() {
 	playerData.w = 40;
 	playerData.h = 70;
 	playerData.playerState = PLAYER_STATE::STAND;
-	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
+	LoadPLayerTexture();
 	playerData.tempoJump = 0;
 	playerData.timeOnAir = 300;
 	playerData.contAuxAnim = 0;
@@ -53,6 +54,25 @@ bool ModulePlayer::CleanUp() {
 
 void ModulePlayer::LoadPLayerTexture() {
 	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
+}
+
+bool ModulePlayer::Load(pugi::xml_node& data)
+{
+	playerData.pos.x = data.child("pos").attribute("x").as_int();
+	playerData.pos.y = data.child("pos").attribute("y").as_int();
+
+	return true;
+}
+
+// Save Game State
+bool ModulePlayer::Save(pugi::xml_node& data) const
+{
+	pugi::xml_node position = data.append_child("camera");
+
+	position.append_attribute("x") = playerData.pos.x;
+	position.append_attribute("y") = playerData.pos.y;
+
+	return true;
 }
 
 void ModulePlayer::SpawnPLayer() {
@@ -110,7 +130,7 @@ void ModulePlayer::MovementPlayer() {
 		break;
 
 	case HABILITY_Q:
-		App->render->Blit(playerData.playerSprites, playerData.x + (playerData.w / 2) + 100 - 50/*tamany del fum / 2*/, playerData.y - (playerData.h / 2) - 10, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
+		App->render->Blit(playerData.playerSprites, playerData.x + (playerData.w / 2) + 100 - 50, playerData.y - (playerData.h / 2) - 10, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
 		App->render->Blit(playerData.playerSprites, playerData.x + (playerData.w / 2) - 100 - 50, playerData.y - (playerData.h / 2) - 10, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
 		App->render->Blit(playerData.playerSprites, playerData.x - (playerData.w / 2) - 10, playerData.y - 100 - 50, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
 		App->render->Blit(playerData.playerSprites, playerData.x - (playerData.w / 2) - 10, playerData.y + 100 - 50, &playerData.playerAnimation_TP_SMOKE.GetCurrentFrame());
@@ -153,21 +173,29 @@ void ModulePlayer::MovementPlayer() {
 				playerData.tempoDead = -1;
 				playerData.playerState = PLAYER_STATE::STAND;
 				playerData.playerAnim = playerData.playerAnimation_DEAD;
-				playerData.x = 0;
-				playerData.y = 0;
+				App->map->CleanUp();
+				App->tex->FreeTextures();
+				App->player->LoadPLayerTexture();
+
+				App->map->Load(App->scene->current_map->data.GetString());
+
+				App->enemies->FindEnemies();
+
 				App->render->camera.x = App->render->cam.x = 0;
 				App->render->camera.y = App->render->cam.y = 0;
+
+				App->player->SpawnPLayer();
 			}
 		}
 		break;
 	case PLAYER_STATE::ATTACK:
 		if (playerData.lookingWay == L_RIGHT) {
 			if (playerData.tempoAtac - SDL_GetTicks() < 350 && playerData.tempoAtac - SDL_GetTicks() > 200)
-				App->enemies->receivDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x + playerData.w), (int)playerData.y, (int)(playerData.w / 2), (int)playerData.h });
+				App->enemies->receiveDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x + playerData.w), (int)playerData.y, (int)(playerData.w / 2), (int)playerData.h });
 		}
 		else if (playerData.lookingWay == L_LEFT) {
 			if (playerData.tempoAtac - SDL_GetTicks() < 350 && playerData.tempoAtac - SDL_GetTicks() > 200)
-				App->enemies->receivDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x - (playerData.w / 2)), (int)playerData.y, (int)playerData.w, (int)playerData.h });
+				App->enemies->receiveDamageEnemyAtThisPosition(SDL_Rect{ (int)(playerData.x - (playerData.w / 2)), (int)playerData.y, (int)playerData.w, (int)playerData.h });
 		}
 		if (playerData.tempoAtac < SDL_GetTicks())
 			playerData.playerState = STAND;
@@ -260,7 +288,8 @@ void ModulePlayer::ChargeAnimations() {
 	playerData.playerAnimation_ATTACK_L.loop = false;
 }
 
-void ModulePlayer::DrawPlayer() {
+void ModulePlayer::DrawPlayer() 
+{
 	switch (playerData.playerState) {
 
 	case PLAYER_STATE::STAND:
@@ -359,7 +388,8 @@ void ModulePlayer::DrawPlayer() {
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
 }
 
-void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
+void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) 
+{
 	if (rect.x < playerData.x + playerData.w &&
 		rect.x + rect.w > playerData.x &&
 		rect.y < playerData.y + playerData.h &&
@@ -367,7 +397,8 @@ void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
 		playerData.playerState = PLAYER_STATE::DEAD;
 }
 
-bool ModulePlayer::AccioMovLaterals(bool col[4]) {
+bool ModulePlayer::AccioMovLaterals(bool col[4]) 
+{
 	bool ret = false;
 	if (App->input->GetKey(SDL_SCANCODE_D) == j1KeyState::KEY_REPEAT && col[3] == false) {
 		if ((playerData.playerState != JUMPING || playerData.playerState != DEAD) && col[0] == true)
@@ -386,7 +417,8 @@ bool ModulePlayer::AccioMovLaterals(bool col[4]) {
 	return ret;
 }
 
-bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
+bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) 
+{
 	bool ret = false;
 	if (App->input->GetKey(SDL_SCANCODE_W) == j1KeyState::KEY_DOWN && playerData.tempoJump < SDL_GetTicks() - playerData.timeOnAir  && col[0] == true) {
 		playerData.playerState = JUMPING;
@@ -402,7 +434,8 @@ bool ModulePlayer::AccioMovJump_Gravity(bool col[4]) {
 	return ret;
 }
 
-void ModulePlayer::ActionTp() {
+void ModulePlayer::ActionTp() 
+{
 	if (App->input->GetKey(SDL_SCANCODE_Q) == j1KeyState::KEY_DOWN) {
 		if (playerData.tempoTP < SDL_GetTicks()) {
 			playerData.playerState = PLAYER_STATE::HABILITY_Q;
@@ -410,7 +443,8 @@ void ModulePlayer::ActionTp() {
 	}
 }
 
-void ModulePlayer::RelocatePlayer() {
+void ModulePlayer::RelocatePlayer() 
+{
 	int comprobacio = ((int)playerData.y + (int)playerData.h) % App->map->data.tile_height;
 	if (col[0] == true && comprobacio < 5) {
 		float aux = (playerData.y + playerData.h) * -1;
@@ -422,8 +456,8 @@ void ModulePlayer::RelocatePlayer() {
 	}
 }
 
-void ModulePlayer::Attack() {
-
+void ModulePlayer::Attack() 
+{
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == j1KeyState::KEY_DOWN) {
 		playerData.tempoAtac = SDL_GetTicks() + 400;
 		playerData.playerState = PLAYER_STATE::ATTACK;
