@@ -78,20 +78,25 @@ void EnemyWalker::UpdateInfo() {
 				enemyWalkerState = E_WALK;
 		}
 	}
-	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, DOWN);
+
+	col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, DOWN);
+	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, UP);
+	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, LEFT);
+	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)pos.y, (int)w, (int)h }, RIGHT);
+
+	/*col[0] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, DOWN);
 	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w / 2), (int)(pos.y + h), (int)w, (int)h }, UP);
 	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)pos.x, (int)(pos.y + h / 2), (int)w, (int)h }, LEFT);
-	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w), (int)(pos.y + h / 2), (int)w, (int)h }, RIGHT);
+	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(pos.x + w), (int)(pos.y + h / 2), (int)w, (int)h }, RIGHT);*/
 
-	walkable[0] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w / 2, pos.y + h, DOWN);
-	walkable[1] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w / 2, pos.y, UP);
-	walkable[2] = App->map->IsCollidingWithWalkableByEnemy(pos.x, pos.y + h / 2, LEFT);
-	walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h / 2, RIGHT);
+	walkable[0] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y + h, DOWN);
+	walkable[1] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w , pos.y, UP);
+	walkable[2] = App->map->IsCollidingWithWalkableByEnemy(pos.x, pos.y + h , LEFT);
+	walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h, RIGHT);
 }
 
 void EnemyWalker::Move(LOOKING_DIRECTION direction)
 {
-	printf_s("%i \n", enemyWalkerState);
 	iPoint pospl;
 	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
 	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
