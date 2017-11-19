@@ -27,6 +27,25 @@ bool ModuleEnemies::CleanUp() {
 	return true;
 }
 
+//bool ModuleEnemies::Load(pugi::xml_node& data)
+//{
+//	x = data.child("camera").attribute("x").as_int();
+//	y = data.child("camera").attribute("y").as_int();
+//
+//	return true;
+//}
+//
+//// Save Game State
+//bool ModuleEnemies::Save(pugi::xml_node& data) const
+//{
+//	pugi::xml_node cam = data.append_child("camera");
+//
+//	cam.append_attribute("x") = camera.x;
+//	cam.append_attribute("y") = camera.y;
+//
+//	return true;
+//}
+
 void ModuleEnemies::addEnemy(ENEMY_TYPES type , float x, float y) {
 	BaseEnemy* b;
 	switch (type) {
@@ -65,10 +84,16 @@ void ModuleEnemies::FindEnemies() {
 			iPoint ret = App->map->TiletoWorld(i);
 			addEnemy(ENEMY_TYPES::E_BAT, ret.x, ret.y);
 		}
+
+		if (item->data->data[i] == 22)
+		{
+			iPoint ret = App->map->TiletoWorld(i);
+			addEnemy(ENEMY_TYPES::E_WALKER, ret.x, ret.y);
+		}
 	}
 }
 
-void ModuleEnemies::receivDamageEnemyAtThisPosition(SDL_Rect rect) {
+void ModuleEnemies::receiveDamageEnemyAtThisPosition(SDL_Rect rect) {
 	p2List_item<BaseEnemy*>* rec = enemies.start;
 	while (rec != nullptr) {
 		if (rect.x < rec->data->pos.x + rec->data->w &&

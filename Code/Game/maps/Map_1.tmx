@@ -327,7 +327,7 @@
    <tile gid="12"/>
   </data>
  </layer>
- <layer name="CapaNavigation" width="30" height="5" opacity="0.39">
+ <layer name="CapaNavigation" width="30" height="5">
   <properties>
    <property name="Navigation" type="int" value="1"/>
   </properties>
@@ -344,44 +344,14 @@
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
    <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
    <tile gid="21"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -395,40 +365,63 @@
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
    <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="24"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="21"/>
+   <tile gid="24"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="24"/>
    <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="24"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="0"/>
-   <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
@@ -436,6 +429,13 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="21"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="0"/>
+   <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="0"/>
@@ -443,10 +443,10 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
-   <tile gid="21"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
+   <tile gid="24"/>
    <tile gid="21"/>
    <tile gid="21"/>
    <tile gid="21"/>
@@ -484,7 +484,7 @@
    <tile gid="0"/>
   </data>
  </layer>
- <layer name="CapaLogica" width="30" height="5" opacity="0.32">
+ <layer name="CapaLogica" width="30" height="5" opacity="0.36">
   <data>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -500,11 +500,11 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="5"/>
-   <tile gid="5"/>
+   <tile gid="22"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="5"/>
-   <tile gid="5"/>
+   <tile gid="22"/>
    <tile gid="0"/>
    <tile gid="23"/>
    <tile gid="6"/>
@@ -521,7 +521,7 @@
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="5"/>
-   <tile gid="5"/>
+   <tile gid="22"/>
    <tile gid="0"/>
    <tile gid="0"/>
    <tile gid="0"/>
@@ -541,7 +541,7 @@
    <tile gid="6"/>
    <tile gid="6"/>
    <tile gid="0"/>
-   <tile gid="5"/>
+   <tile gid="22"/>
    <tile gid="5"/>
    <tile gid="0"/>
    <tile gid="0"/>

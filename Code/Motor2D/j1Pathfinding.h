@@ -4,31 +4,34 @@
 #include "j1Module.h"
 #include "p2Point.h"
 #include "p2DynArray.h"
+#include "ModuleEnemies.h"
+
 
 #define DEFAULT_PATH_LENGTH 50
 #define INVALID_WALK_CODE 255
 
+enum ENEMY_TYPES;
+
+
 class j1PathFinding : public j1Module
 {
 public:
-
 	j1PathFinding();
 	~j1PathFinding();
 
 	bool CleanUp();
 	void SetMap(uint width, uint height, uchar* data);
-	int CreatePath(const iPoint& origin, const iPoint& destination);
+	int CreatePath(const iPoint& origin, const iPoint& destination, ENEMY_TYPES type);
 
 	// To request all tiles involved in the last generated path
 	p2DynArray<iPoint>* GetLastPath();
 
 	bool CheckBoundaries(const iPoint& pos) const;
 
-	bool IsWalkable(const iPoint& pos) const;
+	bool IsWalkable(const iPoint& pos, ENEMY_TYPES type) const;
 	uchar GetTileAt(const iPoint& pos) const;
 
 private:
-
 	// size of the map
 	uint width;
 	uint height;
@@ -50,7 +53,7 @@ struct PathNode
 	PathNode(const PathNode& node);
 
 	// Fills a list (PathList) of all valid adjacent pathnodes
-	uint FindWalkableAdjacents(PathList& list_to_fill) const;
+	uint FindWalkableAdjacents(PathList& list_to_fill, ENEMY_TYPES type) const;
 	// Calculates this tile score
 	int Score() const;
 	// Calculate the F for a specific destination tile

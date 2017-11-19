@@ -81,8 +81,9 @@ bool j1App::Awake()
 		organization.create(app_config.child("organization").child_value());
 		//maxfps = app_config.attribute("framerate_cap").as_int();
 		maxfps = 0;
+		load_game = save_game = app_config.child("save_game").child_value();
+		
 	}
-
 	if(ret == true)
 	{
 		p2List_item<j1Module*>* item;
@@ -294,14 +295,14 @@ const char* j1App::GetOrganization() const
 	return organization.GetString();
 }
 
-void j1App::LoadGame(const char* file)
+void j1App::LoadGame()
 {
 	want_to_load = true;
 	//load_game.create("%s%s", fs->GetSaveDirectory(), file);
 }
 
 // ---------------------------------------
-void j1App::SaveGame(const char* file) const
+void j1App::SaveGame() const
 {
 
 	want_to_save = true;

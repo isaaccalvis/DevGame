@@ -94,8 +94,50 @@ void EnemyWalker::UpdateInfo() {
 	walkable[3] = App->map->IsCollidingWithWalkableByEnemy(pos.x + w, pos.y + h / 2, RIGHT);
 }
 
-void EnemyWalker::Move(LOOKING_DIRECTION direction) {
-	if (enemyWalkerLookingDirection == L_RIGHT) {
+void EnemyWalker::Move(LOOKING_DIRECTION direction) 
+{
+	iPoint pospl;
+	pospl.x = App->player->playerData.pos.x / App->map->data.tilesets.start->data->tile_width;
+	pospl.y = App->player->playerData.pos.y / App->map->data.tilesets.start->data->tile_height;
+
+	iPoint posen;
+	posen.x = pos.x / App->map->data.tilesets.start->data->tile_width;
+	posen.y = pos.y / App->map->data.tilesets.start->data->tile_height;
+
+	if (abs(pospl.x - posen.x) < 5)
+	{
+		App->pathfinding->CreatePath(posen, pospl, ENEMY_TYPES::E_WALKER);
+
+		lastpath = App->pathfinding->GetLastPath();
+
+		lastpath->Flip();
+
+		lastpath->Pop(nextpos);
+		lastpath->Pop(nextpos);
+
+		if (nextpos.x > posen.x)
+		{
+			pos.x += 200.0 * App->dt;
+		}
+
+		else if (nextpos.x < posen.x)
+		{
+			pos.x -= 200.0 * App->dt;
+		}
+
+		if (nextpos.y > posen.y)
+		{
+			pos.y += 200.0 * App->dt;
+		}
+
+		else if (nextpos.y < posen.y)
+		{
+		}
+	}
+
+	gravityFall();
+
+	/*if (enemyWalkerLookingDirection == L_RIGHT) {
 		switch (enemyWalkerState) {
 		case E_STAND:
 			gravityFall();
@@ -157,7 +199,7 @@ void EnemyWalker::Move(LOOKING_DIRECTION direction) {
 				enemyWalkerState = E_STAND;
 			break;
 		}
-	}
+	}*/
 }
 
 

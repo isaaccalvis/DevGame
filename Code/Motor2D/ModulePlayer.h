@@ -71,6 +71,10 @@ public:
 	void SpawnPLayer();
 	void receiveDamageByPosition(SDL_Rect rect);
 
+	bool Load(pugi::xml_node& data);
+
+	bool Save(pugi::xml_node& data) const;
+
 private:
 
 	void DrawPlayer();
