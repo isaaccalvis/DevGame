@@ -79,7 +79,7 @@ void ModulePlayer::MovementPlayer() {
 	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, LEFT);
 	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x + (int)playerData.w, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, RIGHT);
 	colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1}, UP);
-	printf_s(" %i %i %i %i :: %i\n", col[0], col[1], col[2], col[3], colAuxiliar);
+
 	while (colAuxiliar == true) {
 		playerData.y--;
 		colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1 }, UP);
