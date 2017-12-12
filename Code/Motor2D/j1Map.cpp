@@ -22,6 +22,37 @@ bool j1Map::Awake(pugi::xml_node& config)
 	return true;
 }
 
+bool j1Map::CleanUp()
+{
+	LOG("Unloading map");
+
+	p2List_item<TileSet*>* item;
+	item = data.tilesets.start;
+
+	while (item != NULL)
+	{
+		RELEASE(item->data);
+		item = item->next;
+	}
+	data.tilesets.clear();
+
+	p2List_item<MapLayer*>* item2;
+	item2 = data.layers.start;
+
+	while (item2 != NULL)
+	{
+		RELEASE(item2->data);
+		item2 = item2->next;
+	}
+	data.layers.clear();
+
+	data.colliderOnMap.clear();
+
+	map_file.reset();
+
+	return true;
+}
+
 void j1Map::ChargeColliders() {
 	clearCollideRectList();
 	App->enemies->clearEnemies();
@@ -156,9 +187,6 @@ void j1Map::Draw()
 	for (; item->next->next != nullptr; item = item->next)
 	{
 		MapLayer* layer = item->data;
-
-		//if(layer->properties.Get("Nodraw") != 0)
-			//continue;
 
 		for (int y = 0; y < data.height; ++y)
 		{
@@ -308,42 +336,6 @@ SDL_Rect TileSet::GetTileRect(int id) const
 	return rect;
 }
 
-// Called before quitting
-bool j1Map::CleanUp()
-{
-	LOG("Unloading map");
-
-	// Remove all tilesets
-	p2List_item<TileSet*>* item;
-	item = data.tilesets.start;
-
-	while(item != NULL)
-	{
-		RELEASE(item->data);
-		item = item->next;
-	}
-	data.tilesets.clear();
-
-	// Remove all layers
-	p2List_item<MapLayer*>* item2;
-	item2 = data.layers.start;
-
-	while(item2 != NULL)
-	{
-		RELEASE(item2->data);
-		item2 = item2->next;
-	}
-	data.layers.clear();
-	
-	data.colliderOnMap.clear();
-
-	// Clean up the pugui tree
-	map_file.reset();
-
-	return true;
-}
-
-// Load new map
 bool j1Map::Load(const char* file_name)
 {
 	bool ret = true;
@@ -601,7 +593,6 @@ bool j1Map::LoadLayer(pugi::xml_node& node, MapLayer* layer)
 	return ret;
 }
 
-// Load a group of properties from a node and fill a list with it
 bool j1Map::LoadProperties(pugi::xml_node& node, Properties& properties)
 {
 	bool ret = false;
@@ -672,19 +663,6 @@ bool j1Map::CreateWalkabilityMap(int& width, int& height, uchar** buffer) const
 	return ret;
 }
 
-//RETURN_TILE_TYPE j1Map::GetTileByPosition(int x, int y, POSITION_FROM_CENTER posDirection) {
-//	iPoint pos = WorldToMap(x, y);
-//
-//	p2List_item<MapLayer*>* item = data.layers.start;
-//	MapLayer* layer = item->data;
-//
-//	int tile_id = layer->Get(pos.x, pos.y);
-//	if (tile_id > 0)
-//		printf_s("%i :: x,y-> %i %i\n", tile_id, pos.x, pos.y);
-//
-//	return RETURN_TILE_TYPE::NORMAL;
-//}
-
 bool j1Map::IsCollidingWithTerrainWithoutMapToWORLD(int x, int y, POSITION_FROM_CENTER posCent) { // Aquest es fa servir per compress
 	bool ret = false;
 	iPoint pos(x, y);
@@ -733,7 +711,7 @@ bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent)
 			if (rec->data.x * data.tile_width < rect.x + rect.w &&
 				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
 				rec->data.y * data.tile_height < rect.y + rect.h &&
-				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				rec->data.h * data.tile_height + rec->data.y * data.tile_height > rect.y) {
 				ret = true;
 				rec = nullptr;
 			}
@@ -746,7 +724,7 @@ bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent)
 			if (rec->data.x * data.tile_width < rect.x + rect.w &&
 				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
 				rec->data.y * data.tile_height < rect.y + rect.h &&
-				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				rec->data.h * data.tile_height + rec->data.y * data.tile_height > rect.y) {
 				ret = true;
 				rec = nullptr;
 			}
@@ -759,7 +737,7 @@ bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent)
 			if (rec->data.x * data.tile_width < rect.x + rect.w &&
 				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
 				rec->data.y * data.tile_height < rect.y + rect.h &&
-				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				rec->data.h * data.tile_height + rec->data.y * data.tile_height > rect.y) {
 				ret = true;
 				rec = nullptr;
 			}
@@ -772,7 +750,7 @@ bool j1Map::IsCollidingWithTerraint(SDL_Rect rect, POSITION_FROM_CENTER posCent)
 			if (rec->data.x * data.tile_width < rect.x + rect.w &&
 				rec->data.x * data.tile_width + rec->data.w * data.tile_width > rect.x &&
 				rec->data.y * data.tile_height < rect.y + rect.h &&
-				rec->data.h * data.tile_height + rec->data.y * data.tile_width > rect.y) {
+				rec->data.h * data.tile_height + rec->data.y * data.tile_height > rect.y) {
 				ret = true;
 				rec = nullptr;
 			}

@@ -15,18 +15,6 @@ ModulePlayer::ModulePlayer()
 ModulePlayer::~ModulePlayer() {}
 
 bool ModulePlayer::Start() {
-	playerData.x = 0;
-	playerData.y = 0;
-	playerData.w = 40;
-	playerData.h = 70;
-	playerData.playerState = PLAYER_STATE::STAND;
-	LoadPLayerTexture();
-	playerData.tempoJump = 0;
-	playerData.timeOnAir = 300;
-	playerData.contAuxAnim = 0;
-	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
-	playerData.tempoTP = 0;
-	playerData.tempoDead = -1;
 
 	LoadPlayerProperties();
 	ChargeAnimations();
@@ -90,6 +78,12 @@ void ModulePlayer::MovementPlayer() {
 	col[1] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y, (int)(playerData.w / 2), 1 }, UP);
 	col[2] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, LEFT);
 	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x + (int)playerData.w, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, RIGHT);
+	colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1}, UP);
+	printf_s(" %i %i %i %i :: %i\n", col[0], col[1], col[2], col[3], colAuxiliar);
+	while (colAuxiliar == true) {
+		playerData.y--;
+		colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1 }, UP);
+	}
 
 	switch (playerData.playerState) {
 	case STAND:
@@ -211,21 +205,6 @@ void ModulePlayer::MovementPlayer() {
 	if (col[0] == true && col[1] == true && col[2] == true && col[3]) {
 		playerData.playerState = PLAYER_STATE::DEAD;
 	}
-}
-
-void ModulePlayer::LoadPlayerProperties() {
-	playerData.x = 0;
-	playerData.y = -300;
-	playerData.w = 40;
-	playerData.h = 70;
-	playerData.playerState = PLAYER_STATE::STAND;
-	playerData.playerSprites = App->tex->Load("textures/characterSprites.png");
-	playerData.tempoJump = 0;
-	playerData.timeOnAir = 300;
-	playerData.contAuxAnim = 0;
-	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
-	playerData.tempoTP = 0;
-	playerData.tempoDead = -1;
 }
 
 void ModulePlayer::receiveDamageByPosition(SDL_Rect rect) {
@@ -387,6 +366,21 @@ void ModulePlayer::DrawPlayer()
 
 	if (playerData.playerSprites != nullptr)
 		App->render->Blit(playerData.playerSprites, playerData.x, playerData.y, &playerData.playerAnim.GetCurrentFrame());
+}
+
+void ModulePlayer::LoadPlayerProperties() {
+	playerData.x = 0;
+	playerData.y = 0;
+	playerData.w = 40;
+	playerData.h = 70;
+	playerData.playerState = PLAYER_STATE::STAND;
+	LoadPLayerTexture();
+	playerData.tempoJump = 0;
+	playerData.timeOnAir = 300;
+	playerData.contAuxAnim = 0;
+	playerData.lookingWay = LOOKING_DIRECTION::L_RIGHT;
+	playerData.tempoTP = 0;
+	playerData.tempoDead = -1;
 }
 
 void ModulePlayer::ChargeAnimations() {

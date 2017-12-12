@@ -92,6 +92,7 @@ public:
 
 	PlayerData playerData;
 	bool col[4] = { false,false,false,false };
+	bool colAuxiliar = false; // serveix per comprobar que el prota no s'estigui menjant una mica de terra
 };
 
 #endif

@@ -19,12 +19,6 @@ enum MAP_OBJECTS_TYPES {
 	WALKABLE_BY_ENEMY
 };
 
-//enum RETURN_TILE_TYPE {
-//	NORMAL,
-//	COLLIDER,
-//	DAMAGE
-//};
-
 struct Properties
 {
 	struct Property
@@ -54,6 +48,12 @@ struct Properties
 
 struct MapLayer
 {
+	MapLayer() : data(NULL) {}
+
+	~MapLayer() {
+		RELEASE(data);
+	}
+
 	p2SString	name;
 	int			width;
 	int			height;
@@ -62,16 +62,7 @@ struct MapLayer
 	float		speed = 1;
 	uint		size_data = 0;
 
-	MapLayer() : data(NULL)
-	{}
-
-	~MapLayer()
-	{
-		RELEASE(data);
-	}
-
-	inline uint Get(int x, int y) const
-	{
+	inline uint Get(int x, int y) const {
 		return data[(y*width) + x];
 	}
 };
@@ -81,12 +72,12 @@ struct TileSet
 	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
+	SDL_Texture*		texture;
 	int					firstgid;
 	int					margin;
 	int					spacing;
 	int					tile_width;
 	int					tile_height;
-	SDL_Texture*		texture;
 	int					tex_width;
 	int					tex_height;
 	int					num_tiles_width;
