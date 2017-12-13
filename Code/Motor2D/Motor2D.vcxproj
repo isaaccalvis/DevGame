@@ -78,6 +78,11 @@
   <ItemGroup>
     <ClCompile Include="EnemyBat.cpp" />
     <ClCompile Include="EnemyWalker.cpp" />
+    <ClCompile Include="gui_button.cpp" />
+    <ClCompile Include="gui_checkBox.cpp" />
+    <ClCompile Include="gui_image.cpp" />
+    <ClCompile Include="gui_label.cpp" />
+    <ClCompile Include="gui_textBox.cpp" />
     <ClCompile Include="j1Main.cpp" />
     <ClCompile Include="j1App.cpp" />
     <ClCompile Include="j1Audio.cpp" />
@@ -88,6 +93,7 @@
     <ClCompile Include="j1Scene.cpp" />
     <ClCompile Include="j1Timer.cpp" />
     <ClCompile Include="ModuleEnemies.cpp" />
+    <ClCompile Include="ModuleGui.cpp" />
     <ClCompile Include="ModulePlayer.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="j1Render.cpp" />
@@ -100,12 +106,18 @@
     <ClInclude Include="BaseEnemies.h" />
     <ClInclude Include="EnemyBat.h" />
     <ClInclude Include="EnemyWalker.h" />
+    <ClInclude Include="gui_button.h" />
+    <ClInclude Include="gui_checkBox.h" />
+    <ClInclude Include="gui_image.h" />
+    <ClInclude Include="gui_label.h" />
+    <ClInclude Include="gui_textBox.h" />
     <ClInclude Include="j1Map.h" />
     <ClInclude Include="j1Pathfinding.h" />
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1Scene.h" />
     <ClInclude Include="j1Timer.h" />
     <ClInclude Include="ModuleEnemies.h" />
+    <ClInclude Include="ModuleGui.h" />
     <ClInclude Include="ModulePlayer.h" />
     <ClInclude Include="p2DynArray.h" />
     <ClInclude Include="j1Audio.h" />

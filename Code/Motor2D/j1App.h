@@ -21,6 +21,7 @@ class j1Map;
 class j1PathFinding;
 class ModulePlayer;
 class ModuleEnemies;
+class ModuleGUI;
 
 class j1App
 {
@@ -96,6 +97,7 @@ public:
 	j1PathFinding*		pathfinding;
 	ModulePlayer*		player;
 	ModuleEnemies*		enemies;
+	ModuleGUI*			gui;
 
 	float dt;
 	int					maxfps;

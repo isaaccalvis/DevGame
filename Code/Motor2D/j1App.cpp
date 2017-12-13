@@ -14,6 +14,7 @@
 #include "j1Pathfinding.h"
 #include "ModulePlayer.h"
 #include "ModuleEnemies.h"
+#include "ModuleGui.h"
 #include "j1App.h"
 
 
@@ -32,6 +33,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	pathfinding = new j1PathFinding();
 	player = new ModulePlayer();
 	enemies = new ModuleEnemies();
+	gui = new ModuleGUI();
 
 	AddModule(input);
 	AddModule(win);
@@ -42,6 +44,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(player);
 	AddModule(enemies);
+	AddModule(gui);
 
 	// render last to swap buffer
 	AddModule(render);
