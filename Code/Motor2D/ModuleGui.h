@@ -17,7 +17,7 @@ enum GUI_TYPES {
 
 struct GUI_object {
 	GUI_object();
-	GUI_object(int x, int y, SDL_Rect rect/*, GUI_TYPES type*/, GUI_object* parent);
+	GUI_object(int x, int y, SDL_Rect rect, GUI_object* parent);
 	~GUI_object();
 	int x, y;
 	SDL_Rect rect;
@@ -46,11 +46,10 @@ public:
 	void addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
 	//void addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent);
 	//void addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent);
-
 private:
 	p2List<GUI_object*> gui_objects;
-	SDL_Texture* fons;
-	SDL_Texture* guiObj;
+	SDL_Texture* fons = nullptr;
+	SDL_Texture* guiObjTextures = nullptr;
 	//_TTF_Font* font;
 };
 #endif

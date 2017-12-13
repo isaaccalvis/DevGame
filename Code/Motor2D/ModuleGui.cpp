@@ -9,15 +9,17 @@
 #include "gui_checkBox.h"
 #include "gui_textBox.h"
 
+#include "j1Render.h"
+#include "ModulePlayer.h"
+
 ModuleGUI::ModuleGUI() {}
 ModuleGUI::~ModuleGUI() {}
 
 bool ModuleGUI::Start() {
-	guiObj = App->tex->Load("textures/objectesGUI.png");
-
-	addImage(0, 0, SDL_Rect{ 0,0,1280,720 }, fons);
-	addButton(10, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObj, guiObj, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 });
-	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObj, guiObj, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 });
+	guiObjTextures = App->tex->Load("textures/objectesGUI.png");//	La textura es carrega desde el player
+	addImage(0, 0, SDL_Rect{ 0,0,1280,720 }, guiObjTextures);
+	addButton(10, 30, SDL_Rect{ 20,530,120,20 }, guiObjTextures, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 });
+	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, guiObjTextures, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 });
 
 	return true;
 }
@@ -28,17 +30,18 @@ bool ModuleGUI::PostUpdate() {
 		rec->data->UpdateObject();
 		rec = rec->next;
 	}
-	SDL_Rect a = { 0,0,100,40 };
+	SDL_Rect b = { 0,0,100,100 };
+	App->render->Blit(guiObjTextures, 0, 0, &b);
 	return true;
 }
 
 bool ModuleGUI::CleanUp() {
-
+	App->tex->UnLoad(guiObjTextures);
 	return true;
 }
 
 void ModuleGUI::addImage(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* parent) {
-	GUI_object* ret = new GUI_image(x, y, rect, tex);
+	GUI_object* ret = new GUI_image(x, y, rect, tex, parent);
 	gui_objects.add(ret);
 }
 
@@ -66,7 +69,7 @@ void ModuleGUI::addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_T
 
 GUI_object::GUI_object() {}
 
-GUI_object::GUI_object(int x, int y, SDL_Rect rect = {0,0,0,0}/*, GUI_TYPES type = GUI_OBJECT_NULL*/, GUI_object* parent = nullptr) {
+GUI_object::GUI_object(int x, int y, SDL_Rect rect = {0,0,0,0}, GUI_object* parent = nullptr) {
 	this->x = x;
 	this->y = y;
 	this->rect = rect;

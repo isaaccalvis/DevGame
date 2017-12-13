@@ -40,6 +40,7 @@ void GUI_button::UpdateObject() {
 }
 
 void GUI_button::Draw(SDL_Texture* tex, SDL_Rect rect) {
-	if (texture != nullptr)
+	if (texture != nullptr) {
 		App->render->Blit(tex, x, y, &rect);
+	}
 }

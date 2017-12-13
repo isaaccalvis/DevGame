@@ -6,6 +6,8 @@
 #include "j1Map.h"
 #include "j1Scene.h"
 
+#include "ModuleGui.h"
+
 #include "ModuleEnemies.h"
 
 ModulePlayer::ModulePlayer() 
@@ -19,7 +21,7 @@ bool ModulePlayer::Start() {
 	LoadPlayerProperties();
 	ChargeAnimations();
 
-	playerData.playerState = PLAYER_STATE::DEAD;
+//	playerData.playerState = PLAYER_STATE::DEAD;
 
 	return true;
 }
@@ -43,6 +45,7 @@ bool ModulePlayer::Update(float dt) {
 }
 
 bool ModulePlayer::CleanUp() {
+	App->tex->UnLoad(playerData.playerSprites);
 	return true;
 }
 
@@ -171,7 +174,7 @@ void ModulePlayer::MovementPlayer() {
 				playerData.playerState = PLAYER_STATE::STAND;
 				playerData.playerAnim = playerData.playerAnimation_DEAD;
 				App->map->CleanUp();
-				App->tex->FreeTextures();
+				//App->tex->FreeTextures();
 				App->player->LoadPLayerTexture();
 
 				App->map->Load(App->scene->current_map->data.GetString());
@@ -182,6 +185,7 @@ void ModulePlayer::MovementPlayer() {
 				App->render->camera.y = App->render->cam.y = 0;
 
 				App->player->SpawnPLayer();
+
 			}
 		}
 		break;
