@@ -28,6 +28,11 @@ struct GUI_object {
 	virtual void UpdateObject() = 0;
 	virtual void Draw() = 0;
 	bool MouseOn();
+	void updatePosition();
+
+protected:
+	int dToParentX;
+	int dToParentY;
 };
 
 class ModuleGUI : public j1Module
@@ -41,9 +46,9 @@ public:
 	bool PostUpdate();
 	bool CleanUp();
 
-	void addImage(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* parent = nullptr);
-	void addButton(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
-	void addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
+	GUI_object* addImage(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* parent = nullptr);
+	GUI_object* addButton(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
+	GUI_object* addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
 	//void addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent);
 	//void addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent);
 private:

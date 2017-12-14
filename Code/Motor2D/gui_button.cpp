@@ -3,7 +3,7 @@
 #include "j1Input.h"
 #include "j1Render.h"
 
-GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent) : GUI_image(x, y, rect, tex) {
+GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent) : GUI_image(x, y, rect, tex, parent) {
 	if (texOnMouse == nullptr)
 		textureOnMouse = tex;
 	else
@@ -32,6 +32,7 @@ bool GUI_button::MouseOnClick() {
 }
 
 void GUI_button::UpdateObject() {
+	updatePosition();
 	if (MouseOnClick())
 		Draw(textureOnClick, rectOnClick);
 	else if (MouseOn())
@@ -41,6 +42,6 @@ void GUI_button::UpdateObject() {
 
 void GUI_button::Draw(SDL_Texture* tex, SDL_Rect rect) {
 	if (texture != nullptr) {
-		App->render->Blit(tex, x, y, &rect);
+		App->render->Blit(texture, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &rect);
 	}
 }
