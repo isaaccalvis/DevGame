@@ -35,7 +35,6 @@ struct GUI_object {
 
 	virtual void UpdateObject() = 0;
 	virtual void Draw() = 0;
-	//bool MouseOn = false;
 	void updatePosition();
 	void changeState(GUI_OBJECT_STATE state);
 	virtual void MouseInFunction() {};

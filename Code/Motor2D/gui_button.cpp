@@ -26,32 +26,38 @@ GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Textur
 
 
 	textureToDraw = texture;
+	rectToDraw = &this->rect;
 }
 
 void GUI_button::UpdateObject() {
+	printf_s("%i %i %i %i \n", rectToDraw->x, rectToDraw->y, rectToDraw->w, rectToDraw->h);
 	updatePosition();
-	Draw(texture, rect);
+	Draw();
 }
 
-void GUI_button::Draw(SDL_Texture* tex, SDL_Rect rect) {
+void GUI_button::Draw() {
 	if (textureToDraw != nullptr) {
-		App->render->Blit(textureToDraw, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &rect);
+		App->render->Blit(textureToDraw, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, rectToDraw);
 	}
 }
 
 void GUI_button::MouseInFunction() {
 	textureToDraw = textureOnMouse;
+	rectToDraw = &rectOnMouse;
 	printf_s("mouse in \n");
 }
 void GUI_button::MouseOutFunction() {
 	textureToDraw = texture;
+	rectToDraw = &rect;
 	printf_s("mouse out \n");
 }
 void GUI_button::MouseClikOnFunction() {
 	textureToDraw = textureOnClick;
+	rectToDraw = &rectOnClick;
 	printf_s("mouse click \n");
 }
 void GUI_button::MouseClikOffFunction(){
 	textureToDraw = textureOnMouse;
+	rectToDraw = &rectOnMouse;
 	printf_s("mouse off click \n");
 }

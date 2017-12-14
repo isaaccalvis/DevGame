@@ -23,5 +23,5 @@ void GUI_checkBox::UpdateObject() {
 	//	isClicking = false;
 	//if (MouseOn())
 	//	Draw(textureOnMouse, rectOnMouse);
-	Draw(texActual, rectActual);
+	Draw();
 }

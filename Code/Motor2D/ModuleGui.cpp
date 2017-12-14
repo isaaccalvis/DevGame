@@ -81,9 +81,6 @@ void ModuleGUI::mouseInteractionObjects() {
 		}
 		else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_IN)
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-		//else
-		//	if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
-		//		rec->data->actualState = GUI_OBJECT_STATE::MOUSE_OUT;
 		rec = rec->next;
 	}
 }
@@ -98,6 +95,8 @@ void ModuleGUI::mouseInteractionObjects() {
 //	gui_objects.add(ret);
 //}
 
+
+
 //--------------------------------------------- GUI_object ---------------------------------------------
 
 GUI_object::GUI_object() {}
@@ -106,21 +105,12 @@ GUI_object::GUI_object(int x, int y, SDL_Rect rect = {0,0,0,0}, GUI_object* pare
 	this->dToParentX = this->x = x;
 	this->dToParentY = this->y = y;
 	this->rect = rect;
-	//this->type = type;
 	this->parent = parent;
 }
 
 GUI_object::~GUI_object() {
 
 }
-
-//bool GUI_object::MouseOn() {
-//	int nx, ny;
-//	App->input->GetMousePosition(nx, ny);
-//	if (nx > this->x && ny > this->y && nx < (this->x + rect.w) && ny < (this->y + rect.h))
-//		return true;
-//	return false;
-//}
 
 void GUI_object::updatePosition() {
 	if (parent != nullptr) {

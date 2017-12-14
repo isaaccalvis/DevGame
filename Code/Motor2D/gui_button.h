@@ -11,7 +11,7 @@ struct GUI_button : public GUI_image {
 	SDL_Rect rectOnMouse;
 	SDL_Rect rectOnClick;
 	virtual void UpdateObject();
-	void Draw(SDL_Texture* tex, SDL_Rect rect);
+	void Draw();
 
 	virtual void MouseInFunction();
 	virtual void MouseOutFunction();
@@ -19,6 +19,7 @@ struct GUI_button : public GUI_image {
 	virtual void MouseClikOffFunction();
 protected:
 	SDL_Texture* textureToDraw = nullptr;
+	SDL_Rect *rectToDraw = nullptr;
 };
 
 #endif
