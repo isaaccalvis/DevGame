@@ -26,11 +26,13 @@ struct GUI_object {
 	GUI_object();
 	GUI_object(int x, int y, SDL_Rect rect, GUI_object* parent);
 	~GUI_object();
+
 	int x, y;
 	SDL_Rect rect;
 	GUI_TYPES type;
 	GUI_OBJECT_STATE actualState = MOUSE_OUT;
-	bool active = true;
+
+	bool active = true, isMovable = true;
 	GUI_object* parent;
 
 	virtual void UpdateObject() = 0;

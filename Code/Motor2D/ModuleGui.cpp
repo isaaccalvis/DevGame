@@ -83,6 +83,10 @@ void ModuleGUI::mouseInteractionObjects() {
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
 		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
+		else if (rec->data->isMovable == true) {
+			 
+
+		}
 
 		rec = rec->next;
 	}
