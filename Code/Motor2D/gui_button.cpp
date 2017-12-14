@@ -30,7 +30,6 @@ GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Textur
 }
 
 void GUI_button::UpdateObject() {
-	printf_s("%i %i %i %i \n", rectToDraw->x, rectToDraw->y, rectToDraw->w, rectToDraw->h);
 	updatePosition();
 	Draw();
 }
