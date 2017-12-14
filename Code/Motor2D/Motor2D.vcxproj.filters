@@ -73,6 +73,9 @@
     <ClCompile Include="gui_textBox.cpp">
       <Filter>Desenvolupament  ========\Modules\GUI</Filter>
     </ClCompile>
+    <ClCompile Include="GUI_object.cpp">
+      <Filter>Desenvolupament  ========\Modules\GUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -169,6 +172,9 @@
       <Filter>Desenvolupament  ========\Modules\GUI</Filter>
     </ClInclude>
     <ClInclude Include="gui_textBox.h">
+      <Filter>Desenvolupament  ========\Modules\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GUI_object.h">
       <Filter>Desenvolupament  ========\Modules\GUI</Filter>
     </ClInclude>
   </ItemGroup>

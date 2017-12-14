@@ -6,7 +6,6 @@
 
 GUI_image::GUI_image(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* parent) : GUI_object(x,y,rect,parent){
 	this->texture = tex;
-	type = IMAGE;
 }
 
 void GUI_image::UpdateObject() {

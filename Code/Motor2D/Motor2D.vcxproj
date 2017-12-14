@@ -82,6 +82,7 @@
     <ClCompile Include="gui_checkBox.cpp" />
     <ClCompile Include="gui_image.cpp" />
     <ClCompile Include="gui_label.cpp" />
+    <ClCompile Include="GUI_object.cpp" />
     <ClCompile Include="gui_textBox.cpp" />
     <ClCompile Include="j1Main.cpp" />
     <ClCompile Include="j1App.cpp" />
@@ -110,6 +111,7 @@
     <ClInclude Include="gui_checkBox.h" />
     <ClInclude Include="gui_image.h" />
     <ClInclude Include="gui_label.h" />
+    <ClInclude Include="GUI_object.h" />
     <ClInclude Include="gui_textBox.h" />
     <ClInclude Include="j1Map.h" />
     <ClInclude Include="j1Pathfinding.h" />
