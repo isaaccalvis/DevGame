@@ -24,6 +24,10 @@ bool ModuleGUI::Start() {
 
 	return true;
 }
+bool ModuleGUI::PreUpdate() {
+	mouseInteractionObjects();
+	return true;
+}
 
 bool ModuleGUI::PostUpdate() {
 	p2List_item<GUI_object*>* rec = gui_objects.start;
@@ -57,6 +61,33 @@ GUI_object* ModuleGUI::addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex
 	return ret;
 }
 
+void ModuleGUI::mouseInteractionObjects() {
+	int nx, ny;
+	App->input->GetMousePosition(nx, ny);
+
+	p2List_item<GUI_object*>* rec = gui_objects.start;
+	while (rec != nullptr) {
+		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
+			if (App->input->GetMouseButtonDown(1)) {
+				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK)
+					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
+			}
+			else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
+				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OFF_CLICK);
+			}
+			else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_IN) {
+				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_IN);
+			}
+		}
+		else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_IN)
+			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
+		//else
+		//	if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
+		//		rec->data->actualState = GUI_OBJECT_STATE::MOUSE_OUT;
+		rec = rec->next;
+	}
+}
+
 //void ModuleGUI::addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr) {
 //	GUI_object* ret = new GUI_label(text, font, x, y, rect, color, parent);
 //	gui_objects.add(ret);
@@ -83,17 +114,35 @@ GUI_object::~GUI_object() {
 
 }
 
-bool GUI_object::MouseOn() {
-	int nx, ny;
-	App->input->GetMousePosition(nx, ny);
-	if (nx > this->x && ny > this->y && nx < (this->x + rect.w) && ny < (this->y + rect.h))
-		return true;
-	return false;
-}
+//bool GUI_object::MouseOn() {
+//	int nx, ny;
+//	App->input->GetMousePosition(nx, ny);
+//	if (nx > this->x && ny > this->y && nx < (this->x + rect.w) && ny < (this->y + rect.h))
+//		return true;
+//	return false;
+//}
 
 void GUI_object::updatePosition() {
 	if (parent != nullptr) {
 		this->x = dToParentX + parent->x;
 		this->y = dToParentY + parent->y;
+	}
+}
+
+void GUI_object::changeState(GUI_OBJECT_STATE state) {
+	actualState = state;
+	switch (state) {
+	case GUI_OBJECT_STATE::MOUSE_IN:
+		MouseInFunction();
+		break;
+	case GUI_OBJECT_STATE::MOUSE_OUT:
+		MouseOutFunction();
+		break;
+	case GUI_OBJECT_STATE::MOUSE_ON_CLICK:
+		MouseClikOnFunction();
+		break;
+	case GUI_OBJECT_STATE::MOUSE_OFF_CLICK:
+		MouseClikOffFunction();
+		break;
 	}
 }

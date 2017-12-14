@@ -7,21 +7,21 @@ GUI_checkBox::GUI_checkBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Te
 
 void GUI_checkBox::UpdateObject() {
 	updatePosition();
-	if (MouseOnClick()) {
-		if (isClicking == false)
-			if (texActual == texture) {
-				texActual = textureOnClick;
-				rectActual = rectOnClick;
-			}
-			else {
-				texActual = texture;
-				rectActual = rect;
-			}
-			isClicking = true;
-	}
-	else
-		isClicking = false;
-	if (MouseOn())
-		Draw(textureOnMouse, rectOnMouse);
+	//if (MouseOnClick()) {
+	//	if (isClicking == false)
+	//		if (texActual == texture) {
+	//			texActual = textureOnClick;
+	//			rectActual = rectOnClick;
+	//		}
+	//		else {
+	//			texActual = texture;
+	//			rectActual = rect;
+	//		}
+	//		isClicking = true;
+	//}
+	//else
+	//	isClicking = false;
+	//if (MouseOn())
+	//	Draw(textureOnMouse, rectOnMouse);
 	Draw(texActual, rectActual);
 }

@@ -15,6 +15,13 @@ enum GUI_TYPES {
 	TEXT_BOX,
 };
 
+enum GUI_OBJECT_STATE {
+	MOUSE_IN,
+	MOUSE_OUT,
+	MOUSE_ON_CLICK,
+	MOUSE_OFF_CLICK
+};
+
 struct GUI_object {
 	GUI_object();
 	GUI_object(int x, int y, SDL_Rect rect, GUI_object* parent);
@@ -22,13 +29,19 @@ struct GUI_object {
 	int x, y;
 	SDL_Rect rect;
 	GUI_TYPES type;
+	GUI_OBJECT_STATE actualState = MOUSE_OUT;
 	bool active = true;
 	GUI_object* parent;
 
 	virtual void UpdateObject() = 0;
 	virtual void Draw() = 0;
-	bool MouseOn();
+	//bool MouseOn = false;
 	void updatePosition();
+	void changeState(GUI_OBJECT_STATE state);
+	virtual void MouseInFunction() {};
+	virtual void MouseOutFunction() {};
+	virtual void MouseClikOnFunction() {};
+	virtual void MouseClikOffFunction() {};
 
 protected:
 	int dToParentX;
@@ -43,6 +56,7 @@ public:
 	virtual ~ModuleGUI();
 
 	bool Start();
+	bool PreUpdate();
 	bool PostUpdate();
 	bool CleanUp();
 
@@ -51,6 +65,8 @@ public:
 	GUI_object* addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr);
 	//void addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent);
 	//void addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent);
+
+	void mouseInteractionObjects();
 private:
 	p2List<GUI_object*> gui_objects;
 	SDL_Texture* fons = nullptr;

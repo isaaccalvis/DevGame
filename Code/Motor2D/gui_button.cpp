@@ -23,25 +23,35 @@ GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Textur
 		this->rectOnClick = rect;
 	else
 		this->rectOnClick = rectOnClick;
-}
 
-bool GUI_button::MouseOnClick() {
-	if (MouseOn() == true && App->input->GetMouseButtonDown(1))
-		return true;
-	return false;
+
+	textureToDraw = texture;
 }
 
 void GUI_button::UpdateObject() {
 	updatePosition();
-	if (MouseOnClick())
-		Draw(textureOnClick, rectOnClick);
-	else if (MouseOn())
-		Draw(textureOnMouse, rectOnMouse);
 	Draw(texture, rect);
 }
 
 void GUI_button::Draw(SDL_Texture* tex, SDL_Rect rect) {
-	if (texture != nullptr) {
-		App->render->Blit(texture, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &rect);
+	if (textureToDraw != nullptr) {
+		App->render->Blit(textureToDraw, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &rect);
 	}
+}
+
+void GUI_button::MouseInFunction() {
+	textureToDraw = textureOnMouse;
+	printf_s("mouse in \n");
+}
+void GUI_button::MouseOutFunction() {
+	textureToDraw = texture;
+	printf_s("mouse out \n");
+}
+void GUI_button::MouseClikOnFunction() {
+	textureToDraw = textureOnClick;
+	printf_s("mouse click \n");
+}
+void GUI_button::MouseClikOffFunction(){
+	textureToDraw = textureOnMouse;
+	printf_s("mouse off click \n");
 }
