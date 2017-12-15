@@ -19,6 +19,7 @@ struct GUI_object {
 	virtual void UpdateObject() = 0;
 	virtual void Draw() = 0;
 	void updatePosition();
+	void moveWithMouse();
 	void changeState(GUI_OBJECT_STATE state);
 	virtual void MouseInFunction() {};
 	virtual void MouseOutFunction() {};
@@ -26,7 +27,10 @@ struct GUI_object {
 	virtual void MouseClikOffFunction() {};
 
 protected:
-	int dToParentX;
-	int dToParentY;
+	int dToParentX = 0;
+	int dToParentY = 0;
+
+	int dToMouseX = -1;
+	int dToMouseY = -1;
 };
 #endif

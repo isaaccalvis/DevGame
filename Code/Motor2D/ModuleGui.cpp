@@ -18,9 +18,9 @@ ModuleGUI::~ModuleGUI() {}
 bool ModuleGUI::Start() {
 	guiObjTextures = App->tex->Load("textures/objectesGUI.png");
 	fons = App->tex->Load("textures/wowBCscreen.jpg");
-	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures);
-	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi);
-	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi);
+	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures,nullptr, true);
+	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
+	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
 
 	return true;
 }
@@ -81,28 +81,35 @@ void ModuleGUI::mouseInteractionObjects() {
 	while (rec != nullptr) {
 		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
 			if (App->input->GetMouseButtonDown(1)) {
-				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK)
+				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
 					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
+					if (focus == nullptr)
+						focus = rec->data;
+				}
 			}
 			else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
 				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OFF_CLICK);
+				focus = nullptr;
 			}
 			else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_IN) {
 				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_IN);
+				focus = nullptr;
 			}
 		}
-		else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
+		else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-		/*else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
+			focus = nullptr;
+		}
+		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-		else if (rec->data->isMoving == true) {
-			 
-		}*/
+			focus = nullptr;
+		}
+
 		rec->data->isMoving = false;
 		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
 			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
-				rec->data->isMoving = true;
-
+				if (focus == rec->data)
+					rec->data->isMoving = true;
 
 		rec = rec->next;
 	}

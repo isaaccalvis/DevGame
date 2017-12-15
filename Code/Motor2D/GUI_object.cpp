@@ -1,4 +1,5 @@
 #include "GUI_object.h"
+#include "j1Input.h"
 
 GUI_object::GUI_object() {}
 
@@ -14,9 +15,43 @@ GUI_object::~GUI_object() {
 }
 
 void GUI_object::updatePosition() {
+	moveWithMouse();
 	if (parent != nullptr) {
 		this->x = dToParentX + parent->x;
 		this->y = dToParentY + parent->y;
+	}
+}
+
+void GUI_object::moveWithMouse() {
+	int nx, ny;
+	App->input->GetMousePosition(nx, ny);
+	if (isMoving == true) {
+		if (dToMouseX == -1) {
+			if (parent != nullptr) {
+				dToMouseX = nx - x;
+				dToMouseY = ny - y;
+			}
+			else {
+				dToMouseX = nx - x;
+				dToMouseY = ny - y;
+			}
+		}
+		else {
+			if (parent != nullptr) {
+				dToParentX = nx - x;
+				dToParentY = ny - y;
+			}
+			else {
+				x = nx - dToMouseX;
+				y = ny - dToMouseY;
+			}
+		}
+	}
+	else {
+		if (dToMouseX != -1) {
+			dToMouseX = -1;
+			dToMouseY = -1;
+		}
 	}
 }
 
