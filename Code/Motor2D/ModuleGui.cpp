@@ -22,7 +22,7 @@ bool ModuleGUI::Start() {
 	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures,nullptr, true);
 	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
 	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
-	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 5, 5, false, nullptr);
+	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr);
 	return true;
 }
 bool ModuleGUI::PreUpdate() {

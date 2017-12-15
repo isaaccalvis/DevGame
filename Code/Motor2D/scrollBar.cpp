@@ -32,10 +32,10 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 					isMoving = false;
 					pivoteMovable->x = x + margeX;
 				}
-				if (pivoteMovable->x > x + rect.w - +margeX) {
+				if (pivoteMovable->x > x + rect.w - margeX) {
 					App->gui->setFocus(nullptr);
 					isMoving = false;
-					pivoteMovable->x = x + rect.w - +margeX;
+					pivoteMovable->x = x + rect.w - margeX;
 				}
 			}
 			else {
@@ -52,10 +52,10 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 					isMoving = false;
 					pivoteMovable->y = y + margeY;
 				}
-				if (pivoteMovable->y > y + rect.h - +margeY) {
+				if (pivoteMovable->y > y + rect.h - + margeY) {
 					App->gui->setFocus(nullptr);
 					isMoving = false;
-					pivoteMovable->y = y + rect.h - +margeY;
+					pivoteMovable->y = y + rect.h - + margeY;
 				}
 			}
 			else {
@@ -70,6 +70,8 @@ void GUI_ScrollBar::UpdateObject() {
 	MouseClikOnFunction();
 	updatePosition();
 	Draw();
+
+	printf_s("%i\n",returnNumer0to100());
 }
 
 void GUI_ScrollBar::Draw() {
@@ -77,4 +79,19 @@ void GUI_ScrollBar::Draw() {
 		App->render->Blit(texture, App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &rect);
 	if (pivoteMovable->texture != nullptr)
 		App->render->Blit(pivoteMovable->texture, App->render->camera.x * -1 + pivoteMovable->x, App->render->camera.y * -1 + pivoteMovable->y, &pivoteMovable->rect);
+}
+
+int GUI_ScrollBar::returnNumer0to100() {
+	if (blockX == false) {
+		int totalDistance = rect.w - (margeX * 2);
+		int actualPositionRelative = pivoteMovable->x - x - pivoteMovable->rect.w / 2;
+		int result = (actualPositionRelative * 100) / totalDistance;
+		return result;
+	}
+	else {
+		int totalDistance = rect.h - margeY * 2;
+		int actualPositionRelative = pivoteMovable->y - y + margeY / 2;
+		int result = (actualPositionRelative * 100) / totalDistance;
+		return result;
+	}
 }

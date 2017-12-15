@@ -12,6 +12,8 @@ struct GUI_ScrollBar : public GUI_image {
 	virtual void UpdateObject();
 	virtual void Draw();
 
+	int returnNumer0to100();
+
 	bool isMoving = false, blockX;		// si es false, es mou en eix X, sino en Y
 	int margeX, margeY;
 
