@@ -8,6 +8,7 @@
 #include "gui_label.h"
 #include "gui_checkBox.h"
 #include "gui_textBox.h"
+#include "scrollBar.h"
 
 #include "j1Render.h"
 #include "ModulePlayer.h"
@@ -21,7 +22,7 @@ bool ModuleGUI::Start() {
 	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures,nullptr, true);
 	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
 	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
-
+	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 5, 5, false, nullptr);
 	return true;
 }
 bool ModuleGUI::PreUpdate() {
@@ -41,6 +42,56 @@ bool ModuleGUI::PostUpdate() {
 bool ModuleGUI::CleanUp() {
 	App->tex->UnLoad(guiObjTextures);
 	return true;
+}
+
+void ModuleGUI::mouseInteractionObjects() {
+	int nx, ny;
+	App->input->GetMousePosition(nx, ny);
+
+	p2List_item<GUI_object*>* rec = gui_objects.start;
+	while (rec != nullptr) {
+		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
+			if (App->input->GetMouseButtonDown(3)) {
+				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
+					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
+					if (focus == nullptr)
+						focus = rec->data;
+				}
+			}
+			else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
+				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OFF_CLICK);
+				if (focus == rec->data)
+					focus = nullptr;
+			}
+			else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_IN) {
+				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_IN);
+				if (focus == rec->data)
+					focus = nullptr;
+			}
+		}
+		else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
+			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
+			if (focus == rec->data)
+				focus = nullptr;
+		}
+		else if (!App->input->GetMouseButtonDown(3) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
+			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
+			if (focus == rec->data)
+				focus = nullptr;
+		}
+
+		rec->data->isMoving = false;
+		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
+			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
+				if (focus == rec->data)
+					rec->data->isMoving = true;
+
+		rec = rec->next;
+	}
+}
+
+void ModuleGUI::setFocus(GUI_object* newFocus) {
+	focus = newFocus;
 }
 
 GUI_object* ModuleGUI::addImage(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* parent, bool isMovable) {
@@ -73,46 +124,11 @@ GUI_object* ModuleGUI::addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex
 	return ret;
 }
 
-void ModuleGUI::mouseInteractionObjects() {
-	int nx, ny;
-	App->input->GetMousePosition(nx, ny);
-
-	p2List_item<GUI_object*>* rec = gui_objects.start;
-	while (rec != nullptr) {
-		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
-			if (App->input->GetMouseButtonDown(1)) {
-				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
-					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
-					if (focus == nullptr)
-						focus = rec->data;
-				}
-			}
-			else if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
-				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OFF_CLICK);
-				focus = nullptr;
-			}
-			else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_IN) {
-				rec->data->changeState(GUI_OBJECT_STATE::MOUSE_IN);
-				focus = nullptr;
-			}
-		}
-		else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
-			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-			focus = nullptr;
-		}
-		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
-			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-			focus = nullptr;
-		}
-
-		rec->data->isMoving = false;
-		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
-			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
-				if (focus == rec->data)
-					rec->data->isMoving = true;
-
-		rec = rec->next;
-	}
+GUI_object* ModuleGUI::addScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX, GUI_object* parent) {
+	GUI_object* ret = new GUI_ScrollBar(x, y, rectBase, texBase, texMovable, rectMovable, margeX, margeY, blockX, parent);
+	ret->type = SCROLL_BAR;
+	gui_objects.add(ret);
+	return ret;
 }
 
 //void ModuleGUI::addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr) {

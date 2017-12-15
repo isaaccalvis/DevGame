@@ -9,10 +9,6 @@ GUI_image::GUI_image(int x, int y, SDL_Rect rect, SDL_Texture* tex, GUI_object* 
 }
 
 void GUI_image::UpdateObject() {
-	if (App->input->GetKey(SDL_SCANCODE_S) == j1KeyState(KEY_REPEAT)) {
-		x += 2;
-		y += 2;
-	}
 	updatePosition();
 	Draw();
 }
