@@ -13,7 +13,7 @@ struct GUI_object {
 	GUI_TYPES type;
 	GUI_OBJECT_STATE actualState = MOUSE_OUT;
 
-	bool active = true, isMovable = true;
+	bool active = true, isMoving = true;
 	GUI_object* parent;
 
 	virtual void UpdateObject() = 0;

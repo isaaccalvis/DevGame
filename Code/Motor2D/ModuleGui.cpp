@@ -65,6 +65,10 @@ GUI_object* ModuleGUI::addButton(int x, int y, SDL_Rect rect, SDL_Texture* tex, 
 
 GUI_object* ModuleGUI::addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent, bool isMovable) {
 	GUI_object* ret = new GUI_checkBox(x, y, rect, tex, texOnMouse, texOnClick, rectOnMouse, rectOnClick, parent);
+	if (isMovable == false)
+		ret->type = CHECK_BOX;
+	else
+		ret->type = CHECK_BOX_MOVABLE;
 	gui_objects.add(ret);
 	return ret;
 }
@@ -89,11 +93,16 @@ void ModuleGUI::mouseInteractionObjects() {
 		}
 		else if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
+		/*else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT)
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
-		else if (rec->data->isMovable == true) {
+		else if (rec->data->isMoving == true) {
 			 
-		}
+		}*/
+		rec->data->isMoving = false;
+		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
+			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
+				rec->data->isMoving = true;
+
 
 		rec = rec->next;
 	}
