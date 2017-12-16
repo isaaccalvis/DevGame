@@ -22,6 +22,7 @@ class j1PathFinding;
 class ModulePlayer;
 class ModuleEnemies;
 class ModuleGUI;
+class j1Fonts;
 
 class j1App
 {
@@ -98,6 +99,7 @@ public:
 	ModulePlayer*		player;
 	ModuleEnemies*		enemies;
 	ModuleGUI*			gui;
+	j1Fonts*			fonts;
 
 	float dt;
 	int					maxfps;

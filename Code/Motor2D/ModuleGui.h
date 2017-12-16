@@ -4,6 +4,7 @@
 #include "j1Module.h"
 #include "Animation.h"
 #include "p2List.h"
+#include "j1Fonts.h"
 
 #include "SDL_image\include\SDL_image.h"
 
@@ -47,8 +48,8 @@ public:
 	GUI_object* addButton(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr, bool isMovable = false);
 	GUI_object* addCheckBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, GUI_object* parent = nullptr, bool isMovable = false);
 	GUI_object* addScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX, GUI_object* parent);
-	//void addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr, bool isMovable = false);
-	//void addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent = nullptr, bool isMovable = false);
+	GUI_object* addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent , bool isMovable);
+	GUI_object* addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent, bool isMovable);
 
 	void mouseInteractionObjects(); 
 	void setFocus(GUI_object* newFocus);
@@ -56,7 +57,7 @@ private:
 	p2List<GUI_object*> gui_objects;
 	SDL_Texture* fons = nullptr;
 	SDL_Texture* guiObjTextures = nullptr;
-	//_TTF_Font* font;
+	_TTF_Font* font;
 
 	GUI_object* focus = nullptr;
 };

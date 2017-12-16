@@ -19,11 +19,13 @@ ModuleGUI::~ModuleGUI() {}
 bool ModuleGUI::Start() {
 	guiObjTextures = App->tex->Load("textures/objectesGUI.png");
 	fons = App->tex->Load("textures/wowBCscreen.jpg");
+	font = App->fonts->Load("fonts/open_sans/OpenSans-Regular.ttf", 12);
 	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures,nullptr, true);
 	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
 	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, papi, true);
 	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr);
 	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr);
+	addLabel("cacatua ninja", font, 300, 300, SDL_Rect{ 0,0,100,20 }, SDL_Color{255,0,0,255}, papi, true);
 
 	return true;
 }
@@ -133,12 +135,22 @@ GUI_object* ModuleGUI::addScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture
 	return ret;
 }
 
-//void ModuleGUI::addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr) {
-//	GUI_object* ret = new GUI_label(text, font, x, y, rect, color, parent);
-//	gui_objects.add(ret);
-//}
-//
-//void ModuleGUI::addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent = nullptr) {
-//	GUI_object* ret = new GUI_textBox(x, y, rect, tex, texOnMouse, texOnClick, rectOnMouse, rectOnClick, text, font, rectLabel, color, parent);
-//	gui_objects.add(ret);
-//}
+GUI_object* ModuleGUI::addLabel(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr, bool isMovable = false) {
+	GUI_object* ret = new GUI_label(text, font, x, y, rect, color, parent);
+	if (isMovable == false)
+		ret->type = LABEL;
+	else
+		ret->type = LABEL_MOVABLE;
+	gui_objects.add(ret);
+	return ret;
+}
+
+GUI_object* ModuleGUI::addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse, SDL_Texture* texOnClick, SDL_Rect rectOnMouse, SDL_Rect rectOnClick, char* text, _TTF_Font* font, SDL_Rect rectLabel, SDL_Color color, GUI_object* parent = nullptr, bool isMovable = false) {
+	GUI_object* ret = new GUI_textBox(x, y, rect, tex, texOnMouse, texOnClick, rectOnMouse, rectOnClick, text, font, rectLabel, color, parent);
+	if (isMovable == false)
+		ret->type = TEXT_BOX;
+	else
+		ret->type = TEXT_BOX_MOVABLE;
+	gui_objects.add(ret);
+	return ret;
+}
