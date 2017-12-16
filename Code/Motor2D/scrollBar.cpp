@@ -70,8 +70,6 @@ void GUI_ScrollBar::UpdateObject() {
 	MouseClikOnFunction();
 	updatePosition();
 	Draw();
-
-	printf_s("%i\n",returnNumer0to100());
 }
 
 void GUI_ScrollBar::Draw() {
@@ -83,14 +81,14 @@ void GUI_ScrollBar::Draw() {
 
 int GUI_ScrollBar::returnNumer0to100() {
 	if (blockX == false) {
-		int totalDistance = rect.w - (margeX * 2);
-		int actualPositionRelative = pivoteMovable->x - x - pivoteMovable->rect.w / 2;
+		int totalDistance = rect.w - margeX * 2;
+		int actualPositionRelative = pivoteMovable->x - x - margeX;
 		int result = (actualPositionRelative * 100) / totalDistance;
 		return result;
 	}
 	else {
 		int totalDistance = rect.h - margeY * 2;
-		int actualPositionRelative = pivoteMovable->y - y + margeY / 2;
+		int actualPositionRelative = pivoteMovable->y - y - margeY;
 		int result = (actualPositionRelative * 100) / totalDistance;
 		return result;
 	}
