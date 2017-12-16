@@ -93,5 +93,3 @@ int GUI_ScrollBar::returnNumer0to100() {
 		return result;
 	}
 }
-
-void GUI_ScrollBar::CleanUp() {}

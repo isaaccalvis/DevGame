@@ -11,7 +11,6 @@ struct GUI_ScrollBar : public GUI_image {
 	virtual void MouseClikOnFunction();
 	virtual void UpdateObject();
 	virtual void Draw();
-	void CleanUp();
 
 	int returnNumer0to100();
 

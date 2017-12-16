@@ -21,5 +21,3 @@ void GUI_checkBox::MouseClikOnFunction() {
 		rectToDraw = &rectOnClick;
 	}
 }
-
-void GUI_checkBox::CleanUp() {}

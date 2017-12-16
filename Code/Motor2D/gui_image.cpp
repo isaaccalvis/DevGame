@@ -1,7 +1,6 @@
 #include "gui_image.h"
 #include "j1App.h"
 #include "j1Render.h"
-#include "j1Textures.h"
 
 #include "j1Input.h"
 
@@ -17,8 +16,4 @@ void GUI_image::UpdateObject() {
 void GUI_image::Draw() {
 	if (texture != nullptr)
 		App->render->Blit(texture, App->render->camera.x * -1 + x, App->render->camera.y * -1 +  y, &rect);
-}
-
-void GUI_image::CleanUp() {
-	App->tex->UnLoad(texture);
 }

@@ -84,13 +84,11 @@
     <ClCompile Include="gui_label.cpp" />
     <ClCompile Include="GUI_object.cpp" />
     <ClCompile Include="gui_textBox.cpp" />
-    <ClCompile Include="j1FadeToBlack.cpp" />
     <ClCompile Include="j1Main.cpp" />
     <ClCompile Include="j1App.cpp" />
     <ClCompile Include="j1Audio.cpp" />
     <ClCompile Include="j1Input.cpp" />
     <ClCompile Include="j1Map.cpp" />
-    <ClCompile Include="j1Menu.cpp" />
     <ClCompile Include="j1Pathfinding.cpp" />
     <ClCompile Include="j1PerfTimer.cpp" />
     <ClCompile Include="j1Scene.cpp" />
@@ -117,9 +115,7 @@
     <ClInclude Include="gui_label.h" />
     <ClInclude Include="GUI_object.h" />
     <ClInclude Include="gui_textBox.h" />
-    <ClInclude Include="j1FadeToBlack.h" />
     <ClInclude Include="j1Map.h" />
-    <ClInclude Include="j1Menu.h" />
     <ClInclude Include="j1Pathfinding.h" />
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1Scene.h" />

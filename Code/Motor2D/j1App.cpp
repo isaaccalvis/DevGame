@@ -17,7 +17,6 @@
 #include "ModuleGui.h"
 #include "j1Fonts.h"
 #include "j1App.h"
-#include "j1FadeToBlack.h"
 
 
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
@@ -37,7 +36,6 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	enemies = new ModuleEnemies();
 	gui = new ModuleGUI();
 	fonts = new j1Fonts;
-	fade = new j1FadeToBlack;
 
 	AddModule(input);
 	AddModule(win);
@@ -50,7 +48,6 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(enemies);
 	AddModule(gui);
 	AddModule(fonts);
-	AddModule(fade);
 	// render last to swap buffer
 	AddModule(render);
 }
