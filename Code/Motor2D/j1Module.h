@@ -72,6 +72,11 @@ public:
 		return true;
 	}
 
+	virtual void GUI_CallBack(GUI_object* object)
+	{
+
+	}
+
 public:
 
 	p2SString	name;

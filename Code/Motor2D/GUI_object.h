@@ -21,6 +21,8 @@ struct GUI_object {
 	void updatePosition();
 	void moveWithMouse();
 	void changeState(GUI_OBJECT_STATE state);
+
+	virtual void CleanUp() {};
 	virtual void MouseInFunction() {};
 	virtual void MouseOutFunction() {};
 	virtual void MouseClikOnFunction() {};

@@ -2,8 +2,9 @@
 #include "j1App.h"
 #include "j1Input.h"
 #include "j1Render.h"
+#include "j1Textures.h"
 
-GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent) : GUI_image(x, y, rect, tex, parent) {
+GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent) : GUI_object(x, y, rect, parent) {
 	if (texOnMouse == nullptr)
 		textureOnMouse = tex;
 	else
@@ -24,8 +25,9 @@ GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Textur
 	else
 		this->rectOnClick = rectOnClick;
 
+	image = (GUI_image*)App->gui->addImage(x, y, rect, tex, parent);
 
-	textureToDraw = texture;
+	textureToDraw = image->texture;
 	rectToDraw = &this->rect;
 }
 
@@ -46,7 +48,7 @@ void GUI_button::MouseInFunction() {
 	printf_s("mouse in \n");
 }
 void GUI_button::MouseOutFunction() {
-	textureToDraw = texture;
+	textureToDraw = image->texture;
 	rectToDraw = &rect;
 	printf_s("mouse out \n");
 }
@@ -59,4 +61,10 @@ void GUI_button::MouseClikOffFunction(){
 	textureToDraw = textureOnMouse;
 	rectToDraw = &rectOnMouse;
 	printf_s("mouse off click \n");
+}
+
+void GUI_button::CleanUp() {
+	App->tex->UnLoad(textureOnMouse);
+	App->tex->UnLoad(textureOnClick);
+	App->tex->UnLoad(textureToDraw);
 }

@@ -23,6 +23,7 @@ class ModulePlayer;
 class ModuleEnemies;
 class ModuleGUI;
 class j1Fonts;
+class j1FadeToBlack;
 
 class j1App
 {
@@ -100,6 +101,7 @@ public:
 	ModuleEnemies*		enemies;
 	ModuleGUI*			gui;
 	j1Fonts*			fonts;
+	j1FadeToBlack*		fade;
 
 	float dt;
 	int					maxfps;

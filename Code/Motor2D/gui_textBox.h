@@ -12,6 +12,7 @@ struct GUI_textBox : public GUI_button {
 	void Draw();
 	bool activated = false;
 	void UpdateObject();
+	void CleanUp();
 	GUI_label *textLabel;
 
 	void deletLabelInside();
