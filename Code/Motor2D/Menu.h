@@ -34,14 +34,18 @@ public:
 	GUI_object* save_button = nullptr;
 	GUI_object* load_button = nullptr;
 	GUI_object* back_button = nullptr;
+	GUI_object* sound_bar = nullptr;
 
 	bool start_game = false;
 	bool exit_game = false;
 	bool opt = false;
 	bool cred = false;
 	bool loadGame = false;
+	bool go_back = false;
 	bool need_load = false;
+
 	SDL_Texture* back = nullptr;
+	SDL_Texture* bar = nullptr;
 };
 
 #endif

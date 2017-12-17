@@ -32,15 +32,15 @@ bool Menu::Start(){
 
 	background = App->gui->addImage(0, 0, { 0, 0, 1024, 640 }, back, nullptr, nullptr, false);
 
-	new_game = App->gui->addButton(170, 330, { 50, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 212, 250, 70 }, { 50, 395, 250, 70 }, this);
+	new_game = App->gui->addButton(170, 330, { 50, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 212, 250, 70 }, { 49, 392, 250, 70 }, this);
 
-	settings = App->gui->addButton(630, 160, { 50, 120, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 298, 250, 70 }, { 50, 490, 250, 70 }, this);
+	settings = App->gui->addButton(630, 160, { 50, 120, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 298, 250, 70 }, { 50, 487, 250, 70 }, this);
 
-	credits = App->gui->addButton(630, 330, { 435, 122, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 300, 255, 75 }, { 435, 490, 255, 70 }, this);
+	credits = App->gui->addButton(630, 330, { 435, 122, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 300, 255, 75 }, { 435, 489, 255, 70 }, this);
 
-	quit = App->gui->addButton(630, 500, { 435, 25, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 213, 255, 75 }, { 435, 393, 255, 75 }, this);
+	quit = App->gui->addButton(630, 500, { 435, 25, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 213, 255, 75 }, { 435, 392, 255, 75 }, this);
 
-	load_button = App->gui->addButton(170, 500, { 735, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 735, 121, 250, 70 }, { 735, 215, 250, 70 }, this);
+	load_button = App->gui->addButton(170, 500, { 735, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 735, 121, 250, 70 }, { 735, 212, 250, 70 }, this);
 
 	return true;
 }
@@ -78,14 +78,15 @@ bool Menu::PostUpdate(){
 		back = App->tex->Load("textures/menu_background.png");
 
 		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
+		bar = App->tex->Load("textures/wowBCscreen.png");
 
 		App->gui->gui_objects.clear();
 
 		background = App->gui->addImage(0, 0, { 0, 0, 1024, 640 }, back, nullptr, nullptr, false);
 
-		save_button = App->gui->addButton(170, 500, { 735, 300, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 735, 395, 250, 70 }, { 735, 490, 250, 70 }, this);
+		sound_bar = App->gui->addScrollBar(630, 500, { 0, 0, 200, 50 }, bar, bar, { 300, 300, 60, 60 }, 5, 5, false, this, nullptr, false);
 
-		back_button = App->gui->addButton(630, 500, { 1220, 27, 255, 70 }, App->gui->atlas, nullptr, nullptr, { 1220, 125, 255, 70 }, { 1220, 215, 255, 70 }, this);
+		back_button = App->gui->addButton(630, 500, { 1220, 27, 255, 70 }, App->gui->atlas, nullptr, nullptr, { 1220, 123, 255, 70 }, { 1220, 214, 255, 70 }, this);
 
 		opt = false;
 	}
@@ -115,6 +116,32 @@ bool Menu::PostUpdate(){
 		need_load = true;
 
 		loadGame = false;
+	}
+
+	else if (go_back) {
+		for (p2List_item<GUI_object*>* it = App->gui->gui_objects.start; it != nullptr; it = it->next)
+		{
+			it->data->CleanUp();
+		}
+		App->gui->gui_objects.clear();
+
+		back = App->tex->Load("textures/menu_background.png");
+
+		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
+
+		background = App->gui->addImage(0, 0, { 0, 0, 1024, 640 }, back, nullptr, nullptr, false);
+
+		new_game = App->gui->addButton(170, 330, { 50, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 212, 250, 70 }, { 49, 392, 250, 70 }, this);
+
+		settings = App->gui->addButton(630, 160, { 50, 120, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 50, 298, 250, 70 }, { 50, 487, 250, 70 }, this);
+
+		credits = App->gui->addButton(630, 330, { 435, 122, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 300, 255, 75 }, { 435, 489, 255, 70 }, this);
+
+		quit = App->gui->addButton(630, 500, { 435, 25, 255, 75 }, App->gui->atlas, nullptr, nullptr, { 435, 213, 255, 75 }, { 435, 392, 255, 75 }, this);
+
+		load_button = App->gui->addButton(170, 500, { 735, 25, 250, 70 }, App->gui->atlas, nullptr, nullptr, { 735, 121, 250, 70 }, { 735, 212, 250, 70 }, this);
+
+		go_back = false;
 	}
 
 	return ret;
@@ -173,6 +200,9 @@ void Menu::CallBack(GUI_object* object, GUI_OBJECT_STATE state)
 
 		else if (object == quit)
 			exit_game = true;
+
+		else if (object == back_button)
+			go_back = true;
 
 		break;
 	}
