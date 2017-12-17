@@ -9,6 +9,7 @@ GUI_object::GUI_object(int x, int y, SDL_Rect rect = { 0,0,0,0 }, j1Module* list
 	this->rect = rect;
 	this->parent = parent;
 	this->listener = listener;
+	this->atlas = App->gui->atlas;
 }
 
 GUI_object::~GUI_object() {
@@ -74,6 +75,6 @@ void GUI_object::changeState(GUI_OBJECT_STATE state) {
 	}
 }
 
-void GUI_object::CridaCallBack() {
+void GUI_object::MakeCallBack() {
 	listener->CallBack((GUI_object*)this, actualState);
 }

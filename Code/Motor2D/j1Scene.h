@@ -22,8 +22,18 @@ public:
 
 	bool ChangeScene();
 
+	void CallBack(GUI_object* object, GUI_OBJECT_STATE state);
+
 private:
-	SDL_Texture* debug_tex;
+	SDL_Texture* debug_tex = nullptr;
+
+	GUI_object* gear = nullptr;
+
+	GUI_object* save_button = nullptr;
+
+	bool open_menu = false;
+
+	bool saveGame = false;
 	
 public:
 	p2List<p2SString> maps;

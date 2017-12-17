@@ -17,6 +17,7 @@
 #include "ModuleGui.h"
 #include "j1Fonts.h"
 #include "Menu.h"
+#include "j1FadeToBlack.h"
 #include "j1App.h"
 
 
@@ -38,6 +39,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	gui = new ModuleGUI();
 	fonts = new j1Fonts();
 	menu = new Menu();
+	fade = new j1FadeToBlack();
 
 	AddModule(input);
 	AddModule(win);
@@ -51,6 +53,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(gui);
 	AddModule(fonts);
 	AddModule(menu);
+	AddModule(fade);
 	// render last to swap buffer
 	AddModule(render);
 }
@@ -115,7 +118,11 @@ bool j1App::Start()
 
 	while(item != NULL && ret == true)
 	{
-		ret = item->data->Start();
+		if (item->data == scene || item->data == enemies || item->data == map || item->data == player)
+			item->data->active = false;
+		else {
+			ret = item->data->Start();
+		}
 		item = item->next;
 	}
 

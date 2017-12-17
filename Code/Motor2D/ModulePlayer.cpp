@@ -21,8 +21,6 @@ bool ModulePlayer::Start() {
 	LoadPlayerProperties();
 	ChargeAnimations();
 
-//	playerData.playerState = PLAYER_STATE::DEAD;
-
 	return true;
 }
 
@@ -30,11 +28,6 @@ bool ModulePlayer::Update(float dt) {
 	this->dt = dt;
 	MovementPlayer();
 	DrawPlayer();
-	if (App->input->GetKey(SDL_SCANCODE_1) == j1KeyState::KEY_DOWN)
-		App->enemies->addEnemy(E_WALKER, playerData.x + 50, playerData.y);
-
-	if (App->input->GetKey(SDL_SCANCODE_2) == j1KeyState::KEY_DOWN)
-		App->enemies->addEnemy(E_BAT, playerData.x + 50, playerData.y);
 
 	App->render->camera.x = App->render->cam.x;
 	App->render->camera.y = App->render->cam.y;

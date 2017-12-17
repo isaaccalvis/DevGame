@@ -22,17 +22,21 @@ struct GUI_object {
 	void updatePosition();
 	void moveWithMouse();
 	void changeState(GUI_OBJECT_STATE state);
+	virtual void CleanUp() {};
 	virtual void MouseInFunction() {};
 	virtual void MouseOutFunction() {};
 	virtual void MouseClikOnFunction() {};
 	virtual void MouseClikOffFunction() {};
 
-	virtual void CridaCallBack();
+	virtual void MakeCallBack();
 protected:
 	int dToParentX = 0;
 	int dToParentY = 0;
 
 	int dToMouseX = -1;
 	int dToMouseY = -1;
+
+public:
+	SDL_Texture* atlas = nullptr;
 };
 #endif

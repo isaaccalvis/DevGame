@@ -10,6 +10,9 @@
 #include "j1PathFinding.h"
 #include "j1Scene.h"
 #include "ModulePlayer.h"
+#include "ModuleGui.h"
+#include "j1FadeToBlack.h"
+#include "Menu.h"
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -40,10 +43,17 @@ bool j1Scene::Start()
 {
 	if(App->map->Load(current_map->data.GetString()) == true)
 	{
+		App->enemies->FindEnemies();
 		int w, h;
 		uchar* data = NULL;
 		if(App->map->CreateWalkabilityMap(w, h, &data))
 			App->pathfinding->SetMap(w, h, data);
+
+		App->gui->atlas = App->tex->Load("texture/Game_Gui_Buttons.png");
+
+		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
+
+		save_button = App->gui->addButton(900, 15, { 1084, 374, 27, 27 }, App->gui->atlas, nullptr, nullptr, { 1084, 374, 27, 27 }, { 1084, 374, 27, 27 }, this);
 
 		RELEASE_ARRAY(data);
 	}
@@ -200,8 +210,24 @@ bool j1Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if(App->input->GetKey(SDL_SCANCODE_ESCAPE) == KEY_DOWN)
-		ret = false;
+	if (open_menu)
+	{
+		App->scene->active = false;
+		App->map->active = false;
+		App->enemies->active = false;
+		App->player->active = false;
+
+		App->fade->FadeToBlack(this, (j1Module*)App->menu, 1.0f);
+
+		App->menu->active = true;
+
+		open_menu = false;
+	}
+
+	else if (saveGame) {
+		App->SaveGame();
+		saveGame = false;
+	}
 
 	return ret;
 }
@@ -240,4 +266,29 @@ bool j1Scene::ChangeScene() {
 		App->player->SpawnPLayer();
 	}
 	return true;
+}
+
+void j1Scene::CallBack(GUI_object* object, GUI_OBJECT_STATE state)
+{
+	switch (state) {
+	case GUI_OBJECT_STATE::MOUSE_IN:
+
+		break;
+	case GUI_OBJECT_STATE::MOUSE_OUT:
+
+		break;
+	case GUI_OBJECT_STATE::MOUSE_ON_CLICK:
+
+		break;
+	case GUI_OBJECT_STATE::MOUSE_OFF_CLICK:
+		if (object == gear)
+		{
+			open_menu = true;
+		}
+
+		else if (object == save_button)
+			saveGame = true;
+
+		break;
+	}
 }

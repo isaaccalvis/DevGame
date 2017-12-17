@@ -14,6 +14,8 @@ struct GUI_textBox : public GUI_button {
 	void UpdateObject();
 	GUI_label *textLabel;
 
+	void CleanUp();
+
 	void deletLabelInside();
 };
 

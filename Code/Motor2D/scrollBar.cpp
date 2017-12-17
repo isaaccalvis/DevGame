@@ -22,7 +22,7 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 		isMoving = true;
 	}
 	if (isMoving == true) {
-		if (blockX == false) {			// ES MOU EN L'EIX X
+		if (blockX == false) {
 
 			if (App->input->GetMouseButtonDown(1)) {
 				pivoteMovable->x = nx - pivoteMovable->rect.w / 2;
@@ -93,3 +93,5 @@ int GUI_ScrollBar::returnNumer0to100() {
 		return result;
 	}
 }
+
+void GUI_ScrollBar::CleanUp() {}

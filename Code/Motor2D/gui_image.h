@@ -9,8 +9,10 @@ struct GUI_image : public GUI_object {
 	virtual void UpdateObject();
 	virtual void Draw();
 
+	void CleanUp();
+
 	virtual void MouseClikOnFunction();
-	virtual void CridaCallBack();
+	virtual void MakeCallBack();
 	SDL_Texture* texture;
 };
 

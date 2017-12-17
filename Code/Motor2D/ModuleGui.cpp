@@ -55,7 +55,7 @@ void ModuleGUI::mouseInteractionObjects() {
 	p2List_item<GUI_object*>* rec = gui_objects.start;
 	while (rec != nullptr) {
 		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
-			if (App->input->GetMouseButtonDown(3)) {
+			if (App->input->GetMouseButtonDown(1)) {
 				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
 					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
 					if (focus == nullptr)

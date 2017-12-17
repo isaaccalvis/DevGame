@@ -13,12 +13,14 @@ struct GUI_button : public GUI_image {
 	virtual void UpdateObject();
 	void Draw();
 
+	void CleanUp();
+
 	virtual void MouseInFunction();
 	virtual void MouseOutFunction();
 	virtual void MouseClikOnFunction();
 	virtual void MouseClikOffFunction();
 
-	virtual void CridaCallBack();
+	virtual void MakeCallBack();
 
 protected:
 	SDL_Texture* textureToDraw = nullptr;

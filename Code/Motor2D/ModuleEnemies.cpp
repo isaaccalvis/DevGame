@@ -8,7 +8,6 @@ ModuleEnemies::ModuleEnemies() {}
 ModuleEnemies::~ModuleEnemies() {}
 
 bool ModuleEnemies::Start() {
-	FindEnemies();
 	return true;
 }
 
@@ -77,18 +76,21 @@ void ModuleEnemies::updateEnemies(float dt) {
 void ModuleEnemies::FindEnemies() {
 	p2List_item<MapLayer*>* item = App->map->data.layers.end;
 
-	for (int i = 0; i < item->data->size_data; i++)
+	if (item != nullptr)
 	{
-		if (item->data->data[i] == 23)
+		for (int i = 0; i < item->data->size_data; i++)
 		{
-			iPoint ret = App->map->TiletoWorld(i);
-			addEnemy(ENEMY_TYPES::E_BAT, ret.x, ret.y);
-		}
+			if (item->data->data[i] == 23)
+			{
+				iPoint ret = App->map->TiletoWorld(i);
+				addEnemy(ENEMY_TYPES::E_BAT, ret.x, ret.y);
+			}
 
-		if (item->data->data[i] == 22)
-		{
-			iPoint ret = App->map->TiletoWorld(i);
-			addEnemy(ENEMY_TYPES::E_WALKER, ret.x, ret.y);
+			if (item->data->data[i] == 22)
+			{
+				iPoint ret = App->map->TiletoWorld(i);
+				addEnemy(ENEMY_TYPES::E_WALKER, ret.x, ret.y);
+			}
 		}
 	}
 }

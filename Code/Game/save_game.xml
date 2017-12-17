@@ -8,8 +8,12 @@
 	<pathfinding />
 	<scene />
 	<player>
-		<pos x="204" y="186" />
+		<pos x="0" y="442" />
 	</player>
+	<:anonymous />
+	<:anonymous />
+	<fonts />
+	<scene />
 	<:anonymous />
 	<renderer>
 		<camera x="0" y="0" />

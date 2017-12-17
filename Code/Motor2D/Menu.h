@@ -24,7 +24,23 @@ public:
 public:
 	GUI_object* imatgeA = nullptr;
 	GUI_object* buttonA = nullptr;
-	SDL_Texture* texturaA = nullptr;
+
+	GUI_object* background = nullptr;
+
+	GUI_object* new_game = nullptr;
+	GUI_object* settings = nullptr;
+	GUI_object* credits = nullptr;
+	GUI_object* quit = nullptr;
+	GUI_object* save_button = nullptr;
+	GUI_object* load_button = nullptr;
+	GUI_object* back_button = nullptr;
+
+	bool start_game = false;
+	bool exit_game = false;
+	bool opt = false;
+	bool cred = false;
+	bool loadGame = false;
+	SDL_Texture* back = nullptr;
 };
 
 #endif
