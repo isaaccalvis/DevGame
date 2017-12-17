@@ -61,8 +61,6 @@ public:
 	void mouseInteractionObjects(); 
 	void setFocus(GUI_object* newFocus);
 private:
-	SDL_Texture* fons = nullptr;
-	SDL_Texture* guiObjTextures = nullptr;
 	_TTF_Font* font;
 
 	GUI_object* focus = nullptr;

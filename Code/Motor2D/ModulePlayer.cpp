@@ -76,7 +76,7 @@ void ModulePlayer::MovementPlayer() {
 	col[3] = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)playerData.x + (int)playerData.w, (int)(playerData.y + playerData.h / 4), 1, (int)(playerData.h / 2) }, RIGHT);
 	colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1}, UP);
 
-	while (colAuxiliar == true) {
+	while (colAuxiliar == true && App->maxfps != 30) {
 		playerData.y--;
 		colAuxiliar = App->map->IsCollidingWithTerraint(SDL_Rect{ (int)(playerData.x + playerData.w / 4), (int)playerData.y + (int)playerData.h - 1, (int)(playerData.w / 2), 1 }, UP);
 	}
@@ -426,7 +426,7 @@ void ModulePlayer::ChargeAnimations() {
 
 	playerData.playerAnimation_TP_SMOKE.PushBack({ 9,495, 100, 120 });
 	playerData.playerAnimation_TP_SMOKE.PushBack({ 137,495, 100, 120 });
-	playerData.playerAnimation_TP_SMOKE.PushBack({ 250,495, 100, 120 });
+	playerData.playerAnimation_TP_SMOKE.PushBack({ 275,496, 100, 120 });
 	playerData.playerAnimation_TP_SMOKE.speed = 0.05f;
 
 	playerData.playerAnimation_GHOST_R.PushBack({ 20,442,32,40 });

@@ -32,10 +32,10 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 					isMoving = false;
 					pivoteMovable->x = x + margeX;
 				}
-				if (pivoteMovable->x > x + rect.w - margeX) {
+				if (pivoteMovable->x > x + rect.w - margeX - pivoteMovable->rect.w) {
 					App->gui->setFocus(nullptr);
 					isMoving = false;
-					pivoteMovable->x = x + rect.w - margeX;
+					pivoteMovable->x = x + rect.w - margeX - pivoteMovable->rect.w;
 				}
 			}
 			else {
@@ -52,10 +52,10 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 					isMoving = false;
 					pivoteMovable->y = y + margeY;
 				}
-				if (pivoteMovable->y > y + rect.h - + margeY) {
+				if (pivoteMovable->y > y + rect.h - margeY - pivoteMovable->rect.h) {
 					App->gui->setFocus(nullptr);
 					isMoving = false;
-					pivoteMovable->y = y + rect.h - + margeY;
+					pivoteMovable->y = y + rect.h - margeY - pivoteMovable->rect.h;
 				}
 			}
 			else {

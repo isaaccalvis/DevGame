@@ -59,14 +59,8 @@ bool Menu::PostUpdate(){
 	bool ret = true;
 
 	if (start_game) {
-		for (p2List_item<GUI_object*>* it = App->gui->gui_objects.start; it != nullptr; it = it->next)
-		{
-			it->data->CleanUp();
-		}
-		App->gui->gui_objects.clear();
-
+		App->render->cam.x = 0;
 		App->map->Start();
-
 		App->fade->FadeToBlack(this, (j1Module*)App->scene, 1.0f);
 
 		start_game = false;
@@ -85,13 +79,12 @@ bool Menu::PostUpdate(){
 		back = App->tex->Load("textures/menu_background.png");
 
 		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
-		bar = App->tex->Load("textures/wowBCscreen.png");
 
 		App->gui->gui_objects.clear();
 
 		background = App->gui->addImage(0, 0, { 0, 0, 1024, 640 }, back, nullptr, nullptr, false);
 
-		sound_bar = App->gui->addScrollBar(200, 500, { 0, 0, 200, 50 }, back, back, { 300, 300, 60, 60 }, 5, 5, false, this, nullptr, false);
+		sound_bar = App->gui->addScrollBar(200, 500, { 1034, 490, 306, 70 }, App->gui->atlas, App->gui->atlas, { 1372, 480, 66, 66 }, 10, 10, false, this, nullptr, false);
 
 		back_button = App->gui->addButton(630, 500, { 1220, 27, 255, 70 }, App->gui->atlas, nullptr, nullptr, { 1220, 123, 255, 70 }, { 1220, 214, 255, 70 }, this);
 

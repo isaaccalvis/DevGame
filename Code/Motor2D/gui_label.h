@@ -10,6 +10,7 @@ struct GUI_label : public GUI_object {
 	virtual void Draw();
 
 	void CleanUp();
+
 	char* text;
 	_TTF_Font* font;
 	SDL_Color color;

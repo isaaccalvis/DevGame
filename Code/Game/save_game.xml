@@ -8,7 +8,7 @@
 	<pathfinding />
 	<scene />
 	<player>
-		<pos x="0" y="442" />
+		<pos x="1002" y="442" />
 	</player>
 	<:anonymous />
 	<:anonymous />
@@ -16,6 +16,6 @@
 	<scene />
 	<:anonymous />
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="-490.141113" y="0" />
 	</renderer>
 </game_state>

@@ -45,7 +45,6 @@ public:
 	bool need_load = false;
 
 	SDL_Texture* back = nullptr;
-	SDL_Texture* bar = nullptr;
 };
 
 #endif
