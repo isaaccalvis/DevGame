@@ -64,8 +64,12 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 			}
 		}
 	}
+}
+
+void GUI_ScrollBar::MouseClikOffFunction() {
 	MakeCallBack();
 }
+
 
 void GUI_ScrollBar::UpdateObject() {
 	MouseClikOnFunction();

@@ -9,6 +9,7 @@ struct GUI_ScrollBar : public GUI_image {
 	~GUI_ScrollBar();
 
 	virtual void MouseClikOnFunction();
+	virtual void MouseClikOffFunction();
 	virtual void UpdateObject();
 	virtual void Draw();
 

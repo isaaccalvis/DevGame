@@ -29,6 +29,9 @@ struct GUI_object {
 	virtual void MouseClikOffFunction() {};
 
 	virtual void MakeCallBack();
+
+	virtual int returnNumer0to100() { return 0; };
+
 protected:
 	int dToParentX = 0;
 	int dToParentY = 0;

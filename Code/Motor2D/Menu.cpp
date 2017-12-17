@@ -15,6 +15,8 @@
 #include "ModuleGui.h"
 #include "gui_image.h"
 
+#include "SDL_mixer\include\SDL_mixer.h"
+
 Menu::Menu() : j1Module(){
 	name.create("scene");
 }
@@ -89,7 +91,7 @@ bool Menu::PostUpdate(){
 
 		background = App->gui->addImage(0, 0, { 0, 0, 1024, 640 }, back, nullptr, nullptr, false);
 
-		sound_bar = App->gui->addScrollBar(630, 500, { 0, 0, 200, 50 }, bar, bar, { 300, 300, 60, 60 }, 5, 5, false, this, nullptr, false);
+		sound_bar = App->gui->addScrollBar(200, 500, { 0, 0, 200, 50 }, back, back, { 300, 300, 60, 60 }, 5, 5, false, this, nullptr, false);
 
 		back_button = App->gui->addButton(630, 500, { 1220, 27, 255, 70 }, App->gui->atlas, nullptr, nullptr, { 1220, 123, 255, 70 }, { 1220, 214, 255, 70 }, this);
 
@@ -208,7 +210,8 @@ void Menu::CallBack(GUI_object* object, GUI_OBJECT_STATE state)
 
 		else if (object == back_button)
 			go_back = true;
-
+		else if (object == sound_bar)
+			Mix_VolumeMusic(sound_bar->returnNumer0to100());
 		break;
 	}
 }
