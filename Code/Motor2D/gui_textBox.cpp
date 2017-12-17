@@ -20,3 +20,8 @@ void GUI_textBox::deletLabelInside() {
 }
 
 void GUI_textBox::CleanUp() {}
+
+void GUI_textBox::MakeCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

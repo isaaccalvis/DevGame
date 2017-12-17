@@ -64,6 +64,7 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 			}
 		}
 	}
+	MakeCallBack();
 }
 
 void GUI_ScrollBar::UpdateObject() {
@@ -95,3 +96,8 @@ int GUI_ScrollBar::returnNumer0to100() {
 }
 
 void GUI_ScrollBar::CleanUp() {}
+
+void GUI_ScrollBar::MakeCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

@@ -40,6 +40,7 @@ public:
 	bool opt = false;
 	bool cred = false;
 	bool loadGame = false;
+	bool need_load = false;
 	SDL_Texture* back = nullptr;
 };
 

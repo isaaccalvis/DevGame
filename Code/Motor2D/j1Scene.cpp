@@ -71,6 +71,18 @@ bool j1Scene::PreUpdate()
 	static iPoint origin;
 	static bool origin_selected = false;
 
+	if (App->menu->need_load)
+	{
+		App->LoadGame();
+		App->menu->need_load = false;
+
+		App->gui->atlas = App->tex->Load("texture/Game_Gui_Buttons.png");
+
+		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
+
+		save_button = App->gui->addButton(900, 15, { 1084, 374, 27, 27 }, App->gui->atlas, nullptr, nullptr, { 1084, 374, 27, 27 }, { 1084, 374, 27, 27 }, this);
+	}
+
 	int x, y;
 	App->input->GetMousePosition(x, y);
 	iPoint p = App->render->ScreenToWorld(x, y);

@@ -20,6 +20,17 @@ void GUI_checkBox::MouseClikOnFunction() {
 		textureToDraw = textureOnClick;
 		rectToDraw = &rectOnClick;
 	}
+	MakeCallBack();
 }
 
 void GUI_checkBox::CleanUp() {}
+
+
+bool GUI_checkBox::returnValue() {
+	return isClicking;
+}
+
+void GUI_checkBox::MakeCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

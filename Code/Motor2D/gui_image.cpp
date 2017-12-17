@@ -4,6 +4,7 @@
 #include "j1Textures.h"
 
 #include "j1Input.h"
+#include "j1Map.h"
 
 GUI_image::GUI_image(int x, int y, SDL_Rect rect, SDL_Texture* tex, j1Module* listener, GUI_object* parent) : GUI_object(x,y,rect, listener, parent){
 	this->texture = tex;
@@ -20,7 +21,6 @@ void GUI_image::Draw() {
 }
 
 void GUI_image::MouseClikOnFunction() {
-	printf_s("S'ha clicat la imatge\n");
 	MakeCallBack();
 }
 
@@ -31,4 +31,25 @@ void GUI_image::MakeCallBack() {
 
 void GUI_image::CleanUp() {
 	App->tex->UnLoad(texture);
+}
+
+GUI_imageOnMap::GUI_imageOnMap(int x, int y, SDL_Rect rect, SDL_Texture* tex, j1Module* listener, GUI_object* parent) : GUI_image(x,y,rect,tex,listener,parent){
+	realX = x;
+}
+
+void GUI_imageOnMap::UpdateObject() {
+	if (isActivated == true) {
+		Draw();
+		x = realX + (int)App->render->cam.x;
+	}
+}
+
+void GUI_imageOnMap::Draw() {
+	App->render->Blit(texture, realX, y, &rect);
+}
+
+void GUI_imageOnMap::MouseClikOnFunction() {
+	if (isActivated == true) {
+		isActivated = false;
+	}
 }

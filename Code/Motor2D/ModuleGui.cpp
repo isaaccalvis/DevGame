@@ -9,6 +9,7 @@
 #include "gui_checkBox.h"
 #include "gui_textBox.h"
 #include "scrollBar.h"
+#include "j1Scene.h"
 
 #include "j1Render.h"
 #include "ModulePlayer.h"
@@ -23,9 +24,12 @@ bool ModuleGUI::Start() {
 	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr,nullptr, true);
 	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, nullptr, papi, true);
 	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, nullptr, papi, true);
-	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr, nullptr);
-	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr, nullptr);
+	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr, nullptr, true);
+	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr, nullptr, true);
 	addLabel("cacatua ninja", font, 300, 300, SDL_Rect{ 0,0,100,20 }, SDL_Color{255,0,0,255}, nullptr, papi, true);
+
+	addImageOnMap(300, 600, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr, nullptr, true);
+	addImageOnMap(2000, 100, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr, nullptr, true);
 
 	return true;
 }
@@ -78,15 +82,15 @@ void ModuleGUI::mouseInteractionObjects() {
 			if (focus == rec->data)
 				focus = nullptr;
 		}
-		else if (!App->input->GetMouseButtonDown(3) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
+		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
 			if (focus == rec->data)
 				focus = nullptr;
 		}
 
 		rec->data->isMoving = false;
-		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
-			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
+		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK && App->scene->godmode == true)
+			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE || rec->data->type == GUI_TYPES::CHECK_BOX_MOVABLE)
 				if (focus == rec->data)
 					rec->data->isMoving = true;
 
@@ -151,6 +155,16 @@ GUI_object* ModuleGUI::addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex,
 		ret->type = TEXT_BOX;
 	else
 		ret->type = TEXT_BOX_MOVABLE;
+	gui_objects.add(ret);
+	return ret;
+}
+
+GUI_object* ModuleGUI::addImageOnMap(int x, int y, SDL_Rect rect, SDL_Texture* tex, j1Module* listener, GUI_object* parent, bool isMovable) {
+	GUI_object* ret = new GUI_imageOnMap(x, y, rect, tex, listener, parent);
+	if (isMovable == false)
+		ret->type = IMAGE;
+	else
+		ret->type = IMAGE_MOVABLE;
 	gui_objects.add(ret);
 	return ret;
 }

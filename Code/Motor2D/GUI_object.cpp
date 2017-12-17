@@ -40,8 +40,8 @@ void GUI_object::moveWithMouse() {
 		}
 		else {
 			if (parent != nullptr) {
-				dToParentX = nx - x;
-				dToParentY = ny - y;
+				dToParentX = nx - dToMouseX;
+				dToParentY = ny - dToMouseY;
 			}
 			else {
 				x = nx - dToMouseX;
@@ -76,5 +76,6 @@ void GUI_object::changeState(GUI_OBJECT_STATE state) {
 }
 
 void GUI_object::MakeCallBack() {
-	listener->CallBack((GUI_object*)this, actualState);
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
 }

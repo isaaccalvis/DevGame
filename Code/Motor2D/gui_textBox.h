@@ -17,6 +17,8 @@ struct GUI_textBox : public GUI_button {
 	void CleanUp();
 
 	void deletLabelInside();
+	virtual void MakeCallBack();
+
 };
 
 #endif

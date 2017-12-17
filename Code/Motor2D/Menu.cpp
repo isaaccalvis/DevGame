@@ -112,7 +112,7 @@ bool Menu::PostUpdate(){
 		App->map->active = true;
 		App->player->active = true;
 
-		App->LoadGame();
+		need_load = true;
 
 		loadGame = false;
 	}
