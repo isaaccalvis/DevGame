@@ -5,13 +5,14 @@
 
 struct GUI_object {
 	GUI_object();
-	GUI_object(int x, int y, SDL_Rect rect, GUI_object* parent);
+	GUI_object(int x, int y, SDL_Rect rect, j1Module* listener, GUI_object* parent);
 	~GUI_object();
 
 	int x, y;
 	SDL_Rect rect;
 	GUI_TYPES type;
 	GUI_OBJECT_STATE actualState = MOUSE_OUT;
+	j1Module* listener;
 
 	bool active = true, isMoving = true;
 	GUI_object* parent;
@@ -26,6 +27,7 @@ struct GUI_object {
 	virtual void MouseClikOnFunction() {};
 	virtual void MouseClikOffFunction() {};
 
+	virtual void CridaCallBack();
 protected:
 	int dToParentX = 0;
 	int dToParentY = 0;

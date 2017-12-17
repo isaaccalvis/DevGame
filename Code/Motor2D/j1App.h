@@ -23,6 +23,7 @@ class ModulePlayer;
 class ModuleEnemies;
 class ModuleGUI;
 class j1Fonts;
+class Menu;
 
 class j1App
 {
@@ -100,6 +101,7 @@ public:
 	ModuleEnemies*		enemies;
 	ModuleGUI*			gui;
 	j1Fonts*			fonts;
+	Menu*				menu;
 
 	float dt;
 	int					maxfps;

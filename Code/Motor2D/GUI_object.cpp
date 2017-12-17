@@ -3,11 +3,12 @@
 
 GUI_object::GUI_object() {}
 
-GUI_object::GUI_object(int x, int y, SDL_Rect rect = { 0,0,0,0 }, GUI_object* parent = nullptr) {
+GUI_object::GUI_object(int x, int y, SDL_Rect rect = { 0,0,0,0 }, j1Module* listener = nullptr, GUI_object* parent = nullptr) {
 	this->dToParentX = this->x = x;
 	this->dToParentY = this->y = y;
 	this->rect = rect;
 	this->parent = parent;
+	this->listener = listener;
 }
 
 GUI_object::~GUI_object() {
@@ -71,4 +72,8 @@ void GUI_object::changeState(GUI_OBJECT_STATE state) {
 		MouseClikOffFunction();
 		break;
 	}
+}
+
+void GUI_object::CridaCallBack() {
+	listener->CallBack((GUI_object*)this, actualState);
 }

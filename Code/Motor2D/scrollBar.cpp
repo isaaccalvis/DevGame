@@ -3,8 +3,8 @@
 #include "scrollBar.h"
 #include "j1Render.h"
 
-GUI_ScrollBar::GUI_ScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX = false, GUI_object* parent = nullptr) : GUI_image(x, y, rectBase, texBase, parent) {
-	pivoteMovable = new GUI_image(x + margeX, y + margeY, rectMovable, texMovable);
+GUI_ScrollBar::GUI_ScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX = false, j1Module* listener = nullptr, GUI_object* parent = nullptr) : GUI_image(x, y, rectBase, texBase, listener, parent) {
+	pivoteMovable = new GUI_image(x + margeX, y + margeY, rectMovable, texMovable, listener);
 	this->margeX = margeX;
 	this->margeY = margeY;
 	this->blockX = blockX;

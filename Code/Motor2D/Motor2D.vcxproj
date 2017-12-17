@@ -93,6 +93,7 @@
     <ClCompile Include="j1PerfTimer.cpp" />
     <ClCompile Include="j1Scene.cpp" />
     <ClCompile Include="j1Timer.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ModuleEnemies.cpp" />
     <ClCompile Include="j1Fonts.cpp" />
     <ClCompile Include="ModuleGui.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="j1PerfTimer.h" />
     <ClInclude Include="j1Scene.h" />
     <ClInclude Include="j1Timer.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="ModuleEnemies.h" />
     <ClInclude Include="j1Fonts.h" />
     <ClInclude Include="ModuleGui.h" />

@@ -5,7 +5,7 @@
 #include "GUI_object.h"
 
 struct GUI_label : public GUI_object {
-	GUI_label(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, GUI_object* parent = nullptr);
+	GUI_label(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, SDL_Color color, j1Module* listener, GUI_object* parent = nullptr);
 	virtual void UpdateObject();
 	virtual void Draw();
 	char* text;

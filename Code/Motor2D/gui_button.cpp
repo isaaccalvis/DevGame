@@ -3,10 +3,10 @@
 #include "j1Input.h"
 #include "j1Render.h"
 
-GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, GUI_object* parent) : GUI_image(x, y, rect, tex, parent) {
+GUI_button::GUI_button(int x, int y, SDL_Rect rect, SDL_Texture* tex, SDL_Texture* texOnMouse = nullptr, SDL_Texture* texOnClick = nullptr, SDL_Rect rectOnMouse = SDL_Rect{ -1,0,0,0 }, SDL_Rect rectOnClick = SDL_Rect{ -1,0,0,0 }, j1Module* listener = nullptr, GUI_object* parent) : GUI_image(x, y, rect, tex, listener, parent) {
 	if (texOnMouse == nullptr)
 		textureOnMouse = tex;
-	else
+	else 
 		textureOnMouse = texOnMouse;
 
 	if (texOnClick == nullptr)
@@ -54,9 +54,14 @@ void GUI_button::MouseClikOnFunction() {
 	textureToDraw = textureOnClick;
 	rectToDraw = &rectOnClick;
 	printf_s("mouse click \n");
+	CridaCallBack();
 }
 void GUI_button::MouseClikOffFunction(){
 	textureToDraw = textureOnMouse;
 	rectToDraw = &rectOnMouse;
 	printf_s("mouse off click \n");
+}
+
+void GUI_button::CridaCallBack() {
+	listener->CallBack((GUI_object*)this, actualState);
 }

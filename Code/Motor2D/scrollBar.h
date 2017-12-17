@@ -5,7 +5,7 @@
 #include "gui_image.h"
 
 struct GUI_ScrollBar : public GUI_image {
-	GUI_ScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX, GUI_object* parent);
+	GUI_ScrollBar(int x, int y, SDL_Rect rectBase, SDL_Texture* texBase, SDL_Texture* texMovable, SDL_Rect rectMovable, int margeX, int margeY, bool blockX, j1Module* listener, GUI_object* parent);
 	~GUI_ScrollBar();
 
 	virtual void MouseClikOnFunction();

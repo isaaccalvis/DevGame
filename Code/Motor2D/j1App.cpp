@@ -16,6 +16,7 @@
 #include "ModuleEnemies.h"
 #include "ModuleGui.h"
 #include "j1Fonts.h"
+#include "Menu.h"
 #include "j1App.h"
 
 
@@ -35,7 +36,8 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	player = new ModulePlayer();
 	enemies = new ModuleEnemies();
 	gui = new ModuleGUI();
-	fonts = new j1Fonts;
+	fonts = new j1Fonts();
+	menu = new Menu();
 
 	AddModule(input);
 	AddModule(win);
@@ -48,6 +50,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(enemies);
 	AddModule(gui);
 	AddModule(fonts);
+	AddModule(menu);
 	// render last to swap buffer
 	AddModule(render);
 }

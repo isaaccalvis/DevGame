@@ -11,6 +11,9 @@
 
 class j1App;
 
+struct GUI_object;
+enum GUI_OBJECT_STATE;
+
 class j1Module
 {
 public:
@@ -71,6 +74,8 @@ public:
 	{
 		return true;
 	}
+
+	virtual void CallBack(GUI_object* object, GUI_OBJECT_STATE state){}
 
 public:
 
