@@ -49,7 +49,7 @@ bool j1Scene::Start()
 		if(App->map->CreateWalkabilityMap(w, h, &data))
 			App->pathfinding->SetMap(w, h, data);
 
-		App->gui->atlas = App->tex->Load("texture/Game_Gui_Buttons.png");
+		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
 
 		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
 
@@ -76,7 +76,7 @@ bool j1Scene::PreUpdate()
 		App->LoadGame();
 		App->menu->need_load = false;
 
-		App->gui->atlas = App->tex->Load("texture/Game_Gui_Buttons.png");
+		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
 
 		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
 
