@@ -11,7 +11,7 @@ GUI_label::GUI_label(char* text, _TTF_Font* font, int x, int y, SDL_Rect rect, S
 
 void GUI_label::Draw() {
 	if (font != nullptr && text != nullptr)
-		App->render->Blit(App->fonts->Print(text, color, font), x, y, &this->rect);
+		App->render->Blit(App->fonts->Print(text, color, font), App->render->camera.x * -1 + x, App->render->camera.y * -1 + y, &this->rect);
 }
 
 void GUI_label::UpdateObject() {

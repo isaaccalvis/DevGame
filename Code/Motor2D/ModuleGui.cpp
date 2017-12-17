@@ -28,6 +28,9 @@ bool ModuleGUI::Start() {
 	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr, nullptr, true);
 	addLabel("cacatua ninja", font, 300, 300, SDL_Rect{ 0,0,100,20 }, SDL_Color{255,0,0,255}, nullptr, papi, true);
 
+	addImageOnMap(300, 600, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr, nullptr, true);
+	addImageOnMap(2000, 100, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr, nullptr, true);
+
 	return true;
 }
 bool ModuleGUI::PreUpdate() {
@@ -152,6 +155,16 @@ GUI_object* ModuleGUI::addTextBox(int x, int y, SDL_Rect rect, SDL_Texture* tex,
 		ret->type = TEXT_BOX;
 	else
 		ret->type = TEXT_BOX_MOVABLE;
+	gui_objects.add(ret);
+	return ret;
+}
+
+GUI_object* ModuleGUI::addImageOnMap(int x, int y, SDL_Rect rect, SDL_Texture* tex, j1Module* listener, GUI_object* parent, bool isMovable) {
+	GUI_object* ret = new GUI_imageOnMap(x, y, rect, tex, listener, parent);
+	if (isMovable == false)
+		ret->type = IMAGE;
+	else
+		ret->type = IMAGE_MOVABLE;
 	gui_objects.add(ret);
 	return ret;
 }
