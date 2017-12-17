@@ -24,8 +24,8 @@ bool ModuleGUI::Start() {
 	GUI_object* papi = addImage(0, 0, SDL_Rect{ 0,0,100, 100 }, guiObjTextures, nullptr,nullptr, true);
 	addButton(10, 20, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, nullptr, papi, true);
 	addCheckBox(300, 30, SDL_Rect{ 20,530,120,20 }, fons, guiObjTextures, guiObjTextures, SDL_Rect{ 0,0,140,50 }, SDL_Rect{ 160, 0, 140, 50 }, nullptr, papi, true);
-	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr, nullptr);
-	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr, nullptr);
+	addScrollBar(10, 300, SDL_Rect{ 0,0,200,50 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, false, nullptr, nullptr, true);
+	addScrollBar(200, 300, SDL_Rect{ 0,0,50,300 }, guiObjTextures, fons, SDL_Rect{ 0,0,30,30 }, 20, 20, true, nullptr, nullptr, true);
 	addLabel("cacatua ninja", font, 300, 300, SDL_Rect{ 0,0,100,20 }, SDL_Color{255,0,0,255}, nullptr, papi, true);
 
 	return true;
@@ -87,7 +87,7 @@ void ModuleGUI::mouseInteractionObjects() {
 
 		rec->data->isMoving = false;
 		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK && App->scene->godmode == true)
-			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
+			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE || rec->data->type == GUI_TYPES::CHECK_BOX_MOVABLE)
 				if (focus == rec->data)
 					rec->data->isMoving = true;
 

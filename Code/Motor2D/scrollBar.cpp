@@ -64,6 +64,7 @@ void GUI_ScrollBar::MouseClikOnFunction() {
 			}
 		}
 	}
+	CridaCallBack();
 }
 
 void GUI_ScrollBar::UpdateObject() {

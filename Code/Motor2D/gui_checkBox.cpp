@@ -20,6 +20,11 @@ void GUI_checkBox::MouseClikOnFunction() {
 		textureToDraw = textureOnClick;
 		rectToDraw = &rectOnClick;
 	}
+	CridaCallBack();
+}
+
+bool GUI_checkBox::returnValue() {
+	return isClicking;
 }
 
 void GUI_checkBox::CridaCallBack() {

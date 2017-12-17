@@ -39,8 +39,8 @@ void GUI_object::moveWithMouse() {
 		}
 		else {
 			if (parent != nullptr) {
-				dToParentX = nx - x;
-				dToParentY = ny - y;
+				dToParentX = nx - dToMouseX;
+				dToParentY = ny - dToMouseY;
 			}
 			else {
 				x = nx - dToMouseX;

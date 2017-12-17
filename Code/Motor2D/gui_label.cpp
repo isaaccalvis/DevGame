@@ -15,6 +15,7 @@ void GUI_label::Draw() {
 }
 
 void GUI_label::UpdateObject() {
+	updatePosition();
 	Draw();
 }
 
