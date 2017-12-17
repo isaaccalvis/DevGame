@@ -6,6 +6,8 @@ arriving to the end of your personal trip, fighting against cat_robbots, and sui
 
 ## SwaggittyRabbity Trailer
 
+<iframe width="854" height="480" src="https://www.youtube.com/embed/2rsa6ALnTOU" frameborder="0" gesture="media" allow="encrypted-media" allowfullscreen>
+</iframe>
 
 ### Innovations
 
