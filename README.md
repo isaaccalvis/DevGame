@@ -1,51 +1,88 @@
-# SwaggityRabbity
+# SwaggittyRabbity
+ 
+## The game
+SwaggityRabbity is a game where you take the control of the terminator rabbid, the last one of his type, and you will have to survive,
+arriving to the end of your personal trip, fighting against cat_robbots, and suicide bats, that will try to stop you.
 
-This is a platform game where you have to arrive to the end of the level.
+## SwaggittyRabbity Trailer
 
-Key's:
----------------------------------------------------------------------------------------------------------------------
-W-A-S-D		: move keys
-Space		: Atack key
-Q		: Teleport Key (player hability)	-->	when enter on teleport mode click W-A-S-D to teleport
-1		: Spawn a walker enemy
-2		: Spawn a flyer enemy
 
-F1		: Restart a new level
-F2		: Move to the start of the level
+### Innovations
 
-F5		: Save position
-F6		: Load position
+<br>Second Assignament:</br>
 
-F9		: See the logic blocs
-F10		: Godmode
-F11		: Cap. the fps to 30 or unblock it
----------------------------------------------------------------------------------------------------------------------
+• Collider Compression (Colliders are transformed from ipoints, to sdl_Rects, and compressed to take the minimum space)
 
-## Isaac Calvis
-https://github.com/isaaccalvis?tab=repositories
-## Marc Tarres
-https://github.com/MAtaur00
+• Blitting only what camera sees
 
-License:
+<br>Third Assignament:</br>
 
-[23:07, 19/11/2017] Marc Tarres CITM: MIT License
+• Can move GUI_items (if the program let you)
 
-Copyright (c) [2017] Isaac Calv�s and Marc Tarr�s
+## GITHUB Repository and release page
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
+• GitHub repository: [Go to repository](https://github.com/isaaccalvis/SwaggityRabbity)
+
+• Last Release: [Go to release](https://github.com/isaaccalvis/SwaggityRabbity/releases)
+
+### Gameplay
+
+W: jump
+
+D: move player right
+
+A: move player left
+
+Space: Atack
+
+Q: special hability (teleport)
+
+### Debug
+
+F1: start from the beggining of the first level
+
+F2: start from the beggining of the current level
+
+F5: save game state
+
+F6: load game state
+
+F9: show colliders
+
+F10: God Mode
+
+F11: enable/disable cap frames
+
+If you are in god mode you can move some windows  (the windows that programer let you to move)
+
+I + 1: spawn walker enemy
+I + 2: spawn bat
+
+## Team members
+
+![](foto.JPG)
+
+Isaac Calvis    
+•	GitHub account: [Isaac Calvis](https://github.com/isaaccalvis)
+
+Marc Tarres
+
+•	GitHub account: [MAtaur00](https://github.com/MAtaur00)
+
+### License
+
+MIT License
+
+Copyright (c) [2017] Isaac Calvís and Marc Tarrés
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files
+(the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify,
+merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
