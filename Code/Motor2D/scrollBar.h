@@ -17,6 +17,8 @@ struct GUI_ScrollBar : public GUI_image {
 	bool isMoving = false, blockX;		// si es false, es mou en eix X, sino en Y
 	int margeX, margeY;
 
+	virtual void CridaCallBack();
+
 protected:
 	GUI_image* pivoteMovable;
 };

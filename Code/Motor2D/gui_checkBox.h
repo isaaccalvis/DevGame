@@ -10,6 +10,7 @@ struct GUI_checkBox : public GUI_button {
 	void UpdateObject();
 	virtual void MouseClikOnFunction();
 
+	virtual void CridaCallBack();
 };
 
 #endif

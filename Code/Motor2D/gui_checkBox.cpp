@@ -21,3 +21,8 @@ void GUI_checkBox::MouseClikOnFunction() {
 		rectToDraw = &rectOnClick;
 	}
 }
+
+void GUI_checkBox::CridaCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

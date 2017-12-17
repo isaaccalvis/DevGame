@@ -63,5 +63,6 @@ void GUI_button::MouseClikOffFunction(){
 }
 
 void GUI_button::CridaCallBack() {
-	listener->CallBack((GUI_object*)this, actualState);
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
 }

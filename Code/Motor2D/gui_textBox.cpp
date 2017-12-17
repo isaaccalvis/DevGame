@@ -18,3 +18,8 @@ void GUI_textBox::Draw() {
 void GUI_textBox::deletLabelInside() {
 	delete textLabel;
 }
+
+void GUI_textBox::CridaCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

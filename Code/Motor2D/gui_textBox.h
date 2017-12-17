@@ -15,6 +15,8 @@ struct GUI_textBox : public GUI_button {
 	GUI_label *textLabel;
 
 	void deletLabelInside();
+	virtual void CridaCallBack();
+
 };
 
 #endif

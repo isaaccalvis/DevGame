@@ -17,3 +17,8 @@ void GUI_label::Draw() {
 void GUI_label::UpdateObject() {
 	Draw();
 }
+
+void GUI_label::CridaCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

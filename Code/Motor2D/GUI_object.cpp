@@ -75,5 +75,6 @@ void GUI_object::changeState(GUI_OBJECT_STATE state) {
 }
 
 void GUI_object::CridaCallBack() {
-	listener->CallBack((GUI_object*)this, actualState);
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
 }

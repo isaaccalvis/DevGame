@@ -9,6 +9,7 @@
 #include "gui_checkBox.h"
 #include "gui_textBox.h"
 #include "scrollBar.h"
+#include "j1Scene.h"
 
 #include "j1Render.h"
 #include "ModulePlayer.h"
@@ -55,7 +56,7 @@ void ModuleGUI::mouseInteractionObjects() {
 	p2List_item<GUI_object*>* rec = gui_objects.start;
 	while (rec != nullptr) {
 		if (nx > rec->data->x && ny > rec->data->y && nx < (rec->data->x + rec->data->rect.w) && ny < (rec->data->y + rec->data->rect.h)) {
-			if (App->input->GetMouseButtonDown(3)) {
+			if (App->input->GetMouseButtonDown(1)) {
 				if (rec->data->actualState != GUI_OBJECT_STATE::MOUSE_ON_CLICK) {
 					rec->data->changeState(GUI_OBJECT_STATE::MOUSE_ON_CLICK);
 					if (focus == nullptr)
@@ -78,14 +79,14 @@ void ModuleGUI::mouseInteractionObjects() {
 			if (focus == rec->data)
 				focus = nullptr;
 		}
-		else if (!App->input->GetMouseButtonDown(3) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
+		else if (!App->input->GetMouseButtonDown(1) && rec->data->actualState != GUI_OBJECT_STATE::MOUSE_OUT) {
 			rec->data->changeState(GUI_OBJECT_STATE::MOUSE_OUT);
 			if (focus == rec->data)
 				focus = nullptr;
 		}
 
 		rec->data->isMoving = false;
-		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK)
+		if (rec->data->actualState == GUI_OBJECT_STATE::MOUSE_ON_CLICK && App->scene->godmode == true)
 			if (rec->data->type == GUI_TYPES::BUTTON_MOVABLE || rec->data->type == GUI_TYPES::IMAGE_MOVABLE || rec->data->type == GUI_TYPES::LABEL_MOVABLE || rec->data->type == GUI_TYPES::TEXT_BOX_MOVABLE)
 				if (focus == rec->data)
 					rec->data->isMoving = true;

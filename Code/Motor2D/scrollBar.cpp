@@ -93,3 +93,8 @@ int GUI_ScrollBar::returnNumer0to100() {
 		return result;
 	}
 }
+
+void GUI_ScrollBar::CridaCallBack() {
+	if (listener != nullptr)
+		listener->CallBack((GUI_object*)this, actualState);
+}

@@ -11,6 +11,9 @@ struct GUI_label : public GUI_object {
 	char* text;
 	_TTF_Font* font;
 	SDL_Color color;
+
+	virtual void CridaCallBack();
+
 };
 
 #endif
