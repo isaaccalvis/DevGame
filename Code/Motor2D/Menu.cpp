@@ -57,6 +57,11 @@ bool Menu::PostUpdate(){
 	bool ret = true;
 
 	if (start_game) {
+		for (p2List_item<GUI_object*>* it = App->gui->gui_objects.start; it != nullptr; it = it->next)
+		{
+			it->data->CleanUp();
+		}
+		App->gui->gui_objects.clear();
 
 		App->map->Start();
 

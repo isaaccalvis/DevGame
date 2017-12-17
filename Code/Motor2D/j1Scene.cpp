@@ -13,6 +13,7 @@
 #include "ModuleGui.h"
 #include "j1FadeToBlack.h"
 #include "Menu.h"
+#include "gui_image.h"
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -50,6 +51,22 @@ bool j1Scene::Start()
 			App->pathfinding->SetMap(w, h, data);
 
 		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
+
+		if (current_map->next == nullptr)
+		{
+			moneda_1 = App->gui->addImageOnMap( 933, 120, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_2 = App->gui->addImageOnMap( 1600, 600, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_3 = App->gui->addImageOnMap( 2700, 333, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_4 = App->gui->addImageOnMap( 3400, 472, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+		}
+
+		else
+		{
+			moneda_1 = App->gui->addImageOnMap( 300, 530, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_2 = App->gui->addImageOnMap( 1500, 156, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_3 = App->gui->addImageOnMap( 3000, 382, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_4 = App->gui->addImageOnMap( 3700, 450, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+		}
 
 		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
 
@@ -259,6 +276,13 @@ bool j1Scene::ChangeScene() {
 		|| App->map->IsCollidingWithGoal(App->player->playerData.x, App->player->playerData.y + App->player->playerData.h / 2, LEFT)
 		|| App->map->IsCollidingWithGoal(App->player->playerData.x + App->player->playerData.w, App->player->playerData.y + App->player->playerData.h / 2, RIGHT))
 	{
+
+		for (p2List_item<GUI_object*>* it = App->gui->gui_objects.start; it != nullptr; it = it->next)
+		{
+			it->data->CleanUp();
+		}
+		App->gui->gui_objects.clear();
+
 		App->map->CleanUp();
 		App->tex->FreeTextures();
 		App->player->LoadPLayerTexture();
@@ -271,6 +295,28 @@ bool j1Scene::ChangeScene() {
 		App->map->Load(current_map->data.GetString());
 
 		App->enemies->FindEnemies();
+
+		App->gui->atlas = App->tex->Load("textures/Game_Gui_Buttons.png");
+
+		gear = App->gui->addButton(955, 15, { 1077, 272, 34, 34 }, App->gui->atlas, nullptr, nullptr, { 1077, 272, 34, 34 }, { 1077, 272, 34, 34 }, this);
+
+		save_button = App->gui->addButton(900, 15, { 1084, 374, 27, 27 }, App->gui->atlas, nullptr, nullptr, { 1084, 374, 27, 27 }, { 1084, 374, 27, 27 }, this);
+
+		if (current_map->next == nullptr)
+		{
+			moneda_1 = App->gui->addImageOnMap(933, 120, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_2 = App->gui->addImageOnMap(1600, 600, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_3 = App->gui->addImageOnMap(2700, 333, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_4 = App->gui->addImageOnMap(3400, 472, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+		}
+
+		else
+		{
+			moneda_1 = App->gui->addImageOnMap(300, 530, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_2 = App->gui->addImageOnMap(1500, 156, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_3 = App->gui->addImageOnMap(3000, 382, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+			moneda_4 = App->gui->addImageOnMap(3700, 450, { 1060, 72, 33, 33 }, App->gui->atlas, this);
+		}
 
 		App->render->camera.x = App->render->cam.x = 0;
 		App->render->camera.y = App->render->cam.y = 0;

@@ -31,6 +31,11 @@ private:
 
 	GUI_object* save_button = nullptr;
 
+	GUI_object* moneda_1 = nullptr;
+	GUI_object* moneda_2 = nullptr;
+	GUI_object* moneda_3 = nullptr;
+	GUI_object* moneda_4 = nullptr;
+
 	bool open_menu = false;
 
 	bool saveGame = false;
